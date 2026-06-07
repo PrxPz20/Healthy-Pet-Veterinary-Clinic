@@ -1,0 +1,65 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus } from "lucide-react";
+import { Reveal } from "@/components/anim";
+import { getSiteContent } from "@/content/provider";
+
+const ease = [0.22, 1, 0.36, 1] as const;
+
+export function Faq() {
+  const { faqs } = getSiteContent();
+  const [open, setOpen] = useState<number | null>(0);
+
+  return (
+    <section id="faq" className="relative bg-white py-24 text-ink md:py-32">
+      <div className="mx-auto max-w-4xl px-5 sm:px-8">
+        <Reveal>
+          <div className="eyebrow">Questions</div>
+          <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
+            Direct answers before you call.
+          </h2>
+        </Reveal>
+
+        <div className="mt-12 divide-y divide-line border-y border-line">
+          {faqs.map((it, i) => {
+            const isOpen = open === i;
+            return (
+              <Reveal key={it.question} delay={i * 0.04}>
+                <div>
+                  <button
+                    onClick={() => setOpen(isOpen ? null : i)}
+                    className="group flex w-full items-center justify-between gap-6 py-6 text-left"
+                  >
+                    <span className={`font-display text-lg font-black transition-colors duration-200 md:text-xl ${isOpen ? "text-vet-green" : "text-ink group-hover:text-vet-green"}`}>
+                      {it.question}
+                    </span>
+                    <motion.span
+                      animate={{ rotate: isOpen ? 45 : 0 }}
+                      transition={{ duration: 0.25, ease }}
+                      className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-vet-green transition-colors duration-200 group-hover:border-vet-green"
+                    >
+                      <Plus className="h-4 w-4" />
+                    </motion.span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease }}
+                        className="overflow-hidden"
+                      >
+                        <p className="pb-6 pr-12 leading-relaxed text-ink/66 md:pr-16">{it.answer}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </Reveal>
+            );
+          })}
+        </div>
+      </div>
+    </section>
+  );
+}
