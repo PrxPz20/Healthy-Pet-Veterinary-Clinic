@@ -8,11 +8,7 @@ if (existsSync(configPath)) {
     ? config.routes.filter((route) => route.headers && route.src)
     : [];
 
-  config.routes = [
-    ...headerRoutes,
-    { handle: "filesystem" },
-    { src: "/(.*)", dest: "/__server" },
-  ];
+  config.routes = [...headerRoutes, { handle: "filesystem" }, { src: "/(.*)", dest: "/__server" }];
 
   writeFileSync(configPath, `${JSON.stringify(config, null, 2)}\n`);
 }

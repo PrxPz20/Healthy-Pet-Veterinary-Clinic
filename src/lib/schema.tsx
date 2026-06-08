@@ -1,10 +1,5 @@
 import type { FaqItem, Service, SiteContent } from "@/content/types";
 
-const dayMap: Record<string, string[]> = {
-  "Monday to Friday": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-  Saturday: ["Saturday"],
-};
-
 export function buildClinicSchema(content: SiteContent) {
   const { clinic, openingHours, services } = content;
 
@@ -18,7 +13,7 @@ export function buildClinicSchema(content: SiteContent) {
     logo: clinic.logoUrl,
     image: content.media.heroPoster.src,
     description: clinic.tagline,
-    telephone: clinic.phone,
+    telephone: [clinic.phone, clinic.vetPhone].filter(Boolean),
     email: clinic.email,
     isAcceptingNewPatients: true,
     address: {
@@ -34,12 +29,14 @@ export function buildClinicSchema(content: SiteContent) {
       name: "Limassol",
     },
     sameAs: clinic.socialLinks.map((link) => link.href),
-    openingHoursSpecification: openingHours.map((row) => ({
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: dayMap[row.days] ?? [row.days],
-      opens: row.opens,
-      closes: row.closes,
-    })),
+    openingHoursSpecification: openingHours.flatMap((row) =>
+      row.ranges.map((range) => ({
+        "@type": "OpeningHoursSpecification",
+        dayOfWeek: row.day,
+        opens: range.opens,
+        closes: range.closes,
+      })),
+    ),
     hasOfferCatalog: buildOfferCatalog(services),
   };
 }
@@ -97,9 +94,6 @@ export function buildBreadcrumbSchema(siteUrl: string) {
 
 export function JsonLd({ data }: { data: unknown }) {
   return (
-    <script
-      type="application/ld+json"
-      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
-    />
+    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
   );
 }

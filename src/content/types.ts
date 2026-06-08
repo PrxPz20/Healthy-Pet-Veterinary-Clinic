@@ -17,6 +17,8 @@ export type ClinicInfo = {
   logoUrl: string;
   phone: string;
   phoneDisplay: string;
+  vetPhone?: string;
+  vetPhoneDisplay?: string;
   whatsapp: string;
   whatsappDisplay: string;
   email: string;
@@ -33,10 +35,12 @@ export type ClinicInfo = {
 };
 
 export type OpeningHour = {
-  days: string;
+  day: string;
   label: string;
-  opens: string;
-  closes: string;
+  ranges: {
+    opens: string;
+    closes: string;
+  }[];
 };
 
 export type HeroContent = {
@@ -91,6 +95,12 @@ export type SiteContent = {
   openingHours: OpeningHour[];
   navigation: Cta[];
   hero: HeroContent;
+  about: {
+    heading: string;
+    paragraphs: string[];
+    badgeLocation: string;
+    badgeTitle: string;
+  };
   trustPoints: {
     icon: string;
     title: string;

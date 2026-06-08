@@ -12,7 +12,7 @@ export function TrustStrip() {
           const Icon = iconFor(item.icon);
           return (
             <StaggerItem key={item.title}>
-              <div className="flex h-full gap-4 border-line py-7 sm:pr-7 lg:border-r">
+              <div className="flex h-full gap-4 border-line py-6 sm:pr-7 md:py-7 lg:border-r">
                 <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
                   <Icon className="h-5 w-5" />
                 </span>
