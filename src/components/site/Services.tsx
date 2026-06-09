@@ -5,6 +5,7 @@ import { iconFor } from "./Icons";
 
 export function Services() {
   const { services } = getSiteContent();
+  const featuredServices = services.slice(0, 6);
 
   return (
     <section id="care" className="relative bg-clinic py-20 text-ink md:py-28">
@@ -26,7 +27,7 @@ export function Services() {
         </Reveal>
 
         <StaggerGroup className="mt-10 grid grid-cols-1 border-y border-line md:mt-12 md:grid-cols-2 lg:grid-cols-3">
-          {services.map((service, index) => {
+          {featuredServices.map((service, index) => {
             const Icon = iconFor(service.icon);
             return (
               <StaggerItem key={service.slug}>
@@ -57,6 +58,10 @@ export function Services() {
             );
           })}
         </StaggerGroup>
+
+        <Reveal className="mt-6 text-sm font-semibold text-ink/62">
+          Use the button above to see the full list of services.
+        </Reveal>
       </div>
     </section>
   );

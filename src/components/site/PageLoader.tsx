@@ -1,10 +1,10 @@
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { ease, quickTransition } from "@/lib/motion";
 
 export function PageLoader() {
   const [visible, setVisible] = useState(false);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     setVisible(true);
@@ -20,13 +20,13 @@ export function PageLoader() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.2, ease }}
+          transition={reduceMotion ? { duration: 0 } : quickTransition}
         >
           <motion.div
-            className="h-full bg-vet-green"
-            initial={{ width: "0%" }}
-            animate={{ width: "100%" }}
-            transition={{ duration: 0.85, ease }}
+            className="h-full origin-left bg-vet-green"
+            initial={reduceMotion ? false : { scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ duration: reduceMotion ? 0 : 0.85, ease }}
           />
         </motion.div>
       )}

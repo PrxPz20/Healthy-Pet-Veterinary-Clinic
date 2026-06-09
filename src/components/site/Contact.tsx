@@ -27,32 +27,36 @@ export function Contact() {
   return (
     <section id="contact" className="relative bg-ink py-20 text-white md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
-        <div className="grid gap-10 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
-          <Reveal>
+        <Reveal>
+          <div className="max-w-3xl">
             <div className="eyebrow text-sage-light">Visit, call, message</div>
             <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
               Speak with the clinic before you visit.
             </h2>
-            <p className="mt-5 max-w-md leading-relaxed text-white/72">
+            <p className="mt-5 max-w-xl leading-relaxed text-white/72">
               Call or send a WhatsApp message for guidance, visit timing, product questions, or next
               steps for your pet's symptoms.
             </p>
+          </div>
 
-            <ul className="mt-7 space-y-4 text-sm">
-              {rows.map((row) => (
-                <li key={row.label} className="flex items-start gap-4">
-                  <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/12 bg-white/6 text-sage-light">
-                    <row.icon className="h-4 w-4" />
-                  </div>
-                  <div>
-                    <div className="text-xs font-bold text-white/55">{row.label}</div>
-                    <div className="mt-1 text-white/92">{row.value}</div>
-                  </div>
-                </li>
-              ))}
-            </ul>
+          <ul className="mt-9 grid gap-4 text-sm md:grid-cols-2">
+            {rows.map((row) => (
+              <li key={row.label} className="flex items-start gap-4">
+                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/12 bg-white/6 text-sage-light">
+                  <row.icon className="h-4 w-4" />
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-white/55">{row.label}</div>
+                  <div className="mt-1 text-white/92">{row.value}</div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
 
-            <div className="mt-8 flex flex-wrap gap-3">
+        <div className="mt-8 grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+          <Reveal>
+            <div className="flex flex-wrap gap-3">
               <a
                 href={hero.primaryCta.href}
                 className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"

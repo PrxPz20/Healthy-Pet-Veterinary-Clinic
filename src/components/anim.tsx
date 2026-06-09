@@ -5,21 +5,9 @@ import {
   useMotionValue,
   useReducedMotion,
   useTransform,
-  type Variants,
 } from "framer-motion";
 import { useEffect, useRef, type ReactNode } from "react";
-
-export const ease = [0.22, 1, 0.36, 1] as const;
-
-export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 14 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.48, ease } },
-};
-
-export const stagger: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.05 } },
-};
+import { ease, fadeUp, stagger } from "@/lib/motion";
 
 export function Reveal({
   children,
@@ -41,10 +29,11 @@ export function Reveal({
   return (
     <motion.div
       className={className}
-      initial={false}
-      whileInView={{ opacity: 1, y: 0 }}
+      variants={fadeUp}
+      custom={{ delay, y }}
+      initial="hidden"
+      whileInView="show"
       viewport={{ once: true, margin: "-80px" }}
-      transition={{ duration: 0.48, ease, delay }}
     >
       {children}
     </motion.div>
@@ -70,7 +59,7 @@ export function StaggerGroup({
     <motion.div
       className={className}
       variants={stagger}
-      initial={false}
+      initial="hidden"
       whileInView="show"
       viewport={{ once: true, amount }}
     >
@@ -127,5 +116,3 @@ export function CountUp({
     </span>
   );
 }
-
-export { motion };

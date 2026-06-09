@@ -1,9 +1,8 @@
-import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
+import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-import { iconFor } from "./Icons";
 
 export function About() {
-  const { about, media, trustPoints } = getSiteContent();
+  const { about, media } = getSiteContent();
 
   return (
     <section id="about" className="relative bg-white py-20 text-ink md:py-28">
@@ -41,21 +40,6 @@ export function About() {
             </div>
           </Reveal>
         </div>
-
-        <StaggerGroup className="mt-12 grid grid-cols-1 gap-px overflow-hidden rounded-3xl border border-line bg-line md:mt-14 sm:grid-cols-2 lg:grid-cols-4">
-          {trustPoints.map((item) => {
-            const Icon = iconFor(item.icon);
-            return (
-              <StaggerItem key={item.title}>
-                <div className="h-full bg-clinic p-5 transition-colors duration-300 hover:bg-white md:p-6">
-                  <Icon className="h-5 w-5 text-vet-green" />
-                  <h3 className="mt-5 font-display text-xl font-black text-ink">{item.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/62">{item.body}</p>
-                </div>
-              </StaggerItem>
-            );
-          })}
-        </StaggerGroup>
       </div>
     </section>
   );

@@ -14,7 +14,7 @@ export function CareApproach() {
   const progressHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
 
   return (
-    <section ref={ref} className="relative bg-ink py-20 text-white md:py-28">
+    <section id="approach" ref={ref} className="relative bg-ink py-20 text-white md:py-28">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
           <div className="eyebrow text-sage-light">Care approach</div>

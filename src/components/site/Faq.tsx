@@ -3,8 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Plus } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-
-const ease = [0.22, 1, 0.36, 1] as const;
+import { quickTransition } from "@/lib/motion";
 
 export function Faq() {
   const { faqs } = getSiteContent();
@@ -40,7 +39,7 @@ export function Faq() {
                     </span>
                     <motion.span
                       animate={{ rotate: isOpen ? 45 : 0 }}
-                      transition={{ duration: reduceMotion ? 0 : 0.2, ease }}
+                      transition={reduceMotion ? { duration: 0 } : quickTransition}
                       className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-line text-vet-green transition-colors duration-200 group-hover:border-vet-green"
                     >
                       <Plus className="h-4 w-4" />
@@ -53,7 +52,7 @@ export function Faq() {
                         initial={reduceMotion ? false : { opacity: 0, y: -4 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
-                        transition={{ duration: reduceMotion ? 0 : 0.22, ease }}
+                        transition={reduceMotion ? { duration: 0 } : quickTransition}
                         className="overflow-hidden"
                       >
                         <p className="pb-6 pr-12 leading-relaxed text-ink/66 md:pr-16">

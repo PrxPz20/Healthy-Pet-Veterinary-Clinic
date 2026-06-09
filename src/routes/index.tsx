@@ -1,7 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/site/Nav";
 import { Hero } from "@/components/site/Hero";
-import { TrustStrip } from "@/components/site/TrustStrip";
 import { Services } from "@/components/site/Services";
 import { About } from "@/components/site/About";
 import { CareApproach } from "@/components/site/CareApproach";
@@ -42,7 +41,6 @@ function Page() {
       <PageLoader />
       <Nav />
       <Hero />
-      <TrustStrip />
       <Services />
       <About />
       <CareApproach />

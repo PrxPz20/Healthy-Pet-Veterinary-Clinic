@@ -20,7 +20,6 @@ import {
   Waves,
   type LucideIcon,
 } from "lucide-react";
-import healthyPetLogoMark from "@/assets/HealthyPet_Logo_Mark.png";
 
 export const ICONS: Record<string, LucideIcon> = {
   activity: Activity,
@@ -45,21 +44,4 @@ export const ICONS: Record<string, LucideIcon> = {
 
 export function iconFor(name: string) {
   return ICONS[name] ?? Circle;
-}
-
-export function LogoMark({ className = "" }: { className?: string }) {
-  return (
-    <span
-      className={`relative grid place-items-center overflow-hidden rounded-full bg-white p-1.5 text-ink ${className}`}
-      aria-hidden="true"
-    >
-      <span className="absolute inset-1 rounded-full border border-vet-green/30" />
-      <img
-        src={healthyPetLogoMark}
-        alt=""
-        className="relative z-10 h-full w-full object-contain"
-        loading="eager"
-      />
-    </span>
-  );
 }

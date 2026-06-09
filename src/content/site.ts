@@ -1,4 +1,4 @@
-import healthyPetLogo from "@/assets/HealthyPet_Logo_Web.png";
+import healthyPetLogo from "@/assets/healthy_pet_logo.svg";
 import nutribestPuppy from "@/assets/Nutribest-Puppy-with-Chicken-and-Rice-3kg.jpg";
 import picartSalmonMenu from "@/assets/Picart-Select-ADULT-GRAIN-FREE-Salmon-Menu.jpg";
 import aboutImage from "@/assets/about.jpg";
@@ -90,14 +90,15 @@ export const siteContent: SiteContent = {
     { day: "Sunday", label: "Sunday", ranges: [] },
   ],
   navigation: [
-    { label: "Care", href: "/#care" },
     { label: "Services", href: "/services" },
+    { label: "About", href: "/#about" },
+    { label: "Approach", href: "/#approach" },
     { label: "Products", href: "/#products" },
     { label: "FAQ", href: "/#faq" },
     { label: "Contact", href: "/#contact" },
   ],
   hero: {
-    eyebrow: "Veterinary care in Agios Athanasios, Limassol",
+    eyebrow: "",
     title: "Established care for the companions you love.",
     body: "Veterinary medicine, physiotherapy, preventive care, diagnostics, and everyday support from Dr. Avgoustinos Theodorou.",
     primaryCta: { label: "Call Now", href: "tel:+35725101352" },

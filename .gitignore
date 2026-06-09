@@ -26,7 +26,6 @@ coverage/
 
 # Unused large local logo source kept outside git unless needed
 src/assets/HealthyPet_Logo.svg
-src/assets/healthy_pet_logo.svg
 PERSONALIZATION_CHECKLIST.md
 
 # Wrangler / Cloudflare

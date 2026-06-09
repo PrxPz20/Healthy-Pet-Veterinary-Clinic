@@ -1,5 +1,5 @@
 import { getSiteContent } from "@/content/provider";
-import { LogoMark } from "./Icons";
+import logoUrl from "@/assets/healthy_pet_logo_white.svg";
 
 export function Footer() {
   const { clinic, navigation, services } = getSiteContent();
@@ -13,10 +13,11 @@ export function Footer() {
       <div className="mx-auto max-w-7xl px-5 pb-32 pt-16 sm:px-8 md:pb-16">
         <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
           <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-3">
-              <LogoMark className="h-10 w-10" />
-              <span className="font-display text-lg font-black">{clinic.name}</span>
-            </div>
+            <img
+              src={logoUrl}
+              alt="Healthy Pet Veterinary Clinic"
+              className="h-16 w-auto max-w-[260px] object-contain"
+            />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
               {clinic.tagline} Located in {clinic.address.city}, Cyprus.
             </p>
