@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Menu, Phone, X } from "lucide-react";
 import {
   AnimatePresence,
@@ -17,11 +17,7 @@ export function Nav() {
   const [open, setOpen] = useState(false);
   const reduceMotion = useReducedMotion();
   const { scrollY } = useScroll();
-  const isHome = useMemo(() => {
-    if (typeof window === "undefined") return true;
-    return window.location.pathname === "/";
-  }, []);
-  const compact = scrolled || !isHome;
+  const compact = scrolled;
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const next = latest > 40;
@@ -40,8 +36,8 @@ export function Nav() {
         transition={reduceMotion ? { duration: 0 } : layoutSpring}
         className={`relative mx-auto flex items-center justify-between gap-3 border transition-colors duration-300 ${
           compact
-            ? "mt-4 h-14 w-[min(94vw,56rem)] rounded-full border-white/10 bg-ink/92 px-3 shadow-[0_14px_38px_-22px_rgba(24,26,28,0.72)] backdrop-blur-xl md:px-5"
-            : "h-20 max-w-none rounded-none border-transparent bg-transparent px-5 shadow-none sm:px-8 lg:px-12"
+            ? "mt-4 h-16 w-[min(96vw,76rem)] rounded-full border-white/10 bg-ink/92 px-4 shadow-[0_14px_38px_-22px_rgba(24,26,28,0.72)] backdrop-blur-xl md:px-6"
+            : "h-[5.25rem] max-w-none rounded-none border-transparent bg-transparent px-5 shadow-none sm:px-8 lg:px-12"
         }`}
       >
         <a
@@ -56,12 +52,12 @@ export function Nav() {
           />
         </a>
 
-        <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-2 lg:flex">
+        <nav className="absolute left-1/2 hidden max-w-[calc(100%-31rem)] -translate-x-1/2 items-center justify-center gap-1 overflow-hidden xl:flex 2xl:gap-2">
           {navigation.map((l) => (
             <a
               key={l.href}
               href={l.href}
-              className={`focus-ring focus-ring-dark rounded-full px-3 py-2 text-sm font-semibold transition-colors duration-200 ${
+              className={`focus-ring focus-ring-dark whitespace-nowrap rounded-full px-2.5 py-2 text-[0.82rem] font-semibold transition-colors duration-200 2xl:px-3 2xl:text-sm ${
                 compact
                   ? "text-white/70 hover:bg-white/8 hover:text-white"
                   : "text-white/86 hover:text-white"
@@ -85,7 +81,7 @@ export function Nav() {
             aria-controls="mobile-navigation"
             aria-expanded={open}
             onClick={() => setOpen((v) => !v)}
-            className="focus-ring focus-ring-dark grid min-h-11 min-w-11 place-items-center rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white lg:hidden"
+            className="focus-ring focus-ring-dark grid min-h-11 min-w-11 place-items-center rounded-full p-2 text-white/80 transition hover:bg-white/10 hover:text-white xl:hidden"
           >
             {open ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </button>

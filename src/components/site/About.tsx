@@ -9,7 +9,7 @@ export function About() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-start gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <Reveal>
-            <div className="eyebrow">About the clinic</div>
+            <div className="eyebrow">ABOUT THE CLINIC</div>
             <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,4.5vw,3.8rem)] font-black leading-[1.02]">
               {about.heading}
             </h2>

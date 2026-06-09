@@ -71,7 +71,11 @@ export function buildFaqSchema(items: FaqItem[]) {
   };
 }
 
-export function buildBreadcrumbSchema(siteUrl: string) {
+export function buildBreadcrumbSchema(
+  siteUrl: string,
+  currentName = "Veterinary Services",
+  currentPath = "/services",
+) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -85,8 +89,8 @@ export function buildBreadcrumbSchema(siteUrl: string) {
       {
         "@type": "ListItem",
         position: 2,
-        name: "Veterinary Services",
-        item: `${siteUrl}/services`,
+        name: currentName,
+        item: `${siteUrl}${currentPath}`,
       },
     ],
   };

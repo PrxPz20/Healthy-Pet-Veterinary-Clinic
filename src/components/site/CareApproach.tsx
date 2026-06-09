@@ -17,7 +17,7 @@ export function CareApproach() {
     <section id="approach" ref={ref} className="relative bg-ink py-20 text-white md:py-28">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
-          <div className="eyebrow text-sage-light">Care approach</div>
+          <div className="eyebrow text-sage-light">CARE APPROACH</div>
           <h2 className="mt-3 max-w-lg text-balance font-display text-[clamp(2.1rem,4.5vw,3.7rem)] font-black leading-[1.02]">
             Built for prevention, not panic.
           </h2>

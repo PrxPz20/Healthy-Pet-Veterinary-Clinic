@@ -51,3 +51,4 @@ PERSONALIZATION_CHECKLIST.md
 *.njsproj
 *.sln
 *.sw?
+.vercel

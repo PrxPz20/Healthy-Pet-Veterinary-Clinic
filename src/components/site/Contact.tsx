@@ -29,83 +29,83 @@ export function Contact() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow text-sage-light">Visit, call, message</div>
+            <div className="eyebrow text-sage-light">FIND US</div>
             <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
-              Speak with the clinic before you visit.
+              In Limassol, when you need us.
             </h2>
             <p className="mt-5 max-w-xl leading-relaxed text-white/72">
               Call or send a WhatsApp message for guidance, visit timing, product questions, or next
               steps for your pet's symptoms.
             </p>
           </div>
-
-          <ul className="mt-9 grid gap-4 text-sm md:grid-cols-2">
-            {rows.map((row) => (
-              <li key={row.label} className="flex items-start gap-4">
-                <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/12 bg-white/6 text-sage-light">
-                  <row.icon className="h-4 w-4" />
-                </div>
-                <div>
-                  <div className="text-xs font-bold text-white/55">{row.label}</div>
-                  <div className="mt-1 text-white/92">{row.value}</div>
-                </div>
-              </li>
-            ))}
-          </ul>
         </Reveal>
 
-        <div className="mt-8 grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:gap-14">
+        <div className="mt-10 grid gap-x-14 gap-y-10 lg:grid-cols-[0.9fr_1.1fr] lg:grid-rows-[auto_auto] lg:gap-y-0">
           <Reveal>
-            <div className="flex flex-wrap gap-3">
-              <a
-                href={hero.primaryCta.href}
-                className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"
-              >
-                <Phone className="h-4 w-4" />
-                {hero.primaryCta.label}
-              </a>
-              <a
-                href={hero.secondaryCta.href}
-                target="_blank"
-                rel="noreferrer"
-                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
-              >
-                <MessageCircle className="h-4 w-4" />
-                {hero.secondaryCta.label}
-              </a>
-            </div>
-          </Reveal>
+            <div>
+              <ul className="grid gap-4 text-sm md:grid-cols-2 lg:grid-cols-1">
+                {rows.map((row) => (
+                  <li key={row.label} className="flex items-start gap-4">
+                    <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/12 bg-white/6 text-sage-light">
+                      <row.icon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-white/55">{row.label}</div>
+                      <div className="mt-1 text-white/92">{row.value}</div>
+                    </div>
+                  </li>
+                ))}
+              </ul>
 
-          <Reveal delay={0.1}>
-            <div className="overflow-hidden rounded-3xl border border-white/12 bg-white/5">
-              <iframe
-                title={`${clinic.name} map`}
-                src={clinic.mapEmbedUrl}
-                loading="lazy"
-                className="h-[420px] w-full border-0 grayscale"
-                referrerPolicy="no-referrer-when-downgrade"
-              />
-              <div className="flex flex-col gap-3 border-t border-white/12 p-5 sm:flex-row sm:items-center sm:justify-between">
-                <div>
-                  <div className="font-display text-xl font-black">
-                    {clinic.address.city}, Cyprus
-                  </div>
-                  <p className="mt-1 text-sm text-white/68">
-                    {clinic.address.street}, {clinic.address.postalCode}
-                  </p>
-                </div>
+              <div className="mt-9 flex flex-wrap gap-3">
                 <a
-                  href={clinic.mapUrl}
+                  href={hero.primaryCta.href}
+                  className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"
+                >
+                  <Phone className="h-4 w-4" />
+                  {hero.primaryCta.label}
+                </a>
+                <a
+                  href={hero.secondaryCta.href}
                   target="_blank"
                   rel="noreferrer"
-                  className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-colors duration-200 hover:bg-clinic"
+                  className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
                 >
-                  Open Map
-                  <MapPin className="h-4 w-4" />
+                  <MessageCircle className="h-4 w-4" />
+                  {hero.secondaryCta.label}
                 </a>
               </div>
             </div>
           </Reveal>
+
+          <div className="lg:contents">
+            <div className="relative h-[360px] overflow-hidden rounded-t-3xl border border-b-0 border-white/12 bg-white/5 lg:col-start-2 lg:row-start-1 lg:h-auto lg:min-h-0">
+              <iframe
+                title={`${clinic.name} map`}
+                src={clinic.mapEmbedUrl}
+                loading="lazy"
+                className="absolute inset-0 h-full w-full border-0 grayscale"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+            <div className="flex flex-col gap-3 rounded-b-3xl border border-white/12 bg-white/5 p-5 sm:flex-row sm:items-center sm:justify-between lg:col-start-2 lg:row-start-2">
+              <div>
+                <div className="font-display text-xl font-black">{clinic.address.city}, Cyprus</div>
+                <p className="mt-1 text-sm text-white/68">
+                  {clinic.address.street}, {clinic.address.postalCode}
+                </p>
+              </div>
+              <a
+                href={clinic.mapUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-colors duration-200 hover:bg-clinic"
+              >
+                Open Map
+                <MapPin className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </section>

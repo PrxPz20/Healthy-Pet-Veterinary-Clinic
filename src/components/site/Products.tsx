@@ -9,13 +9,13 @@ export function Products() {
     <section id="products" className="bg-clinic py-20 text-ink md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="max-w-3xl">
-          <div className="eyebrow">Food and essentials</div>
+          <div className="eyebrow">FOOD AND ESSENTIALS</div>
           <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
-            Recommended items, redirected to delivery apps.
+            Food and care we trust <br />— delivered to your door.
           </h2>
           <p className="mt-5 max-w-2xl leading-relaxed text-ink/66">
-            The clinic can highlight useful food and care items here, with links that send owners to
-            external delivery apps when available.
+            We curate a small selection of food and everyday care that we use and recommend. Order
+            through Wolt or Foody for same-day delivery in Limassol.
           </p>
         </Reveal>
 

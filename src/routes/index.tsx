@@ -4,6 +4,8 @@ import { Hero } from "@/components/site/Hero";
 import { Services } from "@/components/site/Services";
 import { About } from "@/components/site/About";
 import { CareApproach } from "@/components/site/CareApproach";
+import { Gallery } from "@/components/site/Gallery";
+import { Cases } from "@/components/site/Cases";
 import { Products } from "@/components/site/Products";
 import { Faq } from "@/components/site/Faq";
 import { Contact } from "@/components/site/Contact";
@@ -44,6 +46,8 @@ function Page() {
       <Services />
       <About />
       <CareApproach />
+      <Gallery />
+      <Cases />
       <Products />
       <Faq />
       <Contact />

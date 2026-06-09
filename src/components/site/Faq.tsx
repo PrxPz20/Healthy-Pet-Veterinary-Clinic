@@ -14,7 +14,7 @@ export function Faq() {
     <section id="faq" className="relative bg-white py-20 text-ink md:py-28">
       <div className="mx-auto max-w-4xl px-5 sm:px-8">
         <Reveal>
-          <div className="eyebrow">Questions</div>
+          <div className="eyebrow">FAQ</div>
           <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
             Direct answers before you call.
           </h2>

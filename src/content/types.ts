@@ -72,6 +72,25 @@ export type Product = {
   };
 };
 
+export type GalleryItem = {
+  slug: string;
+  title: string;
+  description: string;
+  image: ImageAsset;
+  orientation?: "portrait" | "landscape" | "square";
+};
+
+export type CaseItem = {
+  id: string;
+  title: string;
+  description: string;
+  category?: string;
+  image: ImageAsset;
+  isSensitive: boolean;
+  homepagePreview?: boolean;
+  orientation?: "portrait" | "landscape" | "square";
+};
+
 export type FaqItem = {
   question: string;
   answer: string;
@@ -112,10 +131,14 @@ export type SiteContent = {
     title: string;
     body: string;
   }[];
+  gallery: GalleryItem[];
+  cases: CaseItem[];
   products: Product[];
   faqs: FaqItem[];
   seo: {
     home: SeoMeta;
     services: SeoMeta;
+    gallery: SeoMeta;
+    cases: SeoMeta;
   };
 };
