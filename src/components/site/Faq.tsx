@@ -6,7 +6,7 @@ import { getSiteContent } from "@/content/provider";
 import { quickTransition } from "@/lib/motion";
 
 export function Faq() {
-  const { faqs } = getSiteContent();
+  const { faqs, homepage } = getSiteContent();
   const [open, setOpen] = useState<number | null>(0);
   const reduceMotion = useReducedMotion();
 
@@ -14,9 +14,8 @@ export function Faq() {
     <section id="faq" className="relative bg-white py-20 text-ink md:py-28">
       <div className="mx-auto max-w-4xl px-5 sm:px-8">
         <Reveal>
-          <div className="eyebrow">FAQ</div>
-          <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
-            Direct answers before you call.
+          <h2 className="text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
+            {homepage.faq.heading}
           </h2>
         </Reveal>
 
@@ -25,7 +24,7 @@ export function Faq() {
             const isOpen = open === i;
             return (
               <Reveal key={it.question} delay={i * 0.04}>
-                <div>
+                <motion.div layout transition={reduceMotion ? { duration: 0 } : quickTransition}>
                   <button
                     aria-expanded={isOpen}
                     aria-controls={`faq-answer-${i}`}
@@ -49,9 +48,9 @@ export function Faq() {
                     {isOpen && (
                       <motion.div
                         id={`faq-answer-${i}`}
-                        initial={reduceMotion ? false : { opacity: 0, y: -4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -4 }}
+                        initial={reduceMotion ? false : { opacity: 0, height: 0, y: -4 }}
+                        animate={{ opacity: 1, height: "auto", y: 0 }}
+                        exit={reduceMotion ? { opacity: 0 } : { opacity: 0, height: 0, y: -4 }}
                         transition={reduceMotion ? { duration: 0 } : quickTransition}
                         className="overflow-hidden"
                       >
@@ -61,7 +60,7 @@ export function Faq() {
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </motion.div>
               </Reveal>
             );
           })}

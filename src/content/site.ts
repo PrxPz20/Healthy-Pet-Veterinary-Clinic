@@ -103,30 +103,81 @@ export const siteContent: SiteContent = {
     { day: "Sunday", label: "Sunday", ranges: [] },
   ],
   navigation: [
-    { label: "Our Care", href: "/#care" },
-    { label: "About", href: "/#about" },
-    { label: "Approach", href: "/#approach" },
+    { label: "Services", href: "/#services" },
+    { label: "Doctor", href: "/#doctor" },
     { label: "Gallery", href: "/#gallery" },
     { label: "Cases", href: "/#cases" },
     { label: "Products", href: "/#products" },
     { label: "FAQ", href: "/#faq" },
-    { label: "Find Us", href: "/#contact" },
+    { label: "Contact", href: "/#contact" },
   ],
   hero: {
     eyebrow: "",
-    title: "Established care for the companions you love.",
-    body: "Veterinary medicine, physiotherapy, preventive care, diagnostics, and everyday support from Dr. Avgoustinos Theodorou.",
+    title: "Veterinary care for the companions you love.",
+    body: "Veterinary medicine, physiotherapy, diagnostics, and preventive care in Agios Athanasios, Limassol.",
     primaryCta: { label: "Call Now", href: "tel:+35725101352" },
     secondaryCta: { label: "WhatsApp", href: "https://wa.me/35795952663", external: true },
   },
+  homepage: {
+    services: {
+      label: "SERVICES",
+      heading: "Veterinary services, delivered with patience.",
+      ctaLabel: "See all care services",
+    },
+    approach: {
+      label: "CARE APPROACH",
+      heading: "Built for prevention, not panic.",
+      body: "The clinic experience is designed around steady communication: what is happening, why it matters, and what owners should do next.",
+    },
+    gallery: {
+      heading: "Real moments from the clinic.",
+      body: "A few familiar faces and everyday clinic moments from Healthy Pet Veterinary Clinic.",
+      ctaLabel: "View gallery",
+    },
+    cases: {
+      heading: "Documented veterinary cases.",
+      body: "Selected case images are shared for educational review. Sensitive media stays protected until the viewer chooses to open it.",
+      ctaLabel: "View cases",
+    },
+    products: {
+      heading: "Pet food and everyday essentials.",
+      body: "A selection of food and care products available through the clinic. Contact the clinic to ask about current availability and suitable options for your pet.",
+      ctaLabel: "Ask about products",
+    },
+    ctaStrip: {
+      heading: "Need help? Call or WhatsApp us.",
+      body: "Speak with the clinic before you visit, ask about your pet's symptoms, or check the next step.",
+    },
+    testimonials: {
+      heading: "What pet owners say.",
+      body: "A few words from pet owners who shared their experience with the clinic.",
+      emptyState: "Testimonials will be added after the clinic approves the reviews.",
+    },
+    faq: {
+      heading: "Direct answers before you call.",
+    },
+    contact: {
+      label: "CONTACT",
+      heading: "Visit Healthy Pet",
+      body: "",
+      mapCtaLabel: "Open map",
+    },
+    servicesCta: { label: "Explore our care", href: "/services" },
+    finalCta: {
+      heading: "Ready to speak with the clinic?",
+      body: "Call or send a WhatsApp message and the clinic will guide you on the next step.",
+    },
+  },
   about: {
-    heading: "A quiet room, a careful hand, and time to listen.",
+    label: "About Us",
+    heading: "Veterinary medicine and physiotherapy in one practice.",
     paragraphs: [
-      "Healthy Pet Veterinary Clinic was established by Dr. Avgoustinos Theodorou, who has been educated and specialised in both Veterinary Medicine and Veterinary Physiotherapy.",
-      "Dr. Avgoustinos is a Russian-speaking doctor, also fluent in Greek and English. He looks forward to helping resolve the matters surrounding your lovely companion with clear communication and careful care.",
+      "Healthy Pet Veterinary Clinic was established by Dr. Avgoustinos Theodorou, who studied Veterinary Medicine and specialised in Veterinary Physiotherapy.",
+      "Dr. Avgoustinos speaks Russian, Greek, and English, helping owners discuss their pet's care clearly and comfortably.",
     ],
     badgeLocation: "Agios Athanasios, Limassol",
     badgeTitle: "Veterinary medicine and physiotherapy.",
+    metrics: [{ label: "Years of experience" }, { label: "Completed cases" }],
   },
   trustPoints: [
     {
@@ -150,10 +201,55 @@ export const siteContent: SiteContent = {
       body: "Communication available in Russian, Greek, and English.",
     },
   ],
+  serviceCategories: [
+    {
+      id: "diagnostics",
+      label: "Diagnostics",
+      description: "Testing and imaging that help the clinic understand what is happening.",
+      serviceSlugs: [
+        "pathology",
+        "laboratory-blood-tests",
+        "ultrasound",
+        "digital-x-ray",
+        "endoscopy",
+      ],
+    },
+    {
+      id: "surgery",
+      label: "Surgery",
+      description: "Surgical care for orthopedic conditions, soft tissues, and recovery planning.",
+      serviceSlugs: ["orthopedic-surgery", "soft-tissue-surgery"],
+    },
+    {
+      id: "skin-care",
+      label: "Skin & Ears",
+      description: "Support for itching, allergies, difficult skin problems, and ear infections.",
+      serviceSlugs: ["dermatology"],
+    },
+    {
+      id: "rehabilitation",
+      label: "Rehabilitation",
+      description: "Physiotherapy, acupuncture, and water-based movement support.",
+      serviceSlugs: ["pet-hydrotherapy", "physiotherapy-acupuncture"],
+    },
+    {
+      id: "daily-care",
+      label: "Daily Care",
+      description: "Everyday hygiene and grooming support for comfort and coat health.",
+      serviceSlugs: ["grooming"],
+    },
+    {
+      id: "shop-products",
+      label: "Pet Shop",
+      description: "Food, accessories, supplements, hygiene products, toys, and essentials.",
+      serviceSlugs: ["pet-shop"],
+    },
+  ],
   services: [
     {
       slug: "pathology",
       icon: "microscope",
+      category: "diagnostics",
       title: "Pathology",
       seoTitle: "Pathology",
       short: "Tissue and fluid analysis to support accurate diagnosis and treatment decisions.",
@@ -164,6 +260,7 @@ export const siteContent: SiteContent = {
     {
       slug: "laboratory-blood-tests",
       icon: "flask-conical",
+      category: "diagnostics",
       title: "Full Laboratory Blood Tests",
       seoTitle: "Full Laboratory Blood Tests",
       short: "CBC and blood chemistry testing to understand your pet's health from the inside.",
@@ -174,6 +271,7 @@ export const siteContent: SiteContent = {
     {
       slug: "orthopedic-surgery",
       icon: "bone",
+      category: "surgery",
       title: "Orthopedic Surgery",
       seoTitle: "Orthopedic Surgery",
       short: "Surgical care for bones, joints, ligaments, muscles, and tendons.",
@@ -184,6 +282,7 @@ export const siteContent: SiteContent = {
     {
       slug: "soft-tissue-surgery",
       icon: "scissors",
+      category: "surgery",
       title: "Soft Tissue Surgery",
       seoTitle: "Soft Tissue Surgery",
       short:
@@ -195,6 +294,7 @@ export const siteContent: SiteContent = {
     {
       slug: "dermatology",
       icon: "activity",
+      category: "skin-care",
       title: "Dermatology",
       seoTitle: "Dermatology",
       short: "Diagnosis and treatment for allergies, skin disease, itching, and ear infections.",
@@ -205,6 +305,7 @@ export const siteContent: SiteContent = {
     {
       slug: "ultrasound",
       icon: "microscope",
+      category: "diagnostics",
       title: "Ultrasound",
       seoTitle: "Ultrasound",
       short: "Safe, non-invasive imaging to view internal body structures and organs.",
@@ -215,6 +316,7 @@ export const siteContent: SiteContent = {
     {
       slug: "digital-x-ray",
       icon: "scan-line",
+      category: "diagnostics",
       title: "Digital X-Ray",
       seoTitle: "Digital X-Ray",
       short: "Digital radiology for examining bones, joints, organs, injuries, and recovery.",
@@ -225,6 +327,7 @@ export const siteContent: SiteContent = {
     {
       slug: "pet-hydrotherapy",
       icon: "waves",
+      category: "rehabilitation",
       title: "Pet Hydrotherapy",
       seoTitle: "Pet Hydrotherapy",
       short:
@@ -236,6 +339,7 @@ export const siteContent: SiteContent = {
     {
       slug: "physiotherapy-acupuncture",
       icon: "heart-pulse",
+      category: "rehabilitation",
       title: "Pet Physiotherapy & Acupuncture",
       seoTitle: "Pet Physiotherapy & Acupuncture",
       short:
@@ -247,6 +351,7 @@ export const siteContent: SiteContent = {
     {
       slug: "endoscopy",
       icon: "camera",
+      category: "diagnostics",
       title: "Endoscopy",
       seoTitle: "Endoscopy",
       short: "Minimally invasive examination of internal organs and body cavities.",
@@ -257,6 +362,7 @@ export const siteContent: SiteContent = {
     {
       slug: "grooming",
       icon: "scissors",
+      category: "daily-care",
       title: "Grooming",
       seoTitle: "Grooming",
       short: "Hygienic care and cleaning to support comfort, coat health, and appearance.",
@@ -267,6 +373,7 @@ export const siteContent: SiteContent = {
     {
       slug: "pet-shop",
       icon: "package",
+      category: "shop-products",
       title: "Pet Shop",
       seoTitle: "Pet Shop",
       short:
@@ -450,65 +557,86 @@ export const siteContent: SiteContent = {
     {
       name: "Nutribest Puppy with Chicken and Rice 3kg",
       category: "Puppy food",
-      description:
-        "Complete puppy food with chicken and rice, available through the clinic product selection.",
+      description: "Nutribest puppy food with chicken and rice in a 3kg bag.",
       image: {
         src: nutribestPuppy,
         alt: "Nutribest Puppy with Chicken and Rice 3kg pet food bag",
       },
-      links: {
-        wolt: "https://wolt.com/",
-        foody: "https://www.foody.com.cy/",
-      },
+      links: {},
     },
     {
       name: "Picart Select Adult Grain Free Salmon Menu",
       category: "Adult dog food",
-      description:
-        "Adult grain-free salmon menu for dogs, available through the clinic product selection.",
+      description: "Picart Select grain-free salmon menu for adult dogs.",
       image: {
         src: picartSalmonMenu,
         alt: "Picart Select Adult Grain Free Salmon Menu pet food bag",
       },
-      links: {
-        wolt: "https://wolt.com/",
-        foody: "https://www.foody.com.cy/",
-      },
+      links: {},
     },
     {
       name: "Profine Dog Adult Small Chicken & Potatoes 2kg",
       category: "Small dog food",
-      description:
-        "Chicken and potatoes adult food for small dogs, available through the clinic product selection.",
+      description: "Profine chicken and potatoes food for adult small dogs in a 2kg bag.",
       image: {
         src: profineSmallDog,
         alt: "Profine Dog Adult Small Chicken and Potatoes 2kg pet food bag",
       },
-      links: {
-        wolt: "https://wolt.com/",
-        foody: "https://www.foody.com.cy/",
-      },
+      links: {},
     },
     {
       name: "Royal Canin Vet Care Starter Small Dog 1.5kg",
       category: "Veterinary nutrition",
-      description:
-        "Starter nutrition for small dogs from Royal Canin Vet Care, available through the clinic product selection.",
+      description: "Royal Canin Vet Care starter food for small dogs in a 1.5kg bag.",
       image: {
         src: royalCaninStarter,
         alt: "Royal Canin Vet Care Starter Small Dog 1.5kg pet food bag",
       },
-      links: {
-        wolt: "https://wolt.com/",
-        foody: "https://www.foody.com.cy/",
-      },
+      links: {},
+    },
+  ],
+  testimonials: [
+    {
+      name: "Andonis",
+      rating: 5,
+      text: "Very experienced vet, great approach, very friendly and smooth with the dog, made it feel very calm and comfortable. Generally very happy and if you care about your pet to take it to a good vet, I recommend him.",
+    },
+    {
+      name: "Yiannis",
+      rating: 5,
+      text: "A small clinic but very helpful! My dog was not eating at the time, and I had no idea what the reason could be. I took him to the clinic and they were very patient with him and tried different things to determine why he had lost his appetite. They were very attentive and I could tell they have a lot of love for animals and that made me trust them. I would recommend them!",
+    },
+    {
+      name: "Дмитрий",
+      rating: 5,
+      text: "I think the Russian storyteller Chukovsky could take the example of Dr. Abolit from Dr. Avgustinos. A very attentive and helpful doctor, always surrounded by cats. Speaks Russian well. My highest recommendations. We have sterilized our cat and regularly carry out the necessary vaccinations with him.",
+    },
+    {
+      name: "Anna",
+      rating: 5,
+      text: "Fantastic service, open and informative communication about my cats condition, his diagnosis and prognosis and professional approach to future treatment. He saved our little baby Lucy for a certain death! It was a miracle! Dr. Augoustinos is very knowledgeable and offers detail explanations and practical advice. I was surprised how much he loves his job and animals. His experience shows and instills confidence!",
+    },
+    {
+      name: "Dia",
+      rating: 5,
+      text: "The service at this clinic is exceptional! Dr Avgoustinos is a very knowledgeable, experienced and caring vet. He has treated my dog with great care and genuine concern. He is open to questions and explains everything you need to know in detail. Highly recommended!",
+    },
+    {
+      name: "Alisa",
+      rating: 5,
+      text: "Great doctor, very empathetic and helped us with our adopted kitten!",
+    },
+    {
+      name: "Yulia",
+      rating: 5,
+      text: "Thanks a lot for your care and attention to our dog Shibi!",
     },
   ],
   faqs: [
     {
-      question: "Do I need an appointment to visit the clinic?",
+      question: "How can I contact the clinic before visiting?",
       answer:
-        "Call or send a WhatsApp message before visiting. The team will tell you the best time to come in and whether your pet needs urgent attention.",
+        "Call +357 25 101352 or send a WhatsApp message to +357 95 952663 during working hours to ask about visit timing.",
     },
     {
       question: "What veterinary services are available in Limassol?",
@@ -518,7 +646,7 @@ export const siteContent: SiteContent = {
     {
       question: "Can I ask about pet food before buying?",
       answer:
-        "Yes. Food guidance should match your pet's age, health, digestion, weight, and lifestyle. When suitable, product links can send you to Wolt or Foody.",
+        "Yes. Contact the clinic to ask about current product availability and options suited to your pet's age and needs.",
     },
     {
       question: "What should I bring to a first visit?",

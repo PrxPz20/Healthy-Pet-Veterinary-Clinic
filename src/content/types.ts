@@ -51,14 +51,73 @@ export type HeroContent = {
   secondaryCta: Cta;
 };
 
+export type HomepageContent = {
+  services: {
+    label: string;
+    heading: string;
+    ctaLabel: string;
+  };
+  approach: {
+    label: string;
+    heading: string;
+    body: string;
+  };
+  gallery: {
+    heading: string;
+    body: string;
+    ctaLabel: string;
+  };
+  cases: {
+    heading: string;
+    body: string;
+    ctaLabel: string;
+  };
+  products: {
+    heading: string;
+    body: string;
+    ctaLabel: string;
+  };
+  ctaStrip: {
+    heading: string;
+    body: string;
+  };
+  testimonials: {
+    heading: string;
+    body: string;
+    emptyState: string;
+  };
+  faq: {
+    heading: string;
+  };
+  contact: {
+    label: string;
+    heading: string;
+    body: string;
+    mapCtaLabel: string;
+  };
+  servicesCta: Cta;
+  finalCta: {
+    heading: string;
+    body: string;
+  };
+};
+
 export type Service = {
   slug: string;
   icon: string;
+  category: string;
   title: string;
   seoTitle: string;
   short: string;
   detail: string;
   highlights: string[];
+};
+
+export type ServiceCategory = {
+  id: string;
+  label: string;
+  description: string;
+  serviceSlugs: string[];
 };
 
 export type Product = {
@@ -96,6 +155,12 @@ export type FaqItem = {
   answer: string;
 };
 
+export type Testimonial = {
+  name: string;
+  rating: 5;
+  text: string;
+};
+
 export type SeoMeta = {
   title: string;
   description: string;
@@ -114,17 +179,25 @@ export type SiteContent = {
   openingHours: OpeningHour[];
   navigation: Cta[];
   hero: HeroContent;
+  homepage: HomepageContent;
   about: {
+    label: string;
     heading: string;
     paragraphs: string[];
     badgeLocation: string;
     badgeTitle: string;
+    metrics: {
+      label: string;
+      value?: number;
+      suffix?: string;
+    }[];
   };
   trustPoints: {
     icon: string;
     title: string;
     body: string;
   }[];
+  serviceCategories: ServiceCategory[];
   services: Service[];
   approach: {
     step: string;
@@ -134,6 +207,7 @@ export type SiteContent = {
   gallery: GalleryItem[];
   cases: CaseItem[];
   products: Product[];
+  testimonials: Testimonial[];
   faqs: FaqItem[];
   seo: {
     home: SeoMeta;

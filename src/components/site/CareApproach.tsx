@@ -4,27 +4,24 @@ import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 
 export function CareApproach() {
-  const { approach, media } = getSiteContent();
+  const { approach, homepage, media } = getSiteContent();
   const ref = useRef<HTMLElement>(null);
   const reduceMotion = useReducedMotion();
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start center", "end center"],
   });
-  const progressHeight = useTransform(scrollYProgress, [0, 1], ["0%", "100%"]);
+  const progressScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
 
   return (
     <section id="approach" ref={ref} className="relative bg-ink py-20 text-white md:py-28">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
-          <div className="eyebrow text-sage-light">CARE APPROACH</div>
+          <div className="eyebrow text-sage-light">{homepage.approach.label}</div>
           <h2 className="mt-3 max-w-lg text-balance font-display text-[clamp(2.1rem,4.5vw,3.7rem)] font-black leading-[1.02]">
-            Built for prevention, not panic.
+            {homepage.approach.heading}
           </h2>
-          <p className="mt-5 max-w-md leading-relaxed text-white/72">
-            The clinic experience is designed around steady communication: what is happening, why it
-            matters, and what owners should do next.
-          </p>
+          <p className="mt-5 max-w-md leading-relaxed text-white/72">{homepage.approach.body}</p>
           <div className="mt-8 overflow-hidden rounded-3xl">
             <img
               src={media.care.src}
@@ -40,8 +37,8 @@ export function CareApproach() {
         <div className="relative">
           <div className="absolute left-5 top-0 h-full w-px bg-white/12" />
           <motion.div
-            className="absolute left-5 top-0 w-px origin-top bg-vet-green"
-            style={{ height: reduceMotion ? "100%" : progressHeight }}
+            className="absolute left-5 top-0 h-full w-px origin-top bg-vet-green"
+            style={{ scaleY: reduceMotion ? 1 : progressScale }}
           />
           <div className="space-y-8">
             {approach.map((item, index) => (

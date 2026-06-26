@@ -7,79 +7,33 @@ import {
   useTransform,
 } from "framer-motion";
 import { useEffect, useRef, type ReactNode } from "react";
-import { ease, fadeUp, stagger } from "@/lib/motion";
+import { ease } from "@/lib/motion";
 
 export function Reveal({
   children,
   className,
-  delay = 0,
-  y = 24,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   y?: number;
 }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
-  return (
-    <motion.div
-      className={className}
-      variants={fadeUp}
-      custom={{ delay, y }}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, margin: "-80px" }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 export function StaggerGroup({
   children,
   className,
-  amount = 0.2,
 }: {
   children: ReactNode;
   className?: string;
   amount?: number;
 }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
-  return (
-    <motion.div
-      className={className}
-      variants={stagger}
-      initial="hidden"
-      whileInView="show"
-      viewport={{ once: true, amount }}
-    >
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
-  const reduceMotion = useReducedMotion();
-
-  if (reduceMotion) {
-    return <div className={className}>{children}</div>;
-  }
-
-  return (
-    <motion.div className={className} variants={fadeUp}>
-      {children}
-    </motion.div>
-  );
+  return <div className={className}>{children}</div>;
 }
 
 export function CountUp({

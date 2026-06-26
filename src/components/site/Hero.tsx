@@ -1,11 +1,26 @@
+import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { ChevronDown, Microscope, Phone } from "lucide-react";
 import { getSiteContent } from "@/content/provider";
 import { ease, softTransition } from "@/lib/motion";
 
 export function Hero() {
-  const { hero, media } = getSiteContent();
+  const { hero, homepage, media } = getSiteContent();
   const reduceMotion = useReducedMotion();
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (reduceMotion) {
+      video.pause();
+      video.currentTime = 0;
+      return;
+    }
+
+    void video.play().catch(() => undefined);
+  }, [reduceMotion]);
 
   return (
     <section
@@ -26,27 +41,28 @@ export function Hero() {
           loading="eager"
         />
         <video
+          ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover object-[58%_center] md:object-center"
-          autoPlay
           muted
           loop
           playsInline
+          preload="metadata"
           poster={media.heroPoster.src}
-          aria-label={media.heroPoster.alt}
+          aria-hidden="true"
         >
           <source src={media.heroVideo} type="video/mp4" />
         </video>
       </motion.div>
 
-      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(24,26,28,0.9)_0%,rgba(24,26,28,0.7)_38%,rgba(24,26,28,0.25)_72%,rgba(24,26,28,0.48)_100%)]" />
-      <div className="absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(0deg,#181A1C_0%,rgba(24,26,28,0)_100%)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(24,26,28,0.78)_0%,rgba(24,26,28,0.58)_38%,rgba(24,26,28,0.14)_72%,rgba(24,26,28,0.34)_100%)]" />
+      <div className="absolute inset-x-0 bottom-0 h-44 bg-[linear-gradient(0deg,rgba(24,26,28,0.92)_0%,rgba(24,26,28,0)_100%)]" />
 
       <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-28 pt-28 sm:px-8 md:pb-24 md:pt-28">
         <motion.h1
           initial={reduceMotion ? false : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reduceMotion ? { duration: 0 } : { ...softTransition, delay: 0.22 }}
-          className="max-w-[20.5rem] text-balance font-display text-[clamp(2.1rem,9vw,5.75rem)] font-black leading-[1] text-white sm:max-w-4xl md:leading-[0.94]"
+          className="max-w-[21rem] text-balance font-display text-[clamp(2.1rem,7.8vw,4.8rem)] font-black leading-[1] text-white sm:max-w-5xl md:leading-[0.96]"
         >
           {hero.title}
         </motion.h1>
@@ -74,17 +90,17 @@ export function Hero() {
             {hero.primaryCta.label}
           </a>
           <a
-            href="/services"
+            href={homepage.servicesCta.href}
             className="focus-ring focus-ring-dark group inline-flex min-h-11 items-center gap-2 rounded-full border border-white/28 bg-white/8 px-7 py-3.5 text-sm font-bold text-white shadow-[0_8px_18px_-16px_rgba(255,255,255,0.42)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/42 hover:bg-white/14"
           >
             <Microscope className="h-4 w-4" />
-            Explore our care
+            {homepage.servicesCta.label}
           </a>
         </motion.div>
       </div>
 
       <motion.a
-        href="#care"
+        href="#services"
         initial={reduceMotion ? false : { opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={reduceMotion ? { duration: 0 } : { ...softTransition, delay: 0.68 }}

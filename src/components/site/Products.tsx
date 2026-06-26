@@ -1,22 +1,18 @@
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, MessageCircle } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 
 export function Products() {
-  const { products } = getSiteContent();
+  const { clinic, homepage, products } = getSiteContent();
 
   return (
     <section id="products" className="bg-clinic py-20 text-ink md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="max-w-3xl">
-          <div className="eyebrow">FOOD AND ESSENTIALS</div>
-          <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
-            Food and care we trust <br />— delivered to your door.
+          <h2 className="text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
+            {homepage.products.heading}
           </h2>
-          <p className="mt-5 max-w-2xl leading-relaxed text-ink/66">
-            We curate a small selection of food and everyday care that we use and recommend. Order
-            through Wolt or Foody for same-day delivery in Limassol.
-          </p>
+          <p className="mt-5 max-w-2xl leading-relaxed text-ink/66">{homepage.products.body}</p>
         </Reveal>
 
         <StaggerGroup className="mt-10 grid grid-cols-1 gap-5 md:mt-12 sm:grid-cols-2 lg:grid-cols-4">
@@ -30,7 +26,7 @@ export function Products() {
                     loading="lazy"
                     width={900}
                     height={675}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
                   />
                 </div>
                 <div className="flex flex-col p-5 md:p-6">
@@ -39,35 +35,49 @@ export function Products() {
                   <p className="mt-3 flex-1 text-sm leading-relaxed text-ink/62">
                     {product.description}
                   </p>
-                  <div className="mt-5 flex flex-wrap gap-2">
-                    {product.links.wolt && (
-                      <a
-                        href={product.links.wolt}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-xs font-bold text-white transition-colors duration-200 hover:bg-vet-green"
-                      >
-                        Wolt
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
-                    )}
-                    {product.links.foody && (
-                      <a
-                        href={product.links.foody}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line bg-white px-4 py-2.5 text-xs font-bold text-ink transition-colors duration-200 hover:border-vet-green hover:text-vet-green"
-                      >
-                        Foody
-                        <ExternalLink className="h-3.5 w-3.5" />
-                      </a>
-                    )}
-                  </div>
+                  {(product.links.wolt || product.links.foody) && (
+                    <div className="mt-5 flex flex-wrap gap-2">
+                      {product.links.wolt && (
+                        <a
+                          href={product.links.wolt}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-xs font-bold text-white transition-colors duration-200 hover:bg-vet-green"
+                        >
+                          Wolt
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+                      {product.links.foody && (
+                        <a
+                          href={product.links.foody}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="focus-ring inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line bg-white px-4 py-2.5 text-xs font-bold text-ink transition-colors duration-200 hover:border-vet-green hover:text-vet-green"
+                        >
+                          Foody
+                          <ExternalLink className="h-3.5 w-3.5" />
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               </article>
             </StaggerItem>
           ))}
         </StaggerGroup>
+
+        <Reveal className="mt-8">
+          <a
+            href={clinic.whatsapp}
+            target="_blank"
+            rel="noreferrer"
+            className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
+          >
+            <MessageCircle className="h-4 w-4" aria-hidden="true" />
+            {homepage.products.ctaLabel}
+          </a>
+        </Reveal>
       </div>
     </section>
   );

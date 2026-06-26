@@ -32,17 +32,18 @@ export function CaseCard({
   allowReveal = true,
 }: CaseCardProps) {
   const reduceMotion = useReducedMotion();
-  const cardClass = `group block min-w-0 overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] transition-colors duration-300 hover:border-vet-green/35 ${className}`;
+  const cardClass = `group flex min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] transition-colors duration-300 hover:border-vet-green/35 ${className}`;
+  const aspectClass = allowReveal ? imageAspect(item.orientation) : "aspect-[4/3]";
   const content = (
-    <figure>
+    <figure className="flex h-full flex-col">
       <SensitiveImage
         image={item.image}
         isSensitive={item.isSensitive}
         priority={priority}
         allowReveal={allowReveal}
-        className={imageAspect(item.orientation)}
+        className={aspectClass}
       />
-      <figcaption className="p-5 sm:p-6">
+      <figcaption className="flex flex-1 p-5 sm:p-6">
         <div className="flex items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">

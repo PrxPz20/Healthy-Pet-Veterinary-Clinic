@@ -1,11 +1,11 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { ArrowRight, MessageCircle, Phone } from "lucide-react";
-import { Reveal } from "@/components/anim";
+import { MessageCircle, Phone } from "lucide-react";
+import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { Footer } from "@/components/site/Footer";
 import { Nav } from "@/components/site/Nav";
+import { ServiceDetailCard } from "@/components/site/ServiceDetailCard";
 import { getSiteContent } from "@/content/provider";
 import { buildBreadcrumbSchema, buildClinicSchema, JsonLd } from "@/lib/schema";
-import { iconFor } from "@/components/site/Icons";
 
 const content = getSiteContent();
 
@@ -25,10 +25,19 @@ export const Route = createFileRoute("/services")({
 });
 
 function ServicesPage() {
-  const { clinic, services, hero } = content;
+  const { clinic, serviceCategories, services, hero } = content;
+  const servicesBySlug = new Map(services.map((service) => [service.slug, service]));
+  const groupedCategories = serviceCategories
+    .map((category) => ({
+      ...category,
+      services: category.serviceSlugs
+        .map((slug) => servicesBySlug.get(slug))
+        .filter((service): service is (typeof services)[number] => Boolean(service)),
+    }))
+    .filter((category) => category.services.length > 0);
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-clinic text-ink">
+    <main id="main-content" className="min-h-screen overflow-x-hidden bg-clinic text-ink">
       <JsonLd data={buildClinicSchema(content)} />
       <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl)} />
       <Nav />
@@ -51,8 +60,8 @@ function ServicesPage() {
               Services
             </h1>
             <p className="mt-6 max-w-[20.5rem] break-words text-lg leading-relaxed text-white/72 sm:max-w-2xl">
-              Explore diagnostics, laboratory testing, surgery, dermatology, imaging,
-              rehabilitation, grooming, and pet shop support for dogs and cats.
+              Find the clinic's core care, from testing and imaging to surgery, skin care,
+              rehabilitation, grooming, and pet shop support.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <a
@@ -76,58 +85,57 @@ function ServicesPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      <section className="bg-white py-9 text-ink md:py-11">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="grid grid-cols-1 gap-5 md:gap-6">
-            {services.map((service, index) => {
-              const Icon = iconFor(service.icon);
-              return (
-                <article
-                  key={service.slug}
-                  id={service.slug}
-                  className="min-w-0 scroll-mt-28 rounded-3xl border border-line bg-white p-5 sm:p-6 md:p-8"
-                >
-                  <div className="grid min-w-0 gap-7 lg:grid-cols-[0.72fr_1fr] lg:items-start">
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-3">
-                        <span className="grid h-12 w-12 place-items-center rounded-full bg-sage text-vet-green">
-                          <Icon className="h-5 w-5" />
-                        </span>
-                        <span className="font-display text-sm font-black text-vet-green">
-                          {String(index + 1).padStart(2, "0")}
-                        </span>
-                      </div>
-                      <h2 className="mt-6 max-w-[18rem] break-words font-display text-[clamp(1.72rem,7vw,3.25rem)] font-black leading-[1.05] sm:max-w-xl md:leading-[1.02]">
-                        {service.title}
-                      </h2>
-                      <p className="mt-5 max-w-[19rem] break-words leading-relaxed text-ink/64 sm:max-w-xl">
-                        {service.detail}
-                      </p>
-                    </div>
+          <Reveal className="grid gap-7 lg:grid-cols-[0.72fr_1fr] lg:items-center">
+            <div className="min-w-0">
+              <h2 className="font-display text-3xl font-black leading-tight text-ink md:text-5xl">
+                Find the right care.
+              </h2>
+              <p className="mt-4 max-w-xl text-pretty leading-relaxed text-ink/68">
+                Browse by care area, then call or message the clinic if you are unsure which service
+                fits your pet's symptoms.
+              </p>
+            </div>
 
-                    <div className="min-w-0 lg:pt-14">
-                      <ul className="grid min-w-0 gap-3 sm:grid-cols-3">
-                        {service.highlights.map((highlight) => (
-                          <li
-                            key={highlight}
-                            className="min-w-0 rounded-2xl border border-line bg-clinic px-4 py-4 text-sm font-bold leading-snug text-ink/72"
-                          >
-                            {highlight}
-                          </li>
-                        ))}
-                      </ul>
-                      <a
-                        href="/#contact"
-                        className="focus-ring focus-ring-dark group mt-8 hidden min-h-11 items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green sm:inline-flex"
-                      >
-                        Contact about {service.title}
-                        <ArrowRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
-                      </a>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
+            <nav aria-label="Service categories" className="flex min-w-0 flex-wrap gap-2">
+              {groupedCategories.map((category) => (
+                <a
+                  key={category.id}
+                  href={`#${category.id}`}
+                  className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full border border-line bg-clinic px-4 py-2 text-sm font-bold text-ink/74 transition-colors duration-200 hover:border-vet-green/35 hover:bg-sage hover:text-ink"
+                >
+                  {category.label}
+                </a>
+              ))}
+            </nav>
+          </Reveal>
+        </div>
+      </section>
+
+      <section className="py-20 md:py-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+          <div className="space-y-14 md:space-y-20">
+            {groupedCategories.map((category) => (
+              <section key={category.id} id={category.id} className="scroll-mt-28">
+                <Reveal className="max-w-3xl">
+                  <h2 className="font-display text-[clamp(2rem,4vw,3.7rem)] font-black leading-[1.04] text-ink">
+                    {category.label}
+                  </h2>
+                  <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-ink/66">
+                    {category.description}
+                  </p>
+                </Reveal>
+
+                <StaggerGroup className="mt-8 grid grid-cols-1 gap-5 md:mt-10 md:gap-6">
+                  {category.services.map((service) => (
+                    <StaggerItem key={service.slug}>
+                      <ServiceDetailCard service={service} categoryLabel={category.label} />
+                    </StaggerItem>
+                  ))}
+                </StaggerGroup>
+              </section>
+            ))}
           </div>
         </div>
       </section>
@@ -135,10 +143,13 @@ function ServicesPage() {
       <section className="bg-white px-5 py-16 text-ink sm:px-8 md:py-20">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div>
-            <div className="eyebrow">NEED GUIDANCE?</div>
-            <h2 className="mt-2 font-display text-3xl font-black md:text-5xl">
-              Call before you visit.
+            <h2 className="font-display text-3xl font-black md:text-5xl">
+              Not sure what your pet needs?
             </h2>
+            <p className="mt-3 max-w-xl leading-relaxed text-ink/66">
+              Call or send a WhatsApp message before visiting so the clinic can guide you on timing
+              and next steps.
+            </p>
           </div>
           <div className="flex flex-wrap gap-3">
             <a

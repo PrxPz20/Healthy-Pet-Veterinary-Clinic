@@ -4,24 +4,24 @@ import { getSiteContent } from "@/content/provider";
 import { iconFor } from "./Icons";
 
 export function Services() {
-  const { services } = getSiteContent();
+  const { homepage, services } = getSiteContent();
   const featuredServices = services.slice(0, 6);
 
   return (
-    <section id="care" className="relative bg-clinic py-20 text-ink md:py-28">
+    <section id="services" className="relative bg-clinic py-20 text-ink md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="eyebrow">OUR CARE</div>
+            <div className="eyebrow">{homepage.services.label}</div>
             <h2 className="mt-3 max-w-3xl text-balance font-display text-[clamp(2.2rem,5vw,4.2rem)] font-black leading-[1]">
-              Veterinary services, delivered with patience.
+              {homepage.services.heading}
             </h2>
           </div>
           <a
             href="/services"
             className="focus-ring focus-ring-dark group inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
           >
-            View all services
+            {homepage.services.ctaLabel}
             <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
           </a>
         </Reveal>
@@ -58,10 +58,6 @@ export function Services() {
             );
           })}
         </StaggerGroup>
-
-        <Reveal className="mt-6 text-sm font-semibold text-ink/62">
-          Use the button above to see the full list of services.
-        </Reveal>
       </div>
     </section>
   );

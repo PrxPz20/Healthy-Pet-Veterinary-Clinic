@@ -1,15 +1,16 @@
-import { Reveal } from "@/components/anim";
+import { CountUp, Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 
 export function About() {
   const { about, media } = getSiteContent();
+  const confirmedMetrics = about.metrics.filter((metric) => typeof metric.value === "number");
 
   return (
-    <section id="about" className="relative bg-white py-20 text-ink md:py-28">
+    <section id="doctor" className="relative bg-white py-20 text-ink md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-start gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <Reveal>
-            <div className="eyebrow">ABOUT THE CLINIC</div>
+            <div className="eyebrow">{about.label}</div>
             <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,4.5vw,3.8rem)] font-black leading-[1.02]">
               {about.heading}
             </h2>
@@ -18,6 +19,18 @@ export function About() {
                 <p key={paragraph}>{paragraph}</p>
               ))}
             </div>
+            {confirmedMetrics.length > 0 && (
+              <div className="mt-8 grid gap-4 sm:grid-cols-2">
+                {confirmedMetrics.map((metric) => (
+                  <div key={metric.label} className="rounded-3xl border border-line bg-clinic p-5">
+                    <div className="font-display text-4xl font-black text-vet-green">
+                      <CountUp to={metric.value ?? 0} suffix={metric.suffix} />
+                    </div>
+                    <div className="mt-2 text-sm font-bold text-ink/62">{metric.label}</div>
+                  </div>
+                ))}
+              </div>
+            )}
           </Reveal>
 
           <Reveal delay={0.1}>
@@ -28,15 +41,8 @@ export function About() {
                 loading="lazy"
                 width={1280}
                 height={1280}
-                className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.025]"
               />
-              <div className="absolute inset-x-0 bottom-0 h-40 bg-[linear-gradient(0deg,rgba(24,26,28,0.68),rgba(24,26,28,0))]" />
-              <div className="absolute bottom-5 left-5 right-5 rounded-2xl border border-white/20 bg-white/88 p-5 backdrop-blur-xl">
-                <div className="text-sm font-bold text-vet-green">{about.badgeLocation}</div>
-                <div className="mt-1 font-display text-xl font-black text-ink">
-                  {about.badgeTitle}
-                </div>
-              </div>
             </div>
           </Reveal>
         </div>

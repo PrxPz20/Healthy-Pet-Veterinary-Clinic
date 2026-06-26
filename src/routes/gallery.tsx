@@ -28,7 +28,7 @@ function GalleryPage() {
   const { clinic, gallery, hero } = content;
 
   return (
-    <main className="min-h-screen overflow-x-hidden bg-clinic text-ink">
+    <main id="main-content" className="min-h-screen overflow-x-hidden bg-clinic text-ink">
       <JsonLd data={buildClinicSchema(content)} />
       <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl, "Gallery", "/gallery")} />
       <Nav />
