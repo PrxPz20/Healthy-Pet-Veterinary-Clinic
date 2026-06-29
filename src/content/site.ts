@@ -177,7 +177,10 @@ export const siteContent: SiteContent = {
     ],
     badgeLocation: "Agios Athanasios, Limassol",
     badgeTitle: "Veterinary medicine and physiotherapy.",
-    metrics: [{ label: "Years of experience" }, { label: "Completed cases" }],
+    metrics: [
+      { label: "Years of experience", value: 20, suffix: "+" },
+      { label: "Completed cases", value: 1000, suffix: "+" },
+    ],
   },
   trustPoints: [
     {

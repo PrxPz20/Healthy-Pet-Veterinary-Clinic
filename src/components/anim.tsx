@@ -6,34 +6,118 @@ import {
   useReducedMotion,
   useTransform,
 } from "framer-motion";
-import { useEffect, useRef, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { ease } from "@/lib/motion";
 
 export function Reveal({
   children,
   className,
+  delay = 0,
+  y = 18,
 }: {
   children: ReactNode;
   className?: string;
   delay?: number;
   y?: number;
 }) {
-  return <div className={className}>{children}</div>;
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -90px 0px", amount: 0.18 });
+  const reduceMotion = useReducedMotion();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setReady(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={false}
+      animate={
+        !ready || inView
+          ? { opacity: 1, y: 0, filter: "blur(0px)" }
+          : { opacity: 0, y, filter: "blur(4px)" }
+      }
+      transition={{ duration: 0.58, ease, delay }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export function StaggerGroup({
   children,
   className,
+  amount = 0.16,
 }: {
   children: ReactNode;
   className?: string;
   amount?: number;
 }) {
-  return <div className={className}>{children}</div>;
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "0px 0px -90px 0px", amount });
+  const reduceMotion = useReducedMotion();
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => setReady(true));
+    return () => window.cancelAnimationFrame(frame);
+  }, []);
+
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      initial={false}
+      animate={!ready || inView ? "show" : "hidden"}
+      variants={{
+        hidden: {},
+        show: {
+          transition: {
+            staggerChildren: 0.055,
+            delayChildren: 0.03,
+          },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export function StaggerItem({ children, className }: { children: ReactNode; className?: string }) {
-  return <div className={className}>{children}</div>;
+  const reduceMotion = useReducedMotion();
+
+  if (reduceMotion) {
+    return <div className={className}>{children}</div>;
+  }
+
+  return (
+    <motion.div
+      className={className}
+      variants={{
+        hidden: { opacity: 0, y: 16, filter: "blur(4px)" },
+        show: {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          transition: { duration: 0.5, ease },
+        },
+      }}
+    >
+      {children}
+    </motion.div>
+  );
 }
 
 export function CountUp({
