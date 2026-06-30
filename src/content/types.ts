@@ -75,6 +75,8 @@ export type HomepageContent = {
   products: {
     heading: string;
     body: string;
+    helpHeading: string;
+    helpBody: string;
     ctaLabel: string;
   };
   ctaStrip: {
@@ -85,6 +87,7 @@ export type HomepageContent = {
     heading: string;
     body: string;
     emptyState: string;
+    reviewsUrl: string;
   };
   faq: {
     heading: string;

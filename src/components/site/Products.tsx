@@ -1,9 +1,9 @@
-import { ExternalLink, MessageCircle } from "lucide-react";
+import { ExternalLink, Info, MessageCircle } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 
 export function Products() {
-  const { clinic, homepage, products } = getSiteContent();
+  const { homepage, products } = getSiteContent();
 
   return (
     <section id="products" className="bg-clinic py-20 text-ink md:py-28">
@@ -67,12 +67,23 @@ export function Products() {
           ))}
         </StaggerGroup>
 
-        <Reveal className="mt-8">
+        <Reveal className="mt-6 rounded-[1.5rem] border border-line bg-white p-5 sm:mt-8 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-6">
+          <div className="flex max-w-2xl items-start gap-3">
+            <span className="mt-0.5 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
+              <Info className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <div className="min-w-0">
+              <h3 className="font-display text-2xl font-black leading-tight text-ink">
+                {homepage.products.helpHeading}
+              </h3>
+              <p className="mt-2 text-sm leading-relaxed text-ink/64">
+                {homepage.products.helpBody}
+              </p>
+            </div>
+          </div>
           <a
-            href={clinic.whatsapp}
-            target="_blank"
-            rel="noreferrer"
-            className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
+            href="#contact"
+            className="focus-ring focus-ring-dark mt-5 inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green sm:mt-0"
           >
             <MessageCircle className="h-4 w-4" aria-hidden="true" />
             {homepage.products.ctaLabel}

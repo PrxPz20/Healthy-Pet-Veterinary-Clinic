@@ -8,7 +8,6 @@ import { Gallery } from "@/components/site/Gallery";
 import { Cases } from "@/components/site/Cases";
 import { Testimonials } from "@/components/site/Testimonials";
 import { Products } from "@/components/site/Products";
-import { CtaStrip } from "@/components/site/CtaStrip";
 import { Faq } from "@/components/site/Faq";
 import { Contact } from "@/components/site/Contact";
 import { FinalCta } from "@/components/site/FinalCta";
@@ -53,7 +52,6 @@ function Page() {
       <Cases />
       <Testimonials />
       <Products />
-      <CtaStrip />
       <Faq />
       <Contact />
       <FinalCta />

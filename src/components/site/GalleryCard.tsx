@@ -6,6 +6,7 @@ import { quickTransition } from "@/lib/motion";
 type GalleryCardProps = {
   item: GalleryItem;
   href?: string;
+  onClick?: () => void;
   className?: string;
   imageClassName?: string;
   priority?: boolean;
@@ -26,13 +27,14 @@ function imageAspect(orientation: GalleryItem["orientation"]) {
 export function GalleryCard({
   item,
   href,
+  onClick,
   className = "",
   imageClassName = "",
   priority = false,
 }: GalleryCardProps) {
   const reduceMotion = useReducedMotion();
   const aspect = imageAspect(item.orientation);
-  const cardClass = `group block min-w-0 overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] transition-colors duration-300 hover:border-vet-green/35 ${className}`;
+  const cardClass = `group flex min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] transition-colors duration-300 hover:border-vet-green/35 ${className}`;
   const image = (
     <div className={`relative overflow-hidden bg-clinic ${aspect} ${imageClassName}`}>
       <motion.img
@@ -47,8 +49,8 @@ export function GalleryCard({
     </div>
   );
   const caption = (
-    <figcaption className="p-5 sm:p-6">
-      <div className="flex items-start justify-between gap-4">
+    <figcaption className="mt-auto p-5 sm:p-6">
+      <div className="flex items-end justify-between gap-4">
         <div className="min-w-0">
           <h3 className="font-display text-xl font-black leading-tight text-ink">{item.title}</h3>
           <p className="mt-2 text-sm leading-relaxed text-ink/62">{item.description}</p>
@@ -70,11 +72,29 @@ export function GalleryCard({
         whileHover={reduceMotion ? undefined : { y: -4 }}
         transition={quickTransition}
       >
-        <figure>
+        <figure className="flex h-full flex-col">
           {image}
           {caption}
         </figure>
       </motion.a>
+    );
+  }
+
+  if (onClick) {
+    return (
+      <motion.button
+        type="button"
+        onClick={onClick}
+        className={`focus-ring focus-ring-dark text-left ${cardClass}`}
+        whileHover={reduceMotion ? undefined : { y: -4 }}
+        transition={quickTransition}
+        aria-label={`Open image: ${item.title}`}
+      >
+        <figure className="flex h-full flex-col">
+          {image}
+          {caption}
+        </figure>
+      </motion.button>
     );
   }
 
@@ -84,8 +104,10 @@ export function GalleryCard({
       whileHover={reduceMotion ? undefined : { y: -4 }}
       transition={quickTransition}
     >
-      {image}
-      {caption}
+      <div className="flex h-full flex-col">
+        {image}
+        {caption}
+      </div>
     </motion.figure>
   );
 }

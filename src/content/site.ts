@@ -142,7 +142,10 @@ export const siteContent: SiteContent = {
     products: {
       heading: "Pet food and everyday essentials.",
       body: "A selection of food and care products available through the clinic. Contact the clinic to ask about current availability and suitable options for your pet.",
-      ctaLabel: "Ask about products",
+      helpHeading: "Need help choosing a product?",
+      helpBody:
+        "Ask the clinic about food, supplements, or everyday care items before choosing what is right for your pet.",
+      ctaLabel: "Contact the clinic",
     },
     ctaStrip: {
       heading: "Need help? Call or WhatsApp us.",
@@ -152,6 +155,8 @@ export const siteContent: SiteContent = {
       heading: "What pet owners say.",
       body: "A few words from pet owners who shared their experience with the clinic.",
       emptyState: "Testimonials will be added after the clinic approves the reviews.",
+      reviewsUrl:
+        "https://www.google.com/maps/place/Healthy+Pet+Veterinary+Clinic+-+Dr.+Avgoustinos+Theodorou/@34.7086804,33.0384632,839m/data=!3m1!1e3!4m8!3m7!1s0x14e73354438e4781:0x3e9c9815f6d172bd!8m2!3d34.709082!4d33.0432822!9m1!1b1!16s%2Fg%2F11h57xx0yl?entry=ttu&g_ep=EgoyMDI2MDYyOC4wIKXMDSoASAFQAw%3D%3D",
     },
     faq: {
       heading: "Direct answers before you call.",

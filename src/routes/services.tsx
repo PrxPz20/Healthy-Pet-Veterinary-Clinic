@@ -52,11 +52,12 @@ function ServicesPage() {
               Home
             </a>
             <span className="mx-2">/</span>
-            <span>Services</span>
+            <span aria-current="page" className="font-bold text-white">
+              Services
+            </span>
           </nav>
           <Reveal className="mt-10 max-w-4xl min-w-0">
-            <div className="eyebrow text-sage-light">VETERINARY SERVICES</div>
-            <h1 className="mt-4 text-balance break-words font-display text-[clamp(2.35rem,8.5vw,5.6rem)] font-black leading-[1] md:leading-[0.96]">
+            <h1 className="text-balance break-words font-display text-[clamp(2.35rem,8.5vw,5.6rem)] font-black leading-[1] md:leading-[0.96]">
               Services
             </h1>
             <p className="mt-6 max-w-[20.5rem] break-words text-lg leading-relaxed text-white/72 sm:max-w-2xl">

@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ChevronLeft, ChevronRight, MessageSquareQuote, Star } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, MessageSquareQuote, Star } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 import { softTransition } from "@/lib/motion";
@@ -41,6 +41,15 @@ export function Testimonials() {
               <p className="mt-5 max-w-xl leading-relaxed text-ink/66">
                 {homepage.testimonials.body}
               </p>
+              <a
+                href={homepage.testimonials.reviewsUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="focus-ring focus-ring-dark mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
+              >
+                View all reviews
+                <ExternalLink className="h-4 w-4" />
+              </a>
             </div>
             {hasTestimonials && active ? (
               <div
@@ -50,11 +59,7 @@ export function Testimonials() {
                 onFocus={() => setPaused(true)}
                 onBlur={() => setPaused(false)}
               >
-                <div className="relative min-h-[21rem] overflow-hidden rounded-3xl bg-white p-5 shadow-[0_18px_45px_-38px_rgba(24,26,28,0.34)] sm:p-6">
-                  <span className="grid h-12 w-12 place-items-center rounded-full bg-sage text-vet-green">
-                    <MessageSquareQuote className="h-5 w-5" />
-                  </span>
-
+                <div className="relative h-[28rem] overflow-hidden rounded-3xl bg-white p-5 shadow-[0_18px_45px_-38px_rgba(24,26,28,0.34)] sm:h-[24rem] sm:p-6 lg:h-[20rem]">
                   <AnimatePresence mode="wait" initial={false}>
                     <motion.article
                       key={active.name}
@@ -64,26 +69,33 @@ export function Testimonials() {
                         reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, filter: "blur(4px)" }
                       }
                       transition={reduceMotion ? { duration: 0 } : softTransition}
-                      className="mt-6 flex min-h-[14rem] flex-col"
+                      className="flex h-full min-h-0 flex-col"
                     >
-                      <div
-                        className="flex gap-1 text-vet-green"
-                        aria-label={`${active.rating} out of 5 stars`}
-                      >
-                        {Array.from({ length: active.rating }).map((_, index) => (
-                          <Star
-                            key={`${active.name}-${index}`}
-                            className="h-4 w-4 fill-current"
-                            aria-hidden="true"
-                          />
-                        ))}
+                      <div className="flex min-w-0 items-center gap-4">
+                        <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
+                          <MessageSquareQuote className="h-5 w-5" />
+                        </span>
+                        <div className="min-w-0">
+                          <div className="truncate font-display text-xl font-black text-ink">
+                            {active.name}
+                          </div>
+                          <div
+                            className="mt-2 flex gap-1 text-vet-green"
+                            aria-label={`${active.rating} out of 5 stars`}
+                          >
+                            {Array.from({ length: active.rating }).map((_, index) => (
+                              <Star
+                                key={`${active.name}-${index}`}
+                                className="h-4 w-4 fill-current"
+                                aria-hidden="true"
+                              />
+                            ))}
+                          </div>
+                        </div>
                       </div>
-                      <blockquote className="mt-5 flex-1 text-base leading-relaxed text-ink/72">
+                      <blockquote className="mt-6 min-h-0 flex-1 overflow-y-auto pr-2 text-base leading-relaxed text-ink/72">
                         “{active.text}”
                       </blockquote>
-                      <div className="mt-6 border-t border-line pt-4 font-display text-xl font-black text-ink">
-                        {active.name}
-                      </div>
                     </motion.article>
                   </AnimatePresence>
                 </div>
