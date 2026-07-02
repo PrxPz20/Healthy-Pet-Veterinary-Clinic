@@ -43,8 +43,8 @@ export function CaseCard({
         allowReveal={allowReveal}
         className={aspectClass}
       />
-      <figcaption className="flex flex-1 p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-4">
+      <figcaption className="mt-auto p-5 sm:p-6">
+        <div className="flex items-end justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               {item.category ? (

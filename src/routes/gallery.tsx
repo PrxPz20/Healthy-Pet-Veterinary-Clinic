@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { MessageCircle, Phone, X } from "lucide-react";
+import { Home, X } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { Footer } from "@/components/site/Footer";
 import { GalleryCard } from "@/components/site/GalleryCard";
@@ -12,6 +12,7 @@ import { quickTransition, softTransition } from "@/lib/motion";
 import { buildBreadcrumbSchema, buildClinicSchema, JsonLd } from "@/lib/schema";
 
 const content = getSiteContent();
+const GALLERY_PAGE_SIZE = 6;
 
 export const Route = createFileRoute("/gallery")({
   head: () => ({
@@ -29,9 +30,12 @@ export const Route = createFileRoute("/gallery")({
 });
 
 function GalleryPage() {
-  const { clinic, gallery, hero } = content;
+  const { clinic, gallery } = content;
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
+  const [visibleCount, setVisibleCount] = useState(GALLERY_PAGE_SIZE);
   const reduceMotion = useReducedMotion();
+  const visibleGallery = gallery.slice(0, visibleCount);
+  const hasMore = visibleCount < gallery.length;
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-hidden bg-clinic text-ink">
@@ -44,8 +48,9 @@ function GalleryPage() {
           <nav aria-label="Breadcrumb" className="text-sm text-white/55">
             <a
               href="/"
-              className="focus-ring focus-ring-dark rounded transition-colors hover:text-white"
+              className="focus-ring focus-ring-dark inline-flex items-center gap-1.5 rounded transition-colors hover:text-white"
             >
+              <Home className="h-3.5 w-3.5" aria-hidden="true" />
               Home
             </a>
             <span className="mx-2">/</span>
@@ -61,24 +66,6 @@ function GalleryPage() {
             <p className="mt-6 max-w-[22rem] break-words text-lg leading-relaxed text-white/72 sm:max-w-2xl">
               Real pets, real visits, and familiar moments from Healthy Pet Veterinary Clinic.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={hero.primaryCta.href}
-                className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"
-              >
-                <Phone className="h-4 w-4" />
-                {hero.primaryCta.label}
-              </a>
-              <a
-                href={hero.secondaryCta.href}
-                target="_blank"
-                rel="noreferrer"
-                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
-              >
-                <MessageCircle className="h-4 w-4" />
-                {hero.secondaryCta.label}
-              </a>
-            </div>
           </Reveal>
         </div>
       </section>
@@ -86,7 +73,7 @@ function GalleryPage() {
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {gallery.map((item, index) => (
+            {visibleGallery.map((item, index) => (
               <GalleryCard
                 key={item.slug}
                 item={item}
@@ -96,6 +83,17 @@ function GalleryPage() {
               />
             ))}
           </div>
+          {hasMore ? (
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((count) => count + GALLERY_PAGE_SIZE)}
+                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-vet-green"
+              >
+                Load more
+              </button>
+            </div>
+          ) : null}
         </div>
       </section>
 

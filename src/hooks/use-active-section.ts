@@ -17,6 +17,12 @@ export function useActiveSection(hrefs: string[]) {
 
     if (!sections.length) return;
 
+    const clearInHero = () => {
+      if (window.scrollY < window.innerHeight * 0.55) {
+        setActiveId("");
+      }
+    };
+
     const visibility = new Map<string, number>();
     const observer = new IntersectionObserver(
       (entries) => {
@@ -39,7 +45,12 @@ export function useActiveSection(hrefs: string[]) {
     );
 
     sections.forEach((section) => observer.observe(section));
-    return () => observer.disconnect();
+    clearInHero();
+    window.addEventListener("scroll", clearInHero, { passive: true });
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("scroll", clearInHero);
+    };
   }, [hrefs]);
 
   return activeId;

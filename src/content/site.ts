@@ -15,6 +15,7 @@ import caseLana from "@/assets/cases/LANA_cesarean.jpg";
 import caseSpongos from "@/assets/cases/SPONGOS_tumor.jpg";
 import caseMavroulias from "@/assets/cases/mavroulias_broken_front_right_leg.jpg";
 import caseRocky from "@/assets/cases/rocky_dog_bite.jpg";
+import caseJiroud from "@/assets/cases/JIROUD_cherry_eye.webp";
 import profineSmallDog from "@/assets/profine-Dog_adult-small-chicken-&-potatoes_2kg.jpg";
 import royalCaninStarter from "@/assets/royal-canin-vet-care-starter-small-dog-1-5kg.jpg";
 import type { SiteContent } from "./types";
@@ -558,6 +559,18 @@ export const siteContent: SiteContent = {
       image: {
         src: caseRocky,
         alt: "Sensitive veterinary wound care case image for Rocky.",
+      },
+    },
+    {
+      id: "jiroud-cherry-eye-case",
+      title: "JIROUD",
+      category: "Surgical case",
+      description: "JIROUD had a Cherry eye correction surgery.",
+      isSensitive: true,
+      orientation: "portrait",
+      image: {
+        src: caseJiroud,
+        alt: "Sensitive veterinary cherry eye correction surgery case image for JIROUD.",
       },
     },
   ],

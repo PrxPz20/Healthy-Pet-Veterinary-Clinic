@@ -21,7 +21,7 @@ export function Reveal({
   y?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "0px 0px -90px 0px", amount: 0.18 });
+  const inView = useInView(ref, { once: true, margin: "0px 0px 120px 0px", amount: 0.08 });
   const reduceMotion = useReducedMotion();
   const [ready, setReady] = useState(false);
 
@@ -61,7 +61,7 @@ export function StaggerGroup({
   amount?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "0px 0px -90px 0px", amount });
+  const inView = useInView(ref, { once: true, margin: "0px 0px 120px 0px", amount });
   const reduceMotion = useReducedMotion();
   const [ready, setReady] = useState(false);
 

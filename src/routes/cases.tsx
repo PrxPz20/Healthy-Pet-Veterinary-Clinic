@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MessageCircle, Phone } from "lucide-react";
+import { useState } from "react";
+import { Home } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { CaseCard } from "@/components/site/CaseCard";
 import { Footer } from "@/components/site/Footer";
@@ -9,6 +10,7 @@ import { getSiteContent } from "@/content/provider";
 import { buildBreadcrumbSchema, buildClinicSchema, JsonLd } from "@/lib/schema";
 
 const content = getSiteContent();
+const CASES_PAGE_SIZE = 6;
 
 export const Route = createFileRoute("/cases")({
   head: () => ({
@@ -26,7 +28,10 @@ export const Route = createFileRoute("/cases")({
 });
 
 function CasesPage() {
-  const { clinic, cases, hero } = content;
+  const { clinic, cases } = content;
+  const [visibleCount, setVisibleCount] = useState(CASES_PAGE_SIZE);
+  const visibleCases = cases.slice(0, visibleCount);
+  const hasMore = visibleCount < cases.length;
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-hidden bg-clinic text-ink">
@@ -40,8 +45,9 @@ function CasesPage() {
           <nav aria-label="Breadcrumb" className="text-sm text-white/55">
             <a
               href="/"
-              className="focus-ring focus-ring-dark rounded transition-colors hover:text-white"
+              className="focus-ring focus-ring-dark inline-flex items-center gap-1.5 rounded transition-colors hover:text-white"
             >
+              <Home className="h-3.5 w-3.5" aria-hidden="true" />
               Home
             </a>
             <span className="mx-2">/</span>
@@ -58,24 +64,6 @@ function CasesPage() {
               Documented veterinary cases shared with care. Sensitive images are blurred until you
               choose to view each one.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={hero.primaryCta.href}
-                className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"
-              >
-                <Phone className="h-4 w-4" />
-                {hero.primaryCta.label}
-              </a>
-              <a
-                href={hero.secondaryCta.href}
-                target="_blank"
-                rel="noreferrer"
-                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
-              >
-                <MessageCircle className="h-4 w-4" />
-                {hero.secondaryCta.label}
-              </a>
-            </div>
           </Reveal>
         </div>
       </section>
@@ -86,8 +74,8 @@ function CasesPage() {
             These images are included for educational review and professional context. They are not
             a substitute for an examination or medical advice for a specific pet.
           </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {cases.map((item, index) => (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {visibleCases.map((item, index) => (
               <CaseCard
                 key={item.id}
                 item={item}
@@ -96,6 +84,17 @@ function CasesPage() {
               />
             ))}
           </div>
+          {hasMore ? (
+            <div className="mt-10 flex justify-center">
+              <button
+                type="button"
+                onClick={() => setVisibleCount((count) => count + CASES_PAGE_SIZE)}
+                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-vet-green"
+              >
+                Load more
+              </button>
+            </div>
+          ) : null}
         </div>
       </section>
 

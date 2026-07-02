@@ -23,6 +23,7 @@ export function Nav() {
   const compact = scrolled;
   const navHrefs = useMemo(() => navigation.map((item) => item.href), [navigation]);
   const activeId = useActiveSection(navHrefs);
+  const activeItem = navigation.find((item) => isActiveHref(item.href, activeId));
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const next = latest > 40;
@@ -113,6 +114,21 @@ export function Nav() {
         </nav>
 
         <div className="absolute right-3 top-1/2 flex shrink-0 -translate-y-1/2 items-center gap-2 md:static md:translate-y-0">
+          <AnimatePresence mode="wait">
+            {activeItem ? (
+              <motion.a
+                key={activeItem.href}
+                href={activeItem.href}
+                initial={reduceMotion ? false : { opacity: 0, y: 6 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
+                transition={reduceMotion ? { duration: 0 } : softTransition}
+                className="focus-ring focus-ring-dark inline-flex max-w-24 items-center rounded-full bg-white/10 px-3 py-2 text-xs font-bold text-white backdrop-blur-md xl:hidden"
+              >
+                <span className="truncate">{activeItem.label}</span>
+              </motion.a>
+            ) : null}
+          </AnimatePresence>
           <a
             href={hero.primaryCta.href}
             className="focus-ring hidden min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold leading-none text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic sm:inline-flex"
@@ -150,20 +166,31 @@ export function Nav() {
               animate="show"
               className="flex flex-col gap-1 px-3 py-3"
             >
-              {navigation.map((l) => (
-                <motion.a
-                  key={l.href}
-                  href={l.href}
-                  onClick={() => setOpen(false)}
-                  variants={fadeUp}
-                  custom={{ y: 10 }}
-                  className={`focus-ring focus-ring-dark rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/10 hover:text-white ${
-                    isActiveHref(l.href, activeId) ? "bg-white/10 text-white" : "text-white/80"
-                  }`}
-                >
-                  {l.label}
-                </motion.a>
-              ))}
+              {navigation.map((l) => {
+                const isActive = isActiveHref(l.href, activeId);
+
+                return (
+                  <motion.a
+                    key={l.href}
+                    href={l.href}
+                    onClick={() => setOpen(false)}
+                    variants={fadeUp}
+                    custom={{ y: 10 }}
+                    className={`focus-ring focus-ring-dark relative overflow-hidden rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/10 hover:text-white ${
+                      isActive ? "text-white" : "text-white/80"
+                    }`}
+                  >
+                    {isActive ? (
+                      <motion.span
+                        layoutId="mobile-nav-active-pill"
+                        className="absolute inset-0 rounded-2xl bg-white/10"
+                        transition={reduceMotion ? { duration: 0 } : layoutSpring}
+                      />
+                    ) : null}
+                    <span className="relative z-10">{l.label}</span>
+                  </motion.a>
+                );
+              })}
               <motion.div variants={fadeUp} custom={{ y: 10 }} className="mt-2">
                 <a
                   href={hero.primaryCta.href}

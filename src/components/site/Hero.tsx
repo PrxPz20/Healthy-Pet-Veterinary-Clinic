@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ChevronDown, Microscope, Phone } from "lucide-react";
+import { ChevronDown, ChevronRight, Phone } from "lucide-react";
 import { getSiteContent } from "@/content/provider";
 import { ease, softTransition } from "@/lib/motion";
 
@@ -91,10 +91,13 @@ export function Hero() {
           </a>
           <a
             href={homepage.servicesCta.href}
-            className="focus-ring focus-ring-dark group inline-flex min-h-11 items-center gap-2 rounded-full border border-white/28 bg-white/8 px-7 py-3.5 text-sm font-bold text-white shadow-[0_8px_18px_-16px_rgba(255,255,255,0.42)] backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-white/42 hover:bg-white/14"
+            className="focus-ring focus-ring-dark group inline-flex min-h-11 items-center gap-2 px-1 py-3 text-sm font-bold text-white transition-colors duration-200 hover:text-white/78"
           >
-            <Microscope className="h-4 w-4" />
             {homepage.servicesCta.label}
+            <ChevronRight
+              className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1"
+              aria-hidden="true"
+            />
           </a>
         </motion.div>
       </div>
