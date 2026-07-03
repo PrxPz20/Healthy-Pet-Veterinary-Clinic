@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
-import { Home } from "lucide-react";
+import { AlertTriangle, Home } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { CaseCard } from "@/components/site/CaseCard";
 import { Footer } from "@/components/site/Footer";
@@ -68,11 +68,16 @@ function CasesPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-28">
+      <section className="pb-20 pt-8 md:pb-28 md:pt-10">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="mb-8 max-w-2xl rounded-[1.25rem] border border-line bg-white p-5 text-sm leading-relaxed text-ink/66">
-            These images are included for educational review and professional context. They are not
-            a substitute for an examination or medical advice for a specific pet.
+          <div className="mb-10 flex w-full items-start gap-4 rounded-[1.5rem] border border-red-200 bg-red-50 p-5 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.45)] sm:p-6">
+            <span className="mt-0.5 grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-100 text-red-600">
+              <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <p className="text-sm font-medium leading-relaxed text-ink/78 sm:text-base">
+              These images are included for educational review and professional context. They are
+              not a substitute for an examination or medical advice for a specific pet.
+            </p>
           </div>
           <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {visibleCases.map((item, index) => (
