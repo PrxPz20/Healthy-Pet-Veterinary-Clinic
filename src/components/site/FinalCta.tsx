@@ -26,7 +26,7 @@ export function FinalCta() {
             href={hero.secondaryCta.href}
             target="_blank"
             rel="noreferrer"
-            className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:border-vet-green hover:text-vet-green"
+            className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full border border-vet-green bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:text-vet-green"
           >
             <MessageCircle className="h-4 w-4" />
             {hero.secondaryCta.label}

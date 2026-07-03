@@ -8,7 +8,7 @@ function formatHourRanges(ranges: { opens: string; closes: string }[]) {
 }
 
 export function Contact() {
-  const { clinic, homepage, openingHours, hero } = getSiteContent();
+  const { clinic, homepage, openingHours } = getSiteContent();
   const fullAddress = `${clinic.address.street}, ${clinic.address.city} ${clinic.address.postalCode}, Cyprus`;
   const rows = [
     { icon: MapPin, label: "Address", value: fullAddress, href: clinic.mapUrl },
@@ -18,16 +18,13 @@ export function Contact() {
       value: clinic.phoneDisplay,
       href: `tel:${clinic.phone}`,
     },
-    ...(clinic.vetPhone && clinic.vetPhoneDisplay
-      ? [
-          {
-            icon: Phone,
-            label: "Vet Phone",
-            value: clinic.vetPhoneDisplay,
-            href: `tel:${clinic.vetPhone}`,
-          },
-        ]
-      : []),
+    {
+      icon: MessageCircle,
+      label: "WhatsApp",
+      value: "Open WhatsApp",
+      href: clinic.whatsapp,
+      external: true,
+    },
     { icon: Mail, label: "Email", value: clinic.email, href: `mailto:${clinic.email}` },
   ];
 
@@ -58,14 +55,36 @@ export function Contact() {
                       </div>
                       <div className="min-w-0">
                         <div className="text-xs font-bold text-white/55">{row.label}</div>
-                        <a
-                          href={row.href}
-                          target={row.label === "Address" ? "_blank" : undefined}
-                          rel={row.label === "Address" ? "noreferrer" : undefined}
-                          className="focus-ring focus-ring-dark mt-1 inline-block rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
-                        >
-                          {row.value}
-                        </a>
+                        {row.label === "Phone" ? (
+                          <div className="mt-1 flex flex-wrap items-center gap-y-1 text-white/92">
+                            <a
+                              href={`tel:${clinic.phone}`}
+                              className="focus-ring focus-ring-dark rounded transition-colors duration-200 hover:text-sage-light"
+                            >
+                              {clinic.phoneDisplay}
+                            </a>
+                            {clinic.vetPhone && clinic.vetPhoneDisplay ? (
+                              <>
+                                <span className="mx-2 text-white/32">|</span>
+                                <a
+                                  href={`tel:${clinic.vetPhone}`}
+                                  className="focus-ring focus-ring-dark rounded transition-colors duration-200 hover:text-sage-light"
+                                >
+                                  Vet Phone {clinic.vetPhoneDisplay}
+                                </a>
+                              </>
+                            ) : null}
+                          </div>
+                        ) : (
+                          <a
+                            href={row.href}
+                            target={row.label === "Address" || row.external ? "_blank" : undefined}
+                            rel={row.label === "Address" || row.external ? "noreferrer" : undefined}
+                            className="focus-ring focus-ring-dark mt-1 inline-block rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
+                          >
+                            {row.value}
+                          </a>
+                        )}
                       </div>
                     </li>
                   ))}
@@ -90,25 +109,6 @@ export function Contact() {
                     ))}
                   </dl>
                 </div>
-              </div>
-
-              <div className="mt-9 flex flex-wrap gap-3">
-                <a
-                  href={hero.primaryCta.href}
-                  className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"
-                >
-                  <Phone className="h-4 w-4" />
-                  {hero.primaryCta.label}
-                </a>
-                <a
-                  href={hero.secondaryCta.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
-                >
-                  <MessageCircle className="h-4 w-4" />
-                  {hero.secondaryCta.label}
-                </a>
               </div>
             </div>
           </Reveal>
