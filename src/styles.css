@@ -145,6 +145,18 @@
     backdrop-filter: saturate(140%) blur(16px);
     -webkit-backdrop-filter: saturate(140%) blur(16px);
   }
+  .trust-strip-loop {
+    animation: trust-strip-loop 24s linear infinite;
+  }
+  .trust-strip-loop:hover {
+    animation-play-state: paused;
+  }
+}
+
+@keyframes trust-strip-loop {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -1,17 +1,9 @@
 import { Clock, Languages, MapPin, MessageCircle, Phone } from "lucide-react";
-import { useEffect, useState } from "react";
 import { StaggerGroup, StaggerItem } from "@/components/anim";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  type CarouselApi,
-} from "@/components/ui/carousel";
 import { getSiteContent } from "@/content/provider";
 
 export function TrustStrip() {
   const { clinic, openingHours } = getSiteContent();
-  const [api, setApi] = useState<CarouselApi>();
   const regularHours = openingHours
     .filter((item) => ["Monday", "Tuesday", "Thursday", "Friday"].includes(item.day))
     .at(0)
@@ -57,29 +49,22 @@ export function TrustStrip() {
       ariaLabel: "View doctor information and spoken languages",
     },
   ];
-  useEffect(() => {
-    if (!api) return;
-
-    const id = window.setInterval(() => api.scrollNext(), 2600);
-    return () => window.clearInterval(id);
-  }, [api]);
 
   return (
     <section className="relative z-10 border-b border-line bg-white text-ink">
-      <Carousel
-        setApi={setApi}
-        opts={{ align: "start", loop: true, dragFree: true }}
-        className="px-5 py-4 sm:px-8 md:hidden"
-        aria-label="Clinic quick information"
-      >
-        <CarouselContent className="-ml-3">
-          {trustItems.map((item) => (
-            <CarouselItem key={item.title} className="basis-[15rem] pl-3">
-              <TrustItem item={item} />
-            </CarouselItem>
+      <div className="overflow-hidden py-4 md:hidden" aria-label="Clinic quick information">
+        <div className="trust-strip-loop flex w-max">
+          {[0, 1].map((setIndex) => (
+            <div key={setIndex} className="flex" aria-hidden={setIndex > 0 ? true : undefined}>
+              {trustItems.map((item) => (
+                <div key={`${setIndex}-${item.title}`} className="mr-3 w-[15rem] shrink-0">
+                  <TrustItem item={item} />
+                </div>
+              ))}
+            </div>
           ))}
-        </CarouselContent>
-      </Carousel>
+        </div>
+      </div>
 
       <StaggerGroup className="mx-auto hidden max-w-7xl grid-cols-5 gap-3 px-8 py-4 md:grid">
         {trustItems.map((item) => (

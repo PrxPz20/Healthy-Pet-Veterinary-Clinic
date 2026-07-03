@@ -17,39 +17,25 @@ export function useActiveSection(hrefs: string[]) {
 
     if (!sections.length) return;
 
-    const clearInHero = () => {
-      if (window.scrollY < window.innerHeight * 0.55) {
-        setActiveId("");
+    const updateActive = () => {
+      const marker = window.scrollY + window.innerHeight * 0.55;
+      let current = "";
+
+      for (const section of sections) {
+        if (section.offsetTop <= marker) {
+          current = section.id;
+        }
       }
+
+      setActiveId(current);
     };
 
-    const visibility = new Map<string, number>();
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          visibility.set(entry.target.id, entry.isIntersecting ? entry.intersectionRatio : 0);
-        });
-
-        const [nextActive] = [...visibility.entries()]
-          .filter(([, ratio]) => ratio > 0)
-          .sort((a, b) => b[1] - a[1]);
-
-        if (nextActive?.[0]) {
-          setActiveId(nextActive[0]);
-        }
-      },
-      {
-        rootMargin: "-28% 0px -58% 0px",
-        threshold: [0.08, 0.18, 0.32, 0.5, 0.68],
-      },
-    );
-
-    sections.forEach((section) => observer.observe(section));
-    clearInHero();
-    window.addEventListener("scroll", clearInHero, { passive: true });
+    updateActive();
+    window.addEventListener("scroll", updateActive, { passive: true });
+    window.addEventListener("resize", updateActive);
     return () => {
-      observer.disconnect();
-      window.removeEventListener("scroll", clearInHero);
+      window.removeEventListener("scroll", updateActive);
+      window.removeEventListener("resize", updateActive);
     };
   }, [hrefs]);
 
