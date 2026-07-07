@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AlertTriangle, Home } from "lucide-react";
+import casesHeroBanner from "@/assets/cases/cases_hero_banner.png";
 import { Reveal } from "@/components/anim";
 import { CaseCard } from "@/components/site/CaseCard";
 import { Footer } from "@/components/site/Footer";
@@ -40,8 +41,15 @@ function CasesPage() {
       <Nav />
       <SensitiveContentWarning />
 
-      <section className="bg-ink px-5 pb-18 pt-32 text-white sm:px-8 md:pb-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="relative overflow-hidden bg-ink px-5 pb-18 pt-32 text-white sm:px-8 md:pb-24">
+        <img
+          src={casesHeroBanner}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover opacity-55"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/78 to-ink/42" />
+        <div className="relative mx-auto max-w-7xl">
           <nav aria-label="Breadcrumb" className="text-sm text-white/55">
             <a
               href="/"
@@ -68,13 +76,15 @@ function CasesPage() {
         </div>
       </section>
 
-      <section className="pb-20 pt-8 md:pb-28 md:pt-10">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="mb-10 flex w-full items-start gap-4 rounded-[1.5rem] border border-red-200 bg-red-50 p-5 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.45)] sm:p-6">
-            <span className="mt-0.5 grid h-11 w-11 shrink-0 place-items-center rounded-full bg-red-100 text-red-600">
-              <AlertTriangle className="h-5 w-5" aria-hidden="true" />
+      <section className="px-5 pb-20 pt-8 sm:px-8 md:pb-28 md:pt-10">
+        <div className="mx-auto max-w-7xl">
+          <div className="mx-auto mb-10 flex max-w-full items-center justify-center gap-3 rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.45)] sm:w-fit sm:px-5 sm:py-4">
+            <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-red-100 text-red-600">
+              <span className="absolute inset-0 rounded-full bg-red-500/20 motion-safe:animate-ping" />
+              <span className="absolute inset-0 rounded-full ring-2 ring-red-400/45 motion-safe:animate-ping [animation-delay:450ms]" />
+              <AlertTriangle className="relative h-5 w-5" aria-hidden="true" />
             </span>
-            <p className="text-sm font-medium leading-relaxed text-ink/78 sm:text-base">
+            <p className="min-w-0 text-center text-sm font-medium leading-relaxed text-ink/72 sm:text-base lg:whitespace-nowrap">
               These images are included for educational review and professional context. They are
               not a substitute for an examination or medical advice for a specific pet.
             </p>

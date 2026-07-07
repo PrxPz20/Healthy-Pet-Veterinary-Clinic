@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { MessageCircle, Phone } from "lucide-react";
+import { Home, MessageCircle, Phone } from "lucide-react";
+import servicesHeroBanner from "@/assets/services/services_hero_banner.png";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { Footer } from "@/components/site/Footer";
 import { Nav } from "@/components/site/Nav";
@@ -35,20 +36,29 @@ function ServicesPage() {
         .filter((service): service is (typeof services)[number] => Boolean(service)),
     }))
     .filter((category) => category.services.length > 0);
+  let renderedServiceIndex = 0;
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-hidden bg-clinic text-ink">
       <JsonLd data={buildClinicSchema(content)} />
-      <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl)} />
+      <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl, "Services", "/services")} />
       <Nav />
 
-      <section className="bg-ink px-5 pb-18 pt-32 text-white sm:px-8 md:pb-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="relative overflow-hidden bg-ink px-5 pb-18 pt-32 text-white sm:px-8 md:pb-24">
+        <img
+          src={servicesHeroBanner}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover opacity-55"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/78 to-ink/42" />
+        <div className="relative mx-auto max-w-7xl">
           <nav aria-label="Breadcrumb" className="text-sm text-white/55">
             <a
               href="/"
-              className="focus-ring focus-ring-dark rounded transition-colors hover:text-white"
+              className="focus-ring focus-ring-dark inline-flex items-center gap-1.5 rounded transition-colors hover:text-white"
             >
+              <Home className="h-3.5 w-3.5" aria-hidden="true" />
               Home
             </a>
             <span className="mx-2">/</span>
@@ -64,30 +74,12 @@ function ServicesPage() {
               Find the clinic's core care, from testing and imaging to surgery, skin care,
               rehabilitation, grooming, and pet shop support.
             </p>
-            <div className="mt-8 flex flex-wrap gap-3">
-              <a
-                href={hero.primaryCta.href}
-                className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"
-              >
-                <Phone className="h-4 w-4" />
-                {hero.primaryCta.label}
-              </a>
-              <a
-                href={hero.secondaryCta.href}
-                target="_blank"
-                rel="noreferrer"
-                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
-              >
-                <MessageCircle className="h-4 w-4" />
-                {hero.secondaryCta.label}
-              </a>
-            </div>
           </Reveal>
         </div>
       </section>
 
-      <section className="bg-white py-9 text-ink md:py-11">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <section className="bg-white px-5 py-9 text-ink sm:px-8 md:py-11">
+        <div className="mx-auto max-w-7xl">
           <Reveal className="grid gap-7 lg:grid-cols-[0.72fr_1fr] lg:items-center">
             <div className="min-w-0">
               <h2 className="font-display text-3xl font-black leading-tight text-ink md:text-5xl">
@@ -114,8 +106,8 @@ function ServicesPage() {
         </div>
       </section>
 
-      <section className="py-20 md:py-24">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <section className="px-5 py-20 sm:px-8 md:py-24">
+        <div className="mx-auto max-w-7xl">
           <div className="space-y-14 md:space-y-20">
             {groupedCategories.map((category) => (
               <section key={category.id} id={category.id} className="scroll-mt-28">
@@ -129,11 +121,16 @@ function ServicesPage() {
                 </Reveal>
 
                 <StaggerGroup className="mt-8 grid grid-cols-1 gap-5 md:mt-10 md:gap-6">
-                  {category.services.map((service) => (
-                    <StaggerItem key={service.slug}>
-                      <ServiceDetailCard service={service} categoryLabel={category.label} />
-                    </StaggerItem>
-                  ))}
+                  {category.services.map((service) => {
+                    const reversed = renderedServiceIndex % 2 === 1;
+                    renderedServiceIndex += 1;
+
+                    return (
+                      <StaggerItem key={service.slug}>
+                        <ServiceDetailCard service={service} reversed={reversed} />
+                      </StaggerItem>
+                    );
+                  })}
                 </StaggerGroup>
               </section>
             ))}
@@ -143,7 +140,7 @@ function ServicesPage() {
 
       <section className="bg-white px-5 py-16 text-ink sm:px-8 md:py-20">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <div>
+          <div className="min-w-0">
             <h2 className="font-display text-3xl font-black md:text-5xl">
               Not sure what your pet needs?
             </h2>
@@ -152,7 +149,7 @@ function ServicesPage() {
               and next steps.
             </p>
           </div>
-          <div className="flex flex-wrap gap-3">
+          <div className="flex min-w-0 flex-wrap gap-3 md:justify-end">
             <a
               href={hero.primaryCta.href}
               className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"

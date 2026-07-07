@@ -79,8 +79,10 @@ export function SensitiveContentWarning() {
             transition={softTransition}
           >
             <div className="grid grid-cols-[3.5rem_1fr] gap-4 sm:grid-cols-[5rem_1fr] sm:gap-8">
-              <div className="grid h-14 w-14 place-items-center rounded-full bg-red-100 text-red-500 sm:h-20 sm:w-20">
-                <AlertTriangle className="h-6 w-6 sm:h-9 sm:w-9" />
+              <div className="relative grid h-14 w-14 place-items-center rounded-full bg-red-100 text-red-500 sm:h-20 sm:w-20">
+                <span className="absolute inset-0 rounded-full bg-red-500/20 motion-safe:animate-ping" />
+                <span className="absolute inset-0 rounded-full ring-2 ring-red-400/45 motion-safe:animate-ping [animation-delay:450ms]" />
+                <AlertTriangle className="relative h-6 w-6 sm:h-9 sm:w-9" />
               </div>
               <div>
                 <h2

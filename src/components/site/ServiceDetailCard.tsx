@@ -1,17 +1,43 @@
 import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import dermatologyImage from "@/assets/services/dermatology.png";
+import digitalXrayImage from "@/assets/services/digital_x_ray.png";
+import endoscopyImage from "@/assets/services/endoscopy.png";
+import groomingImage from "@/assets/services/grooming.png";
+import laboratoryImage from "@/assets/services/full_laboratory_blood_tests .png";
+import orthopedicImage from "@/assets/services/orthopedic_surgery.png";
+import pathologyImage from "@/assets/services/pathology.png";
+import hydrotherapyImage from "@/assets/services/pet_hydrotherapy.png";
+import physiotherapyImage from "@/assets/services/pet_physiotherapy_&_acupuncture.png";
+import petShopImage from "@/assets/services/pet_shop.png";
+import softTissueImage from "@/assets/services/soft_tissue_surgery.png";
+import ultrasoundImage from "@/assets/services/ultrasound.png";
 import type { Service } from "@/content/types";
 import { quickTransition } from "@/lib/motion";
-import { iconFor } from "./Icons";
+
+const serviceImages: Record<string, string> = {
+  pathology: pathologyImage,
+  "laboratory-blood-tests": laboratoryImage,
+  "orthopedic-surgery": orthopedicImage,
+  "soft-tissue-surgery": softTissueImage,
+  dermatology: dermatologyImage,
+  ultrasound: ultrasoundImage,
+  "digital-x-ray": digitalXrayImage,
+  "pet-hydrotherapy": hydrotherapyImage,
+  "physiotherapy-acupuncture": physiotherapyImage,
+  endoscopy: endoscopyImage,
+  grooming: groomingImage,
+  "pet-shop": petShopImage,
+};
 
 type ServiceDetailCardProps = {
   service: Service;
-  categoryLabel: string;
+  reversed?: boolean;
 };
 
-export function ServiceDetailCard({ service, categoryLabel }: ServiceDetailCardProps) {
+export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCardProps) {
   const reduceMotion = useReducedMotion();
-  const Icon = iconFor(service.icon);
+  const image = serviceImages[service.slug] ?? petShopImage;
 
   return (
     <motion.article
@@ -20,38 +46,27 @@ export function ServiceDetailCard({ service, categoryLabel }: ServiceDetailCardP
       whileHover={reduceMotion ? undefined : { y: -3 }}
       transition={quickTransition}
     >
-      <div className="grid min-w-0 gap-0 lg:grid-cols-[0.78fr_1fr]">
-        <div className="min-w-0 border-b border-line p-5 sm:p-6 md:p-8 lg:border-b-0 lg:border-r">
-          <div className="flex items-center justify-between gap-4">
-            <span className="rounded-full bg-sage px-3 py-1 text-xs font-bold text-ink/72">
-              {categoryLabel}
-            </span>
-            <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-vet-green/10 text-vet-green transition-colors duration-300 group-hover:bg-vet-green group-hover:text-white">
-              <Icon className="h-5 w-5" aria-hidden="true" />
-            </span>
-          </div>
-
-          <h3 className="mt-6 text-balance break-words font-display text-[clamp(1.65rem,5.5vw,3rem)] font-black leading-[1.04] text-ink">
-            {service.title}
-          </h3>
-          <p className="mt-4 max-w-xl text-pretty text-base leading-relaxed text-ink/70">
-            {service.short}
-          </p>
+      <div
+        className={`grid min-w-0 gap-0 lg:grid-cols-2 ${
+          reversed ? "" : "lg:[&>*:first-child]:order-2"
+        }`}
+      >
+        <div className="min-h-full border-b border-line bg-clinic lg:border-b-0">
+          <img
+            src={image}
+            alt={`${service.title} at Healthy Pet Veterinary Clinic`}
+            loading="lazy"
+            className="aspect-[4/3] h-full w-full object-cover"
+          />
         </div>
 
-        <div className="flex min-w-0 flex-col p-5 sm:p-6 md:p-8">
-          <p className="max-w-[68ch] text-pretty leading-relaxed text-ink/68">{service.detail}</p>
-
-          <ul className="mt-7 grid min-w-0 gap-3 sm:grid-cols-3">
-            {service.highlights.map((highlight) => (
-              <li
-                key={highlight}
-                className="min-w-0 rounded-2xl bg-clinic px-4 py-4 text-sm font-bold leading-snug text-ink/74 ring-1 ring-line"
-              >
-                {highlight}
-              </li>
-            ))}
-          </ul>
+        <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:p-8 lg:min-h-[26rem]">
+          <h3 className="text-balance break-words font-display text-[clamp(1.65rem,5.5vw,3rem)] font-black leading-[1.04] text-ink">
+            {service.title}
+          </h3>
+          <p className="mt-4 max-w-[68ch] text-pretty leading-relaxed text-ink/68">
+            {service.detail}
+          </p>
 
           <a
             href="/#contact"
