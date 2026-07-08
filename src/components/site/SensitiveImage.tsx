@@ -24,7 +24,7 @@ export function SensitiveImage({
   const protectedImage = isSensitive && !revealed;
 
   return (
-    <div className={`relative overflow-hidden bg-clinic ${className}`}>
+    <div className={`relative overflow-hidden bg-white ${className}`}>
       <motion.img
         src={image.src}
         alt={image.alt}

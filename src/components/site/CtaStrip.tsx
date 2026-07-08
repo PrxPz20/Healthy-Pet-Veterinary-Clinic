@@ -19,7 +19,7 @@ export function CtaStrip() {
         <div className="flex flex-wrap gap-3">
           <a
             href={hero.primaryCta.href}
-            className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic"
+            className="focus-ring inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90"
           >
             <Phone className="h-4 w-4" />
             {hero.primaryCta.label}

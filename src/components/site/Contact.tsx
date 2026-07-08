@@ -137,7 +137,7 @@ export function Contact() {
                   href={clinic.mapUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-colors duration-200 hover:bg-clinic"
+                  className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-colors duration-200 hover:bg-white/90"
                 >
                   {homepage.contact.mapCtaLabel}
                   <MapPin className="h-4 w-4" />

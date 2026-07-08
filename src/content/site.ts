@@ -168,7 +168,7 @@ export const siteContent: SiteContent = {
       body: "",
       mapCtaLabel: "Open map",
     },
-    servicesCta: { label: "Explore our care", href: "/services" },
+    servicesCta: { label: "Explore our services", href: "/services" },
     finalCta: {
       heading: "Ready to speak with the clinic?",
       body: "Call or send a WhatsApp message and the clinic will guide you on the next step.",

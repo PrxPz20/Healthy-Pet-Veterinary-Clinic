@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Menu, Phone, X } from "lucide-react";
+import { ChevronDown, Menu, Phone, X } from "lucide-react";
 import {
   AnimatePresence,
   motion,
@@ -11,6 +11,12 @@ import { getSiteContent } from "@/content/provider";
 import { isActiveHref, useActiveSection } from "@/hooks/use-active-section";
 import { fadeUp, layoutSpring, menuPanel, softTransition, stagger } from "@/lib/motion";
 import logoUrl from "@/assets/healthy_pet_logo_white.svg";
+
+const navDropdowns: Record<string, { label: string; href: string }> = {
+  "/#services": { label: "All services", href: "/services" },
+  "/#gallery": { label: "All gallery", href: "/gallery" },
+  "/#cases": { label: "All cases", href: "/cases" },
+};
 
 export function Nav() {
   const { navigation, hero } = getSiteContent();
@@ -67,10 +73,10 @@ export function Nav() {
       <motion.div
         layout
         transition={reduceMotion ? { duration: 0 } : layoutSpring}
-        className={`relative mx-auto flex items-center justify-between gap-3 border transition-colors duration-300 ${
+        className={`relative mx-auto flex items-center justify-between gap-3 rounded-full border transition-[width,max-width,height,margin,background-color,border-color,box-shadow,padding] duration-500 ease-out ${
           compact
-            ? "mt-4 h-[4.75rem] w-[min(96vw,82rem)] rounded-full border-white/10 bg-ink/92 px-4 shadow-[0_14px_38px_-22px_rgba(24,26,28,0.72)] backdrop-blur-xl md:px-6"
-            : "h-[5.75rem] max-w-none rounded-none border-transparent bg-transparent px-5 shadow-none sm:px-8 lg:px-12"
+            ? "mt-4 h-[4.75rem] w-[calc(100%-2.5rem)] max-w-[calc(80rem-4rem)] rounded-full border-white/10 bg-ink/92 px-4 shadow-[0_14px_38px_-22px_rgba(24,26,28,0.72)] backdrop-blur-xl sm:w-[calc(100%-4rem)] md:px-6"
+            : "mt-0 h-[5.75rem] w-[calc(100%-2.5rem)] max-w-[calc(80rem-4rem)] border-transparent bg-transparent px-0 shadow-none sm:w-[calc(100%-4rem)]"
         }`}
       >
         <a
@@ -85,30 +91,53 @@ export function Nav() {
           />
         </a>
 
-        <nav className="absolute left-1/2 hidden max-w-[calc(100%-36rem)] -translate-x-1/2 items-center justify-center gap-1 overflow-hidden xl:flex 2xl:gap-2">
+        <nav className="absolute left-1/2 hidden max-w-[calc(100%-36rem)] -translate-x-1/2 items-center justify-center gap-1 xl:flex 2xl:gap-2">
           {navigation.map((l) => {
             const isActive = isActiveHref(l.href, activeId);
+            const dropdown = navDropdowns[l.href];
+
             return (
-              <a
-                key={l.href}
-                href={l.href}
-                className={`focus-ring focus-ring-dark relative whitespace-nowrap rounded-full px-2.5 py-2 text-[0.82rem] font-semibold transition-colors duration-200 2xl:px-3 2xl:text-sm ${
-                  isActive
-                    ? "text-white"
-                    : compact
-                      ? "text-white/70 hover:text-white"
-                      : "text-white/86 hover:text-white"
-                }`}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="nav-active-pill"
-                    className="absolute inset-0 rounded-full bg-white/10"
-                    transition={reduceMotion ? { duration: 0 } : layoutSpring}
-                  />
-                )}
-                <span className="relative z-10">{l.label}</span>
-              </a>
+              <div key={l.href} className="group/drop relative">
+                <a
+                  href={l.href}
+                  className={`focus-ring focus-ring-dark relative flex whitespace-nowrap rounded-full px-2.5 py-2 text-[0.82rem] font-semibold transition-colors duration-200 2xl:px-3 2xl:text-sm ${
+                    isActive
+                      ? "text-white"
+                      : compact
+                        ? "text-white/70 hover:text-white"
+                        : "text-white/86 hover:text-white"
+                  }`}
+                >
+                  {isActive && (
+                    <motion.span
+                      layoutId="nav-active-pill"
+                      className="absolute inset-0 rounded-full bg-white/10"
+                      transition={reduceMotion ? { duration: 0 } : layoutSpring}
+                    />
+                  )}
+                  <span className="relative z-10 inline-flex items-center gap-1.5">
+                    {l.label}
+                    {dropdown ? (
+                      <ChevronDown
+                        className="h-3.5 w-3.5 transition-transform duration-200 group-hover/drop:rotate-180 group-focus-within/drop:rotate-180"
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                  </span>
+                </a>
+                {dropdown ? (
+                  <div className="invisible absolute left-0 top-full z-50 min-w-40 pt-2 opacity-0 transition duration-200 motion-safe:translate-y-1 group-hover/drop:visible group-hover/drop:translate-y-0 group-hover/drop:opacity-100 group-focus-within/drop:visible group-focus-within/drop:translate-y-0 group-focus-within/drop:opacity-100">
+                    <div className="rounded-2xl border border-white/10 bg-ink/92 p-2 backdrop-blur-xl">
+                      <a
+                        href={dropdown.href}
+                        className="focus-ring focus-ring-dark block rounded-xl px-4 py-3 text-sm font-bold text-white/78 transition-colors hover:bg-white/10 hover:text-white"
+                      >
+                        {dropdown.label}
+                      </a>
+                    </div>
+                  </div>
+                ) : null}
+              </div>
             );
           })}
         </nav>
@@ -131,7 +160,7 @@ export function Nav() {
           </AnimatePresence>
           <a
             href={hero.primaryCta.href}
-            className="focus-ring hidden min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold leading-none text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-clinic sm:inline-flex"
+            className="focus-ring hidden min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold leading-none text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 sm:inline-flex"
           >
             <Phone className="h-4 w-4 shrink-0" />
             <span>{hero.primaryCta.label}</span>
@@ -168,27 +197,41 @@ export function Nav() {
             >
               {navigation.map((l) => {
                 const isActive = isActiveHref(l.href, activeId);
+                const dropdown = navDropdowns[l.href];
 
                 return (
-                  <motion.a
-                    key={l.href}
-                    href={l.href}
-                    onClick={() => setOpen(false)}
-                    variants={fadeUp}
-                    custom={{ y: 10 }}
-                    className={`focus-ring focus-ring-dark relative overflow-hidden rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/10 hover:text-white ${
-                      isActive ? "text-white" : "text-white/80"
-                    }`}
-                  >
-                    {isActive ? (
-                      <motion.span
-                        layoutId="mobile-nav-active-pill"
-                        className="absolute inset-0 rounded-2xl bg-white/10"
-                        transition={reduceMotion ? { duration: 0 } : layoutSpring}
-                      />
+                  <motion.div key={l.href} variants={fadeUp} custom={{ y: 10 }}>
+                    <a
+                      href={l.href}
+                      onClick={() => setOpen(false)}
+                      className={`focus-ring focus-ring-dark relative block overflow-hidden rounded-2xl px-4 py-3 text-sm font-semibold transition hover:bg-white/10 hover:text-white ${
+                        isActive ? "text-white" : "text-white/80"
+                      }`}
+                    >
+                      {isActive ? (
+                        <motion.span
+                          layoutId="mobile-nav-active-pill"
+                          className="absolute inset-0 rounded-2xl bg-white/10"
+                          transition={reduceMotion ? { duration: 0 } : layoutSpring}
+                        />
+                      ) : null}
+                      <span className="relative z-10 inline-flex items-center gap-1.5">
+                        {l.label}
+                        {dropdown ? (
+                          <ChevronDown className="h-3.5 w-3.5" aria-hidden="true" />
+                        ) : null}
+                      </span>
+                    </a>
+                    {dropdown ? (
+                      <a
+                        href={dropdown.href}
+                        onClick={() => setOpen(false)}
+                        className="focus-ring focus-ring-dark ml-4 mt-1 block rounded-xl px-4 py-2.5 text-sm font-semibold text-white/62 transition hover:bg-white/10 hover:text-white"
+                      >
+                        {dropdown.label}
+                      </a>
                     ) : null}
-                    <span className="relative z-10">{l.label}</span>
-                  </motion.a>
+                  </motion.div>
                 );
               })}
               <motion.div variants={fadeUp} custom={{ y: 10 }} className="mt-2">

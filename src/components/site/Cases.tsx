@@ -8,7 +8,7 @@ export function Cases() {
   const previewItems = cases.filter((item) => item.homepagePreview).slice(0, 4);
 
   return (
-    <section id="cases" className="relative bg-clinic py-20 text-ink md:py-28">
+    <section id="cases" className="relative bg-white py-20 text-ink md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>

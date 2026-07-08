@@ -130,7 +130,7 @@ export function CountUp({
   suffix?: string;
 }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "0px 0px 140px 0px" });
   const reduceMotion = useReducedMotion();
   const mv = useMotionValue(0);
   const rounded = useTransform(mv, (v) => Math.round(v).toLocaleString());
@@ -145,6 +145,9 @@ export function CountUp({
       const controls = animate(mv, to, { duration, ease });
       return () => controls.stop();
     }
+
+    const fallback = window.setTimeout(() => mv.set(to), 900);
+    return () => window.clearTimeout(fallback);
   }, [inView, to, duration, mv, reduceMotion]);
 
   return (

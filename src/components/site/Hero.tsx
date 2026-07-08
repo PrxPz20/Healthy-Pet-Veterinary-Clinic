@@ -91,7 +91,7 @@ export function Hero() {
           </a>
           <a
             href={homepage.servicesCta.href}
-            className="focus-ring focus-ring-dark group inline-flex min-h-11 items-center gap-2 px-1 py-3 text-sm font-bold text-white transition-colors duration-200 hover:text-white/78"
+            className="focus-ring focus-ring-dark group relative inline-flex min-h-11 items-center gap-2 px-1 py-3 text-sm font-bold text-white transition-colors duration-200 after:absolute after:bottom-2 after:left-1 after:h-px after:w-[calc(100%-0.5rem)] after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:text-white/78 hover:after:scale-x-100"
           >
             {homepage.servicesCta.label}
             <ChevronRight

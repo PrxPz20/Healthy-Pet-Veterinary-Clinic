@@ -1,14 +1,14 @@
 import { ArrowUpRight } from "lucide-react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-import { iconFor } from "./Icons";
+import { serviceImages } from "./ServiceDetailCard";
 
 export function Services() {
   const { homepage, services } = getSiteContent();
-  const featuredServices = services.slice(0, 6);
+  const featuredServices = services.slice(0, 3);
 
   return (
-    <section id="services" className="relative bg-clinic py-20 text-ink md:py-28">
+    <section id="services" className="relative bg-white py-20 text-ink md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -26,32 +26,45 @@ export function Services() {
           </a>
         </Reveal>
 
-        <StaggerGroup className="mt-10 grid grid-cols-1 gap-px overflow-hidden rounded-[1.5rem] border border-line bg-line md:mt-12 md:grid-cols-2 lg:grid-cols-3">
+        <StaggerGroup className="mt-10 grid grid-cols-1 gap-5 md:mt-12 md:gap-6">
           {featuredServices.map((service, index) => {
-            const Icon = iconFor(service.icon);
+            const image = serviceImages[service.slug];
+            const reversed = index % 2 === 1;
+
             return (
-              <StaggerItem key={service.slug} className="h-full">
+              <StaggerItem key={service.slug}>
                 <a
                   href={`/services#${service.slug}`}
-                  className="focus-ring group relative flex h-full min-h-[17rem] flex-col overflow-hidden bg-white px-5 py-7 transition-colors duration-300 before:absolute before:inset-x-0 before:top-0 before:h-1 before:origin-left before:scale-x-0 before:bg-vet-green before:transition-transform before:duration-300 hover:bg-clinic/80 hover:before:scale-x-100 md:px-8 md:py-8"
+                  className="focus-ring focus-ring-dark group block min-w-0 overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-38px_rgba(24,26,28,0.32)] transition-all duration-300 hover:-translate-y-1 hover:border-vet-green/35 hover:shadow-[0_22px_48px_-38px_rgba(24,26,28,0.42)]"
                 >
-                  <div className="flex items-center justify-between gap-4">
-                    <span className="font-display text-sm font-black text-vet-green">
-                      {String(index + 1).padStart(2, "0")}
-                    </span>
-                    <span className="grid h-11 w-11 place-items-center rounded-full bg-vet-green/10 text-vet-green transition-all duration-300 group-hover:scale-105 group-hover:bg-vet-green group-hover:text-white">
-                      <Icon className="h-5 w-5" />
-                    </span>
-                  </div>
-                  <h3 className="mt-6 font-display text-2xl font-black text-ink">
-                    {service.title}
-                  </h3>
-                  <p className="mt-3 max-w-sm text-sm leading-relaxed text-ink/65">
-                    {service.short}
-                  </p>
-                  <div className="mt-auto inline-flex items-center gap-2 pt-6 text-sm font-bold text-vet-green">
-                    Learn more
-                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  <div
+                    className={`grid min-w-0 gap-0 lg:grid-cols-2 ${
+                      reversed ? "" : "lg:[&>*:first-child]:order-2"
+                    }`}
+                  >
+                    <div className="border-b border-line bg-white lg:border-b-0">
+                      <img
+                        src={image}
+                        alt={`${service.title} at Healthy Pet Veterinary Clinic`}
+                        loading="lazy"
+                        className="aspect-[4/3] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                      />
+                    </div>
+                    <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:p-8 lg:min-h-[22rem]">
+                      <span className="font-display text-sm font-black text-vet-green">
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="mt-5 text-balance break-words font-display text-[clamp(1.65rem,5vw,2.8rem)] font-black leading-[1.04] text-ink">
+                        {service.title}
+                      </h3>
+                      <p className="mt-4 max-w-[56ch] text-pretty leading-relaxed text-ink/68">
+                        {service.short}
+                      </p>
+                      <div className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-vet-green transition-colors duration-200 group-hover:text-vet-green-dark">
+                        Learn more
+                        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1" />
+                      </div>
+                    </div>
                   </div>
                 </a>
               </StaggerItem>

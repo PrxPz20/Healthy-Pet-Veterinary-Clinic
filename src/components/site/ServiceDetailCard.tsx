@@ -15,7 +15,7 @@ import ultrasoundImage from "@/assets/services/ultrasound.png";
 import type { Service } from "@/content/types";
 import { quickTransition } from "@/lib/motion";
 
-const serviceImages: Record<string, string> = {
+export const serviceImages: Record<string, string> = {
   pathology: pathologyImage,
   "laboratory-blood-tests": laboratoryImage,
   "orthopedic-surgery": orthopedicImage,
@@ -51,7 +51,7 @@ export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCa
           reversed ? "" : "lg:[&>*:first-child]:order-2"
         }`}
       >
-        <div className="min-h-full border-b border-line bg-clinic lg:border-b-0">
+        <div className="min-h-full border-b border-line bg-white lg:border-b-0">
           <img
             src={image}
             alt={`${service.title} at Healthy Pet Veterinary Clinic`}

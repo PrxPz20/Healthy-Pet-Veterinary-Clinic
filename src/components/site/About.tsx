@@ -42,13 +42,15 @@ export function About() {
               ))}
             </div>
             {confirmedMetrics.length > 0 && (
-              <div className="mt-9 grid gap-8 sm:grid-cols-2">
+              <div className="mt-9 grid grid-cols-2 gap-4 sm:gap-8">
                 {confirmedMetrics.map((metric) => (
                   <div key={metric.label} className="min-w-0">
-                    <div className="font-display text-5xl font-black leading-none text-vet-green">
+                    <div className="font-display text-4xl font-black leading-none text-vet-green sm:text-5xl">
                       <CountUp to={metric.value ?? 0} suffix={metric.suffix} />
                     </div>
-                    <div className="mt-3 text-sm font-bold text-ink/62">{metric.label}</div>
+                    <div className="mt-3 text-xs font-bold leading-snug text-ink/62 sm:text-sm">
+                      {metric.label}
+                    </div>
                     <motion.div
                       className="mt-4 h-px origin-left bg-vet-green/55"
                       initial={reduceMotion ? false : { scaleX: 0 }}

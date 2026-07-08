@@ -105,6 +105,11 @@
     font-family: var(--font-display);
     letter-spacing: 0;
   }
+  p,
+  li,
+  blockquote {
+    text-wrap: pretty;
+  }
   a,
   button {
     -webkit-tap-highlight-color: transparent;

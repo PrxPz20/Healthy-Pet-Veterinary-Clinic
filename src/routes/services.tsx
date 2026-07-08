@@ -39,7 +39,7 @@ function ServicesPage() {
   let renderedServiceIndex = 0;
 
   return (
-    <main id="main-content" className="min-h-screen overflow-x-hidden bg-clinic text-ink">
+    <main id="main-content" className="min-h-screen overflow-x-hidden bg-white text-ink">
       <JsonLd data={buildClinicSchema(content)} />
       <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl, "Services", "/services")} />
       <Nav />
@@ -96,7 +96,7 @@ function ServicesPage() {
                 <a
                   key={category.id}
                   href={`#${category.id}`}
-                  className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full border border-line bg-clinic px-4 py-2 text-sm font-bold text-ink/74 transition-colors duration-200 hover:border-vet-green/35 hover:bg-sage hover:text-ink"
+                  className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink/74 transition-colors duration-200 hover:border-vet-green/35 hover:bg-sage hover:text-ink"
                 >
                   {category.label}
                 </a>

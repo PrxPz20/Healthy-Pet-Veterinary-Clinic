@@ -6,7 +6,7 @@ export function Products() {
   const { homepage, products } = getSiteContent();
 
   return (
-    <section id="products" className="bg-clinic py-20 text-ink md:py-28">
+    <section id="products" className="bg-white py-20 text-ink md:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="max-w-3xl">
           <h2 className="text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">

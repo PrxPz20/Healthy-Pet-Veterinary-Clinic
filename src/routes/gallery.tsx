@@ -38,7 +38,7 @@ function GalleryPage() {
   const hasMore = visibleCount < gallery.length;
 
   return (
-    <main id="main-content" className="min-h-screen overflow-x-hidden bg-clinic text-ink">
+    <main id="main-content" className="min-h-screen overflow-x-hidden bg-white text-ink">
       <JsonLd data={buildClinicSchema(content)} />
       <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl, "Gallery", "/gallery")} />
       <Nav />
@@ -121,13 +121,13 @@ function GalleryPage() {
               <button
                 type="button"
                 onClick={() => setActiveItem(null)}
-                className="focus-ring absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white/92 text-ink shadow-[0_10px_24px_-18px_rgba(24,26,28,0.6)] transition-colors hover:bg-clinic"
+                className="focus-ring absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white/92 text-ink shadow-[0_10px_24px_-18px_rgba(24,26,28,0.6)] transition-colors hover:bg-white"
                 aria-label="Close gallery image"
               >
                 <X className="h-5 w-5" />
               </button>
 
-              <div className="max-h-[72vh] bg-clinic">
+              <div className="max-h-[72vh] bg-white">
                 <img
                   src={activeItem.image.src}
                   alt={activeItem.image.alt}

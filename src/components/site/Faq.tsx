@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Plus } from "lucide-react";
+import { MessageCircle, Plus } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 import { quickTransition } from "@/lib/motion";
@@ -12,14 +12,26 @@ export function Faq() {
 
   return (
     <section id="faq" className="relative bg-white py-20 text-ink md:py-28">
-      <div className="mx-auto max-w-4xl px-5 sm:px-8">
-        <Reveal>
-          <h2 className="text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-16">
+        <Reveal className="lg:order-2 lg:sticky lg:top-32">
+          <h2 className="max-w-xl text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
             {homepage.faq.heading}
           </h2>
+          <div className="mt-8 border-t border-line pt-6">
+            <h3 className="font-display text-2xl font-black leading-tight">
+              Still have questions?
+            </h3>
+            <a
+              href="#contact"
+              className="focus-ring focus-ring-dark mt-5 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
+            >
+              <MessageCircle className="h-4 w-4" aria-hidden="true" />
+              Get in touch
+            </a>
+          </div>
         </Reveal>
 
-        <div className="mt-10 divide-y divide-line border-y border-line md:mt-12">
+        <div className="divide-y divide-line border-y border-line lg:order-1">
           {faqs.map((it, i) => {
             const isOpen = open === i;
             return (

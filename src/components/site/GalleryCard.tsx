@@ -36,7 +36,7 @@ export function GalleryCard({
   const aspect = imageAspect(item.orientation);
   const cardClass = `group flex min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] transition-colors duration-300 hover:border-vet-green/35 ${className}`;
   const image = (
-    <div className={`relative overflow-hidden bg-clinic ${aspect} ${imageClassName}`}>
+    <div className={`relative overflow-hidden bg-white ${aspect} ${imageClassName}`}>
       <motion.img
         src={item.image.src}
         alt={item.image.alt}
