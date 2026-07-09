@@ -48,7 +48,7 @@ export function CaseCard({
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               {item.category ? (
-                <span className="text-xs font-bold text-vet-green">{item.category}</span>
+                <span className="type-label text-vet-green">{item.category}</span>
               ) : null}
               {item.isSensitive ? (
                 <span className="rounded-full bg-sage px-3 py-1 text-[0.72rem] font-bold text-ink/72">
@@ -56,10 +56,8 @@ export function CaseCard({
                 </span>
               ) : null}
             </div>
-            <h3 className="mt-3 font-display text-xl font-black leading-tight text-ink">
-              {item.title}
-            </h3>
-            <p className="mt-2 text-sm leading-relaxed text-ink/62">{item.description}</p>
+            <h3 className="type-card-title mt-3 text-ink">{item.title}</h3>
+            <p className="type-card-copy mt-2 text-ink/62">{item.description}</p>
           </div>
           {href ? (
             <span className="mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sage text-vet-green transition-colors duration-300 group-hover:bg-vet-green group-hover:text-white">

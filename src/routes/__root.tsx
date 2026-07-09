@@ -15,15 +15,15 @@ function NotFoundComponent() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-7xl font-black text-foreground">404</h1>
-        <h2 className="mt-4 font-display text-xl font-bold text-foreground">Page not found</h2>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h1 className="type-page-title text-foreground">404</h1>
+        <h2 className="type-card-title mt-4 text-foreground">Page not found</h2>
+        <p className="type-card-copy mt-2 text-muted-foreground">
           The page you're looking for doesn't exist or has been moved.
         </p>
         <div className="mt-6">
           <Link
             to="/"
-            className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="focus-ring type-button inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Go home
           </Link>
@@ -40,8 +40,8 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
-        <h1 className="font-display text-xl font-bold text-foreground">This page didn't load</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
+        <h1 className="type-card-title text-foreground">This page didn't load</h1>
+        <p className="type-card-copy mt-2 text-muted-foreground">
           Something went wrong on our end. You can try refreshing or head back home.
         </p>
         <div className="mt-6 flex flex-wrap justify-center gap-2">
@@ -50,13 +50,13 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
               router.invalidate();
               reset();
             }}
-            className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+            className="focus-ring type-button inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
           >
             Try again
           </button>
           <a
             href="/"
-            className="focus-ring inline-flex min-h-11 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+            className="focus-ring type-button inline-flex min-h-11 items-center justify-center rounded-md border border-input bg-background px-4 py-2 text-foreground transition-colors hover:bg-accent"
           >
             Go home
           </a>
@@ -89,7 +89,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800;900&display=swap",
       },
       { rel: "stylesheet", href: appCss },
     ],
@@ -109,7 +109,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
       <body>
         <a
           href="#main-content"
-          className="focus-ring fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-white px-4 py-3 text-sm font-bold text-ink shadow-md transition-transform focus:translate-y-0"
+          className="focus-ring type-button fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-white px-4 py-3 text-ink shadow-md transition-transform focus:translate-y-0"
         >
           Skip to main content
         </a>

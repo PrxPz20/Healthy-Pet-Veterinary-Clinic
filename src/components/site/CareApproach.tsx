@@ -18,10 +18,8 @@ export function CareApproach() {
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
           <div className="eyebrow text-sage-light">{homepage.approach.label}</div>
-          <h2 className="mt-3 max-w-lg text-balance font-display text-[clamp(2.1rem,4.5vw,3.7rem)] font-black leading-[1.02]">
-            {homepage.approach.heading}
-          </h2>
-          <p className="mt-5 max-w-md leading-relaxed text-white/72">{homepage.approach.body}</p>
+          <h2 className="type-section-title mt-3 max-w-lg">{homepage.approach.heading}</h2>
+          <p className="type-section-copy mt-5 max-w-md text-white/72">{homepage.approach.body}</p>
           <div className="mt-8 overflow-hidden rounded-3xl">
             <img
               src={media.care.src}
@@ -44,12 +42,12 @@ export function CareApproach() {
             {approach.map((item, index) => (
               <Reveal key={item.step} delay={index * 0.05}>
                 <article className="relative pl-14">
-                  <div className="absolute left-0 top-1 grid h-10 w-10 place-items-center rounded-full border border-white/14 bg-ink font-display text-sm font-black text-vet-green">
+                  <div className="type-label absolute left-0 top-1 grid h-10 w-10 place-items-center rounded-full border border-white/14 bg-ink text-vet-green">
                     {item.step}
                   </div>
                   <div className="border-b border-white/12 pb-10">
-                    <h3 className="font-display text-3xl font-black text-white">{item.title}</h3>
-                    <p className="mt-4 max-w-2xl leading-relaxed text-white/70">{item.body}</p>
+                    <h3 className="type-feature-title text-white">{item.title}</h3>
+                    <p className="type-body mt-4 max-w-2xl text-white/70">{item.body}</p>
                   </div>
                 </article>
               </Reveal>

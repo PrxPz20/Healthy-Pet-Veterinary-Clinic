@@ -100,7 +100,7 @@ export function Nav() {
               <div key={l.href} className="group/drop relative">
                 <a
                   href={l.href}
-                  className={`focus-ring focus-ring-dark relative flex whitespace-nowrap rounded-full px-2.5 py-2 text-[0.82rem] font-semibold transition-colors duration-200 2xl:px-3 2xl:text-sm ${
+                  className={`focus-ring focus-ring-dark relative flex whitespace-nowrap rounded-full px-2.5 py-2 text-sm font-semibold transition-colors duration-200 2xl:px-3 ${
                     isActive
                       ? "text-white"
                       : compact
@@ -130,7 +130,7 @@ export function Nav() {
                     <div className="rounded-2xl border border-white/10 bg-ink/92 p-2 backdrop-blur-xl">
                       <a
                         href={dropdown.href}
-                        className="focus-ring focus-ring-dark block rounded-xl px-4 py-3 text-sm font-bold text-white/78 transition-colors hover:bg-white/10 hover:text-white"
+                        className="focus-ring focus-ring-dark type-button block rounded-xl px-4 py-3 text-white/78 transition-colors hover:bg-white/10 hover:text-white"
                       >
                         {dropdown.label}
                       </a>
@@ -152,7 +152,7 @@ export function Nav() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
                 transition={reduceMotion ? { duration: 0 } : softTransition}
-                className="focus-ring focus-ring-dark inline-flex max-w-24 items-center rounded-full bg-white/10 px-3 py-2 text-xs font-bold text-white backdrop-blur-md xl:hidden"
+                className="focus-ring focus-ring-dark type-label inline-flex max-w-24 items-center rounded-full bg-white/10 px-3 py-2 text-white backdrop-blur-md xl:hidden"
               >
                 <span className="truncate">{activeItem.label}</span>
               </motion.a>
@@ -160,7 +160,7 @@ export function Nav() {
           </AnimatePresence>
           <a
             href={hero.primaryCta.href}
-            className="focus-ring hidden min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-bold leading-none text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 sm:inline-flex"
+            className="focus-ring type-button hidden min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 sm:inline-flex"
           >
             <Phone className="h-4 w-4 shrink-0" />
             <span>{hero.primaryCta.label}</span>
@@ -237,7 +237,7 @@ export function Nav() {
               <motion.div variants={fadeUp} custom={{ y: 10 }} className="mt-2">
                 <a
                   href={hero.primaryCta.href}
-                  className="focus-ring inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-sm font-bold text-ink"
+                  className="focus-ring type-button inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-ink"
                 >
                   <Phone className="h-4 w-4" />
                   {hero.primaryCta.label}

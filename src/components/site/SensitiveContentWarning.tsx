@@ -85,15 +85,12 @@ export function SensitiveContentWarning() {
                 <AlertTriangle className="relative h-6 w-6 sm:h-9 sm:w-9" />
               </div>
               <div>
-                <h2
-                  id="sensitive-warning-title"
-                  className="font-display text-2xl font-black leading-tight sm:text-5xl"
-                >
+                <h2 id="sensitive-warning-title" className="type-section-title">
                   Sensitive images
                 </h2>
                 <p
                   id="sensitive-warning-description"
-                  className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/72 sm:mt-4 sm:text-xl"
+                  className="type-section-copy mt-3 max-w-2xl text-ink/72 sm:mt-4"
                 >
                   This page may include surgical, wound-related, or clinical case images. Some
                   visitors may find them uncomfortable. Do you want to continue?
@@ -105,7 +102,7 @@ export function SensitiveContentWarning() {
               <button
                 type="button"
                 onClick={leave}
-                className="focus-ring focus-ring-dark inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-sm font-bold text-ink/50 transition-colors duration-200 hover:text-ink sm:text-base"
+                className="focus-ring focus-ring-dark type-button inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-ink/50 transition-colors duration-200 hover:text-ink"
               >
                 Leave page
               </button>
@@ -114,7 +111,7 @@ export function SensitiveContentWarning() {
                 type="button"
                 onClick={accept}
                 disabled={!isReady}
-                className="focus-ring relative inline-flex min-h-14 w-full items-center justify-center overflow-hidden rounded-2xl border border-vet-green bg-white px-6 py-4 text-sm font-black text-white shadow-[0_14px_28px_-20px_rgba(24,26,28,0.65)] transition-transform duration-200 enabled:cursor-pointer enabled:hover:-translate-y-0.5 disabled:cursor-wait sm:w-auto sm:min-w-64 sm:text-base"
+                className="focus-ring type-button relative inline-flex min-h-14 w-full items-center justify-center overflow-hidden rounded-2xl border border-vet-green bg-white px-6 py-4 text-white shadow-[0_14px_28px_-20px_rgba(24,26,28,0.65)] transition-transform duration-200 enabled:cursor-pointer enabled:hover:-translate-y-0.5 disabled:cursor-wait sm:w-auto sm:min-w-64"
               >
                 <span
                   className="absolute inset-y-0 left-0 bg-vet-green transition-[width] duration-100 ease-linear"

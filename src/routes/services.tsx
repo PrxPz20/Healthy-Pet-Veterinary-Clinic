@@ -67,10 +67,8 @@ function ServicesPage() {
             </span>
           </nav>
           <Reveal className="mt-10 max-w-4xl min-w-0">
-            <h1 className="text-balance break-words font-display text-[clamp(2.35rem,8.5vw,5.6rem)] font-black leading-[1] md:leading-[0.96]">
-              Services
-            </h1>
-            <p className="mt-6 max-w-[20.5rem] break-words text-lg leading-relaxed text-white/72 sm:max-w-2xl">
+            <h1 className="type-page-title break-words">Services</h1>
+            <p className="type-section-copy mt-6 max-w-[20.5rem] break-words text-white/72 sm:max-w-2xl">
               Find the clinic's core care, from testing and imaging to surgery, skin care,
               rehabilitation, grooming, and pet shop support.
             </p>
@@ -82,10 +80,8 @@ function ServicesPage() {
         <div className="mx-auto max-w-7xl">
           <Reveal className="grid gap-7 lg:grid-cols-[0.72fr_1fr] lg:items-center">
             <div className="min-w-0">
-              <h2 className="font-display text-3xl font-black leading-tight text-ink md:text-5xl">
-                Find the right care.
-              </h2>
-              <p className="mt-4 max-w-xl text-pretty leading-relaxed text-ink/68">
+              <h2 className="type-section-title text-ink">Find the right care.</h2>
+              <p className="type-section-copy mt-4 max-w-xl text-ink/68">
                 Browse by care area, then call or message the clinic if you are unsure which service
                 fits your pet's symptoms.
               </p>
@@ -96,7 +92,7 @@ function ServicesPage() {
                 <a
                   key={category.id}
                   href={`#${category.id}`}
-                  className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full border border-line bg-white px-4 py-2 text-sm font-bold text-ink/74 transition-colors duration-200 hover:border-vet-green/35 hover:bg-sage hover:text-ink"
+                  className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center rounded-full border border-line bg-white px-4 py-2 text-ink/74 transition-colors duration-200 hover:border-vet-green/35 hover:bg-sage hover:text-ink"
                 >
                   {category.label}
                 </a>
@@ -112,10 +108,8 @@ function ServicesPage() {
             {groupedCategories.map((category) => (
               <section key={category.id} id={category.id} className="scroll-mt-28">
                 <Reveal className="max-w-3xl">
-                  <h2 className="font-display text-[clamp(2rem,4vw,3.7rem)] font-black leading-[1.04] text-ink">
-                    {category.label}
-                  </h2>
-                  <p className="mt-4 max-w-2xl text-pretty leading-relaxed text-ink/66">
+                  <h2 className="type-section-title text-ink">{category.label}</h2>
+                  <p className="type-section-copy mt-4 max-w-2xl text-ink/66">
                     {category.description}
                   </p>
                 </Reveal>
@@ -141,10 +135,8 @@ function ServicesPage() {
       <section className="bg-white px-5 py-16 text-ink sm:px-8 md:py-20">
         <div className="mx-auto flex max-w-7xl flex-col gap-6 md:flex-row md:items-center md:justify-between">
           <div className="min-w-0">
-            <h2 className="font-display text-3xl font-black md:text-5xl">
-              Not sure what your pet needs?
-            </h2>
-            <p className="mt-3 max-w-xl leading-relaxed text-ink/66">
+            <h2 className="type-section-title">Not sure what your pet needs?</h2>
+            <p className="type-section-copy mt-3 max-w-xl text-ink/66">
               Call or send a WhatsApp message before visiting so the clinic can guide you on timing
               and next steps.
             </p>
@@ -152,7 +144,7 @@ function ServicesPage() {
           <div className="flex min-w-0 flex-wrap gap-3 md:justify-end">
             <a
               href={hero.primaryCta.href}
-              className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
+              className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-6 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
             >
               <Phone className="h-4 w-4" />
               {hero.primaryCta.label}
@@ -161,7 +153,7 @@ function ServicesPage() {
               href={hero.secondaryCta.href}
               target="_blank"
               rel="noreferrer"
-              className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
+              className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-6 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
             >
               <MessageCircle className="h-4 w-4" />
               {hero.secondaryCta.label}

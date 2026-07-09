@@ -140,6 +140,84 @@
   .text-balance {
     text-wrap: balance;
   }
+  .type-hero-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 7vw, 5rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+  .type-page-title {
+    font-family: var(--font-display);
+    font-size: clamp(2.35rem, 6vw, 4.75rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+  .type-section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4.4vw, 3.75rem);
+    font-weight: 900;
+    line-height: 1.04;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+  .type-feature-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.45rem, 3vw, 2.25rem);
+    font-weight: 800;
+    line-height: 1.1;
+    letter-spacing: 0;
+    text-wrap: balance;
+  }
+  .type-card-title {
+    font-family: var(--font-display);
+    font-size: clamp(1.25rem, 1.8vw, 1.5rem);
+    font-weight: 800;
+    line-height: 1.16;
+    letter-spacing: 0;
+  }
+  .type-section-copy {
+    font-size: clamp(1rem, 1.35vw, 1.125rem);
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .type-body {
+    font-size: 1rem;
+    line-height: 1.7;
+    text-wrap: pretty;
+  }
+  .type-card-copy {
+    font-size: 0.875rem;
+    line-height: 1.65;
+    text-wrap: pretty;
+  }
+  .type-button {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1;
+  }
+  .type-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+  .type-stat-number {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 8vw, 3rem);
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: 0;
+  }
+  @media (min-width: 768px) {
+    .type-hero-title {
+      line-height: 0.98;
+    }
+  }
   .glass {
     background-color: color-mix(in oklab, white 70%, transparent);
     backdrop-filter: saturate(140%) blur(16px);

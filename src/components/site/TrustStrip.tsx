@@ -101,8 +101,8 @@ function TrustItem({ item }: { item: TrustStripItem }) {
         <Icon className="h-[18px] w-[18px]" aria-hidden="true" />
       </span>
       <span className="min-w-0">
-        <span className="block text-sm font-bold leading-tight text-ink">{item.title}</span>
-        <span className="mt-1 block truncate text-sm leading-relaxed text-ink/64">{item.body}</span>
+        <span className="type-label block text-ink">{item.title}</span>
+        <span className="type-card-copy mt-1 block truncate text-ink/64">{item.body}</span>
       </span>
     </a>
   );

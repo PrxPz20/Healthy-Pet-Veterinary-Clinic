@@ -34,11 +34,11 @@ export function Contact() {
         <Reveal>
           <div className="max-w-3xl">
             <div className="eyebrow text-sage-light">{homepage.contact.label}</div>
-            <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,5vw,4rem)] font-black leading-[1.02]">
-              {homepage.contact.heading}
-            </h2>
+            <h2 className="type-section-title mt-3">{homepage.contact.heading}</h2>
             {homepage.contact.body ? (
-              <p className="mt-5 max-w-xl leading-relaxed text-white/72">{homepage.contact.body}</p>
+              <p className="type-section-copy mt-5 max-w-xl text-white/72">
+                {homepage.contact.body}
+              </p>
             ) : null}
           </div>
         </Reveal>
@@ -54,7 +54,7 @@ export function Contact() {
                         <row.icon className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
-                        <div className="text-xs font-bold text-white/55">{row.label}</div>
+                        <div className="type-label text-white/55">{row.label}</div>
                         {row.label === "Phone" ? (
                           <div className="mt-1 flex flex-wrap items-center gap-y-1 text-white/92">
                             <a
@@ -96,8 +96,8 @@ export function Contact() {
                   <Clock className="h-4 w-4" aria-hidden="true" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="text-xs font-bold text-white/55">Opening hours</div>
-                  <dl className="mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04] text-sm">
+                  <div className="type-label text-white/55">Opening hours</div>
+                  <dl className="type-card-copy mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
                     {openingHours.map((row) => (
                       <div
                         key={row.day}
@@ -126,10 +126,8 @@ export function Contact() {
               </div>
               <div className="flex flex-col gap-3 border-t border-white/12 p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                  <div className="font-display text-xl font-black">
-                    {clinic.address.city}, Cyprus
-                  </div>
-                  <p className="mt-1 text-sm text-white/68">
+                  <div className="type-card-title">{clinic.address.city}, Cyprus</div>
+                  <p className="type-card-copy mt-1 text-white/68">
                     {clinic.address.street}, {clinic.address.postalCode}
                   </p>
                 </div>
@@ -137,7 +135,7 @@ export function Contact() {
                   href={clinic.mapUrl}
                   target="_blank"
                   rel="noreferrer"
-                  className="focus-ring inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-ink transition-colors duration-200 hover:bg-white/90"
+                  className="focus-ring type-button inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-white px-5 py-3 text-ink transition-colors duration-200 hover:bg-white/90"
                 >
                   {homepage.contact.mapCtaLabel}
                   <MapPin className="h-4 w-4" />

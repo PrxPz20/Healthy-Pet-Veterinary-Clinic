@@ -31,10 +31,8 @@ export function About() {
         <div className="grid items-start gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <Reveal>
             <div className="eyebrow">{about.label}</div>
-            <h2 className="mt-3 text-balance font-display text-[clamp(2.1rem,4.5vw,3.8rem)] font-black leading-[1.02]">
-              {about.heading}
-            </h2>
-            <div className="mt-6 space-y-4 text-base leading-relaxed text-ink/68">
+            <h2 className="type-section-title mt-3">{about.heading}</h2>
+            <div className="type-body mt-6 space-y-4 text-ink/68">
               {about.paragraphs.map((paragraph) => (
                 <p key={paragraph}>
                   <HighlightDoctor text={paragraph} />
@@ -45,12 +43,10 @@ export function About() {
               <div className="mt-9 grid grid-cols-2 gap-4 sm:gap-8">
                 {confirmedMetrics.map((metric) => (
                   <div key={metric.label} className="min-w-0">
-                    <div className="font-display text-4xl font-black leading-none text-vet-green sm:text-5xl">
+                    <div className="type-stat-number text-vet-green">
                       <CountUp to={metric.value ?? 0} suffix={metric.suffix} />
                     </div>
-                    <div className="mt-3 text-xs font-bold leading-snug text-ink/62 sm:text-sm">
-                      {metric.label}
-                    </div>
+                    <div className="type-label mt-3 text-ink/62 sm:text-sm">{metric.label}</div>
                     <motion.div
                       className="mt-4 h-px origin-left bg-vet-green/55"
                       initial={reduceMotion ? false : { scaleX: 0 }}

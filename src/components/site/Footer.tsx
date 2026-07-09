@@ -33,7 +33,7 @@ export function Footer() {
               alt="Healthy Pet Veterinary Clinic"
               className="h-16 w-auto max-w-[260px] object-contain"
             />
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/55">
+            <p className="type-card-copy mt-4 max-w-xs text-white/55">
               {clinic.tagline} Located in {clinic.address.city}, Cyprus.
             </p>
             <div className="mt-6 flex items-center gap-3" aria-label="Social media">
@@ -77,7 +77,7 @@ export function Footer() {
           />
         </div>
 
-        <div className="mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/55 sm:flex-row sm:items-center sm:justify-between">
+        <div className="type-label mt-12 flex flex-col gap-3 border-t border-white/10 pt-6 text-white/55 sm:flex-row sm:items-center sm:justify-between">
           <div>
             © {new Date().getFullYear()} {clinic.legalName}. All rights reserved.
           </div>
@@ -108,7 +108,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <div className="text-sm font-bold text-white/55">{title}</div>
+      <div className="type-label text-white/55">{title}</div>
       <ul className="mt-5 space-y-3">
         {links.map((link) => (
           <li key={`${title}-${link.label}`}>

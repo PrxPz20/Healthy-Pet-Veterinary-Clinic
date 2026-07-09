@@ -35,17 +35,15 @@ export function Testimonials() {
           <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
             <div>
               <div className="eyebrow">REVIEWS</div>
-              <h2 className="text-balance font-display text-[clamp(2rem,4vw,3.4rem)] font-black leading-[1.02]">
-                {homepage.testimonials.heading}
-              </h2>
-              <p className="mt-5 max-w-xl leading-relaxed text-ink/66">
+              <h2 className="type-section-title">{homepage.testimonials.heading}</h2>
+              <p className="type-section-copy mt-5 max-w-xl text-ink/66">
                 {homepage.testimonials.body}
               </p>
               <a
                 href={homepage.testimonials.reviewsUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="focus-ring focus-ring-dark mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
+                className="focus-ring focus-ring-dark type-button mt-7 inline-flex min-h-11 items-center gap-2 rounded-full bg-ink px-5 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
               >
                 View all reviews
                 <ExternalLink className="h-4 w-4" />
@@ -76,9 +74,7 @@ export function Testimonials() {
                           <MessageSquareQuote className="h-5 w-5" />
                         </span>
                         <div className="min-w-0">
-                          <div className="truncate font-display text-xl font-black text-ink">
-                            {active.name}
-                          </div>
+                          <div className="type-card-title truncate text-ink">{active.name}</div>
                           <div
                             className="mt-2 flex gap-1 text-vet-green"
                             aria-label={`${active.rating} out of 5 stars`}
@@ -93,7 +89,7 @@ export function Testimonials() {
                           </div>
                         </div>
                       </div>
-                      <blockquote className="mt-6 min-h-0 flex-1 overflow-y-auto pr-2 text-base leading-relaxed text-ink/72">
+                      <blockquote className="type-body mt-6 min-h-0 flex-1 overflow-y-auto pr-2 text-ink/72">
                         “{active.text}”
                       </blockquote>
                     </motion.article>
@@ -143,9 +139,7 @@ export function Testimonials() {
                 <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
                   <MessageSquareQuote className="h-5 w-5" />
                 </span>
-                <p className="text-sm leading-relaxed text-ink/68">
-                  {homepage.testimonials.emptyState}
-                </p>
+                <p className="type-card-copy text-ink/68">{homepage.testimonials.emptyState}</p>
               </div>
             )}
           </div>

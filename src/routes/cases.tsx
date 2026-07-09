@@ -65,10 +65,8 @@ function CasesPage() {
           </nav>
 
           <Reveal className="mt-10 max-w-4xl min-w-0">
-            <h1 className="text-balance break-words font-display text-[clamp(2.35rem,8.5vw,5.6rem)] font-black leading-[1] md:leading-[0.96]">
-              Cases
-            </h1>
-            <p className="mt-6 max-w-[23rem] break-words text-lg leading-relaxed text-white/72 sm:max-w-2xl">
+            <h1 className="type-page-title break-words">Cases</h1>
+            <p className="type-section-copy mt-6 max-w-[23rem] break-words text-white/72 sm:max-w-2xl">
               Documented veterinary cases shared with care. Sensitive images are blurred until you
               choose to view each one.
             </p>
@@ -84,7 +82,7 @@ function CasesPage() {
               <span className="absolute inset-0 rounded-full ring-2 ring-red-400/45 motion-safe:animate-ping [animation-delay:450ms]" />
               <AlertTriangle className="relative h-5 w-5" aria-hidden="true" />
             </span>
-            <p className="min-w-0 text-center text-sm font-medium leading-relaxed text-ink/72 sm:text-base lg:whitespace-nowrap">
+            <p className="type-body min-w-0 text-center font-medium text-ink/72 lg:whitespace-nowrap">
               These images are included for educational review and professional context. They are
               not a substitute for an examination or medical advice for a specific pet.
             </p>
@@ -104,7 +102,7 @@ function CasesPage() {
               <button
                 type="button"
                 onClick={() => setVisibleCount((count) => count + CASES_PAGE_SIZE)}
-                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-vet-green"
+                className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-white transition-colors duration-200 hover:bg-vet-green"
               >
                 Load more
               </button>

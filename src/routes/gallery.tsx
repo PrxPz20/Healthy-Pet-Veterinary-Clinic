@@ -60,10 +60,8 @@ function GalleryPage() {
           </nav>
 
           <Reveal className="mt-10 max-w-4xl min-w-0">
-            <h1 className="text-balance break-words font-display text-[clamp(2.35rem,8.5vw,5.6rem)] font-black leading-[1] md:leading-[0.96]">
-              Gallery
-            </h1>
-            <p className="mt-6 max-w-[22rem] break-words text-lg leading-relaxed text-white/72 sm:max-w-2xl">
+            <h1 className="type-page-title break-words">Gallery</h1>
+            <p className="type-section-copy mt-6 max-w-[22rem] break-words text-white/72 sm:max-w-2xl">
               Real pets, real visits, and familiar moments from Healthy Pet Veterinary Clinic.
             </p>
           </Reveal>
@@ -88,7 +86,7 @@ function GalleryPage() {
               <button
                 type="button"
                 onClick={() => setVisibleCount((count) => count + GALLERY_PAGE_SIZE)}
-                className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-sm font-bold text-white transition-colors duration-200 hover:bg-vet-green"
+                className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-white transition-colors duration-200 hover:bg-vet-green"
               >
                 Load more
               </button>
@@ -136,10 +134,10 @@ function GalleryPage() {
               </div>
 
               <div className="p-5 sm:p-6">
-                <h2 id="gallery-modal-title" className="font-display text-2xl font-black">
+                <h2 id="gallery-modal-title" className="type-card-title">
                   {activeItem.title}
                 </h2>
-                <p className="mt-2 leading-relaxed text-ink/66">{activeItem.description}</p>
+                <p className="type-body mt-2 text-ink/66">{activeItem.description}</p>
               </div>
             </motion.div>
           </motion.div>

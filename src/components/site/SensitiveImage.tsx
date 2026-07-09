@@ -40,21 +40,21 @@ export function SensitiveImage({
       {protectedImage ? (
         <div className="absolute inset-0 grid place-items-center bg-ink/30 px-5 text-center backdrop-blur-[2px]">
           <div className="max-w-[16rem] rounded-[1.25rem] bg-white/92 p-4 text-ink shadow-[0_14px_32px_-22px_rgba(24,26,28,0.72)]">
-            <div className="text-sm font-bold">Sensitive veterinary image</div>
-            <p className="mt-1 text-xs leading-relaxed text-ink/66">
+            <div className="type-label">Sensitive veterinary image</div>
+            <p className="type-card-copy mt-1 text-ink/66">
               This case photo may be uncomfortable to view.
             </p>
             {allowReveal ? (
               <button
                 type="button"
                 onClick={() => setRevealed(true)}
-                className="focus-ring focus-ring-dark mt-4 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-xs font-bold text-white transition-colors duration-200 hover:bg-vet-green"
+                className="focus-ring focus-ring-dark type-button mt-4 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-white transition-colors duration-200 hover:bg-vet-green"
               >
                 <Eye className="h-4 w-4" />
                 View image
               </button>
             ) : (
-              <span className="mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-xs font-bold text-white">
+              <span className="type-button mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-white">
                 Protected preview
               </span>
             )}

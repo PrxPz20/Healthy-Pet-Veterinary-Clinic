@@ -52,8 +52,8 @@ export function GalleryCard({
     <figcaption className="mt-auto p-5 sm:p-6">
       <div className="flex items-end justify-between gap-4">
         <div className="min-w-0">
-          <h3 className="font-display text-xl font-black leading-tight text-ink">{item.title}</h3>
-          <p className="mt-2 text-sm leading-relaxed text-ink/62">{item.description}</p>
+          <h3 className="type-card-title text-ink">{item.title}</h3>
+          <p className="type-card-copy mt-2 text-ink/62">{item.description}</p>
         </div>
         {href ? (
           <span className="mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sage text-vet-green transition-colors duration-300 group-hover:bg-vet-green group-hover:text-white">

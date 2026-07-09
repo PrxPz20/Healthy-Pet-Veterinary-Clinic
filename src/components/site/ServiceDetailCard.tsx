@@ -61,17 +61,13 @@ export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCa
         </div>
 
         <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:p-8 lg:min-h-[26rem]">
-          <h3 className="text-balance break-words font-display text-[clamp(1.65rem,5.5vw,3rem)] font-black leading-[1.04] text-ink">
-            {service.title}
-          </h3>
-          <p className="mt-4 max-w-[68ch] text-pretty leading-relaxed text-ink/68">
-            {service.detail}
-          </p>
+          <h3 className="type-feature-title break-words text-ink">{service.title}</h3>
+          <p className="type-body mt-4 max-w-[68ch] text-ink/68">{service.detail}</p>
 
           <a
             href="/#contact"
             aria-label={`Ask about ${service.title}`}
-            className="focus-ring focus-ring-dark group/link mt-8 inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-ink px-5 py-3 text-sm font-bold text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
+            className="focus-ring focus-ring-dark type-button group/link mt-8 inline-flex min-h-11 w-fit items-center gap-2 rounded-full bg-ink px-5 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green"
           >
             Ask about this service
             <ArrowUpRight

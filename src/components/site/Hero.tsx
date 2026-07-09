@@ -62,7 +62,7 @@ export function Hero() {
           initial={reduceMotion ? false : { opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reduceMotion ? { duration: 0 } : { ...softTransition, delay: 0.22 }}
-          className="max-w-[21rem] text-balance font-display text-[clamp(2.1rem,7.8vw,4.8rem)] font-black leading-[1] text-white sm:max-w-5xl md:leading-[0.96]"
+          className="type-hero-title max-w-[21rem] text-white sm:max-w-5xl"
         >
           {hero.title}
         </motion.h1>
@@ -71,7 +71,7 @@ export function Hero() {
           initial={reduceMotion ? false : { opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={reduceMotion ? { duration: 0 } : { ...softTransition, delay: 0.34 }}
-          className="mt-6 max-w-[22rem] text-base leading-relaxed text-white/78 sm:max-w-2xl sm:text-lg md:text-xl"
+          className="type-section-copy mt-6 max-w-[22rem] text-white/78 sm:max-w-2xl"
         >
           {hero.body}
         </motion.p>
@@ -84,14 +84,14 @@ export function Hero() {
         >
           <a
             href={hero.primaryCta.href}
-            className="focus-ring focus-ring-dark group inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-7 py-3.5 text-sm font-bold text-white shadow-[0_8px_18px_-16px_rgba(59,98,34,0.82)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
+            className="focus-ring focus-ring-dark type-button group inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-7 py-3.5 text-white shadow-[0_8px_18px_-16px_rgba(59,98,34,0.82)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
           >
             <Phone className="h-4 w-4" />
             {hero.primaryCta.label}
           </a>
           <a
             href={homepage.servicesCta.href}
-            className="focus-ring focus-ring-dark group relative inline-flex min-h-11 items-center gap-2 px-1 py-3 text-sm font-bold text-white transition-colors duration-200 after:absolute after:bottom-2 after:left-1 after:h-px after:w-[calc(100%-0.5rem)] after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:text-white/78 hover:after:scale-x-100"
+            className="focus-ring focus-ring-dark type-button group relative inline-flex min-h-11 items-center gap-2 px-1 py-3 text-white transition-colors duration-200 after:absolute after:bottom-2 after:left-1 after:h-px after:w-[calc(100%-0.5rem)] after:origin-left after:scale-x-0 after:bg-white after:transition-transform after:duration-300 hover:text-white/78 hover:after:scale-x-100"
           >
             {homepage.servicesCta.label}
             <ChevronRight
