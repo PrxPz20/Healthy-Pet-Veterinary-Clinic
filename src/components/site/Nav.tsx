@@ -8,6 +8,8 @@ import {
   useScroll,
 } from "framer-motion";
 import { getSiteContent } from "@/content/provider";
+import { primaryContactCta } from "@/content/contact";
+import { useContactSettings } from "./contact-settings-context";
 import { isActiveHref, useActiveSection } from "@/hooks/use-active-section";
 import { fadeUp, layoutSpring, menuPanel, softTransition, stagger } from "@/lib/motion";
 import logoUrl from "@/assets/healthy_pet_logo_white.svg";
@@ -19,7 +21,8 @@ const navDropdowns: Record<string, { label: string; href: string }> = {
 };
 
 export function Nav() {
-  const { navigation, hero } = getSiteContent();
+  const { navigation } = getSiteContent();
+  const primaryCta = primaryContactCta(useContactSettings());
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
@@ -87,7 +90,7 @@ export function Nav() {
           <img
             src={logoUrl}
             alt="Healthy Pet Veterinary Clinic"
-            className="h-12 w-auto max-w-[190px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-14 sm:max-w-[260px]"
+            className="h-14 w-auto max-w-[200px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-16 sm:max-w-[280px]"
           />
         </a>
 
@@ -159,11 +162,11 @@ export function Nav() {
             ) : null}
           </AnimatePresence>
           <a
-            href={hero.primaryCta.href}
+            href={primaryCta.href}
             className="focus-ring type-button hidden min-h-12 items-center justify-center gap-2 rounded-full bg-white px-6 py-3 text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90 sm:inline-flex"
           >
             <Phone className="h-4 w-4 shrink-0" />
-            <span>{hero.primaryCta.label}</span>
+            <span>{primaryCta.label}</span>
           </a>
           <button
             ref={menuButtonRef}
@@ -236,11 +239,11 @@ export function Nav() {
               })}
               <motion.div variants={fadeUp} custom={{ y: 10 }} className="mt-2">
                 <a
-                  href={hero.primaryCta.href}
+                  href={primaryCta.href}
                   className="focus-ring type-button inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-full bg-white px-4 py-3 text-ink"
                 >
                   <Phone className="h-4 w-4" />
-                  {hero.primaryCta.label}
+                  {primaryCta.label}
                 </a>
               </motion.div>
             </motion.div>

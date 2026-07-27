@@ -1,34 +1,8 @@
 import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import dermatologyImage from "@/assets/services/dermatology.png";
-import digitalXrayImage from "@/assets/services/digital_x_ray.png";
-import endoscopyImage from "@/assets/services/endoscopy.png";
-import groomingImage from "@/assets/services/grooming.png";
-import laboratoryImage from "@/assets/services/full_laboratory_blood_tests .png";
-import orthopedicImage from "@/assets/services/orthopedic_surgery.png";
-import pathologyImage from "@/assets/services/pathology.png";
-import hydrotherapyImage from "@/assets/services/pet_hydrotherapy.png";
-import physiotherapyImage from "@/assets/services/pet_physiotherapy_&_acupuncture.png";
-import petShopImage from "@/assets/services/pet_shop.png";
-import softTissueImage from "@/assets/services/soft_tissue_surgery.png";
-import ultrasoundImage from "@/assets/services/ultrasound.png";
+import { serviceImages } from "@/content/cms-media";
 import type { Service } from "@/content/types";
 import { quickTransition } from "@/lib/motion";
-
-export const serviceImages: Record<string, string> = {
-  pathology: pathologyImage,
-  "laboratory-blood-tests": laboratoryImage,
-  "orthopedic-surgery": orthopedicImage,
-  "soft-tissue-surgery": softTissueImage,
-  dermatology: dermatologyImage,
-  ultrasound: ultrasoundImage,
-  "digital-x-ray": digitalXrayImage,
-  "pet-hydrotherapy": hydrotherapyImage,
-  "physiotherapy-acupuncture": physiotherapyImage,
-  endoscopy: endoscopyImage,
-  grooming: groomingImage,
-  "pet-shop": petShopImage,
-};
 
 type ServiceDetailCardProps = {
   service: Service;
@@ -37,7 +11,8 @@ type ServiceDetailCardProps = {
 
 export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCardProps) {
   const reduceMotion = useReducedMotion();
-  const image = serviceImages[service.slug] ?? petShopImage;
+  const image = service.image?.src ?? serviceImages[service.slug] ?? serviceImages["pet-shop"];
+  const imageAlt = service.image?.alt ?? `${service.title} at Healthy Pet Veterinary Clinic`;
 
   return (
     <motion.article
@@ -54,7 +29,7 @@ export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCa
         <div className="min-h-full border-b border-line bg-white lg:border-b-0">
           <img
             src={image}
-            alt={`${service.title} at Healthy Pet Veterinary Clinic`}
+            alt={imageAlt}
             loading="lazy"
             className="aspect-[4/3] h-full w-full object-cover"
           />

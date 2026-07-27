@@ -1,9 +1,15 @@
-import { MessageCircle, Phone } from "lucide-react";
+import { Mail, MessageCircle, Phone } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
+import { primaryContactCta, whatsappCta } from "@/content/contact";
+import { useContactSettings } from "./contact-settings-context";
 
 export function CtaStrip() {
-  const { hero, homepage } = getSiteContent();
+  const { homepage } = getSiteContent();
+  const contact = useContactSettings();
+  const primary = primaryContactCta(contact);
+  const secondary = contact.phones.length ? whatsappCta(contact) : null;
+  const PrimaryIcon = contact.phones.length ? Phone : contact.whatsapp ? MessageCircle : Mail;
 
   return (
     <section className="bg-white px-5 py-6 text-ink sm:px-8">
@@ -14,21 +20,23 @@ export function CtaStrip() {
         </div>
         <div className="flex flex-wrap gap-3">
           <a
-            href={hero.primaryCta.href}
+            href={primary.href}
             className="focus-ring type-button inline-flex min-h-11 items-center gap-2 rounded-full bg-white px-5 py-3 text-ink transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/90"
           >
-            <Phone className="h-4 w-4" />
-            {hero.primaryCta.label}
+            <PrimaryIcon className="h-4 w-4" />
+            {primary.label}
           </a>
-          <a
-            href={hero.secondaryCta.href}
-            target="_blank"
-            rel="noreferrer"
-            className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-5 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
-          >
-            <MessageCircle className="h-4 w-4" />
-            {hero.secondaryCta.label}
-          </a>
+          {secondary ? (
+            <a
+              href={secondary.href}
+              target="_blank"
+              rel="noreferrer"
+              className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-5 py-3 text-white transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
+            >
+              <MessageCircle className="h-4 w-4" />
+              {secondary.label}
+            </a>
+          ) : null}
         </div>
       </Reveal>
     </section>

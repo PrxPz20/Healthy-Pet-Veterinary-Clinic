@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { CountUp, Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
+import { useEditorialContent } from "./editorial-content-context";
 import { ease } from "@/lib/motion";
 
 function HighlightDoctor({ text }: { text: string }) {
@@ -21,7 +22,8 @@ function HighlightDoctor({ text }: { text: string }) {
 }
 
 export function About() {
-  const { about, media } = getSiteContent();
+  const { media } = getSiteContent();
+  const { about } = useEditorialContent();
   const confirmedMetrics = about.metrics.filter((metric) => typeof metric.value === "number");
   const reduceMotion = useReducedMotion();
 

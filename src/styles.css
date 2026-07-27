@@ -114,6 +114,9 @@
   button {
     -webkit-tap-highlight-color: transparent;
   }
+  button:not(:disabled) {
+    cursor: pointer;
+  }
 }
 
 @layer utilities {
@@ -129,6 +132,11 @@
     box-shadow:
       0 0 0 3px var(--ink),
       0 0 0 6px color-mix(in oklab, var(--sage-light) 88%, transparent);
+  }
+  .focus-ring[data-invalid="true"]:focus-visible {
+    box-shadow:
+      0 0 0 3px var(--white),
+      0 0 0 6px color-mix(in oklab, #dc2626 78%, transparent);
   }
   .eyebrow {
     font-family: var(--font-sans);

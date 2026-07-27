@@ -17,8 +17,15 @@ dist-ssr/
 .vite/
 .cache/
 .parcel-cache/
+*.tsbuildinfo
+.eslintcache
 coverage/
+playwright-report/
+test-results/
+blob-report/
 *.local
+
+# Environment files
 .env
 .env.*
 !.env.example
@@ -26,11 +33,17 @@ coverage/
 
 # Unused large local logo source kept outside git unless needed
 src/assets/HealthyPet_Logo.svg
-PERSONALIZATION_CHECKLIST.md
 
 # Wrangler / Cloudflare
 .wrangler/
 .dev.vars
+
+# Supabase local CLI state (migrations remain tracked)
+supabase/.branches/
+supabase/.temp/
+supabase/.env
+supabase/.env.*
+!supabase/.env.example
 
 # Deployment / platform state
 .vercel/
@@ -46,9 +59,9 @@ PERSONALIZATION_CHECKLIST.md
 !.vscode/extensions.json
 .idea
 .DS_Store
+Thumbs.db
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
 *.sw?
-.vercel

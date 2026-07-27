@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
+import { coverImage } from "@/content/media";
 import type { GalleryItem } from "@/content/types";
 import { quickTransition } from "@/lib/motion";
 
@@ -34,12 +35,13 @@ export function GalleryCard({
 }: GalleryCardProps) {
   const reduceMotion = useReducedMotion();
   const aspect = imageAspect(item.orientation);
+  const itemCover = coverImage(item);
   const cardClass = `group flex min-w-0 flex-col overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] transition-colors duration-300 hover:border-vet-green/35 ${className}`;
   const image = (
     <div className={`relative overflow-hidden bg-white ${aspect} ${imageClassName}`}>
       <motion.img
-        src={item.image.src}
-        alt={item.image.alt}
+        src={itemCover.src}
+        alt={itemCover.alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
         className="h-full w-full object-cover"

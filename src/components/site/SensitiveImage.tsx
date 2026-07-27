@@ -47,7 +47,10 @@ export function SensitiveImage({
             {allowReveal ? (
               <button
                 type="button"
-                onClick={() => setRevealed(true)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setRevealed(true);
+                }}
                 className="focus-ring focus-ring-dark type-button mt-4 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-white transition-colors duration-200 hover:bg-vet-green"
               >
                 <Eye className="h-4 w-4" />

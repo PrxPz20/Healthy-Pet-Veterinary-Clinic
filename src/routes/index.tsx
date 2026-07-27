@@ -16,6 +16,8 @@ import { PageLoader } from "@/components/site/PageLoader";
 import { MobileCta } from "@/components/site/MobileCta";
 import { getSiteContent } from "@/content/provider";
 import { buildClinicSchema, buildFaqSchema, JsonLd } from "@/lib/schema";
+import { useContactSettings } from "@/components/site/contact-settings-context";
+import { useEditorialContent } from "@/components/site/editorial-content-context";
 
 const content = getSiteContent();
 
@@ -38,10 +40,12 @@ export const Route = createFileRoute("/")({
 });
 
 function Page() {
+  const contact = useContactSettings();
+  const { faqs } = useEditorialContent();
   return (
     <main id="main-content" className="min-h-screen bg-white text-ink">
-      <JsonLd data={buildClinicSchema(content)} />
-      <JsonLd data={buildFaqSchema(content.faqs)} />
+      <JsonLd data={buildClinicSchema(content, contact)} />
+      <JsonLd data={buildFaqSchema(faqs)} />
       <PageLoader />
       <Nav />
       <Hero />

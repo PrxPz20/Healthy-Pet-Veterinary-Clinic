@@ -9,7 +9,12 @@ import {
 } from "@tanstack/react-router";
 
 import appCss from "../styles.css?url";
+import { getStaticContactSettings } from "@/content/contact";
 import { getSiteContent } from "@/content/provider";
+import { ContactSettingsProvider } from "@/components/site/ContactSettingsProvider";
+import { loadPublicContactSettings } from "@/lib/supabase/public-contact";
+import { EditorialContentProvider } from "@/components/site/EditorialContentProvider";
+import { loadPublicEditorialContent } from "@/lib/supabase/public-editorial";
 
 function NotFoundComponent() {
   return (
@@ -67,6 +72,25 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
 }
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: async ({ location }) => {
+    if (location.pathname.startsWith("/admin")) {
+      const content = getSiteContent();
+      return {
+        contact: getStaticContactSettings(),
+        editorial: {
+          about: content.about,
+          faqs: content.faqs,
+          testimonials: content.testimonials,
+        },
+      };
+    }
+
+    const [contact, editorial] = await Promise.all([
+      loadPublicContactSettings(),
+      loadPublicEditorialContent(),
+    ]);
+    return { contact, editorial };
+  },
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -107,12 +131,6 @@ function RootShell({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <a
-          href="#main-content"
-          className="focus-ring type-button fixed left-4 top-4 z-[100] -translate-y-24 rounded-full bg-white px-4 py-3 text-ink shadow-md transition-transform focus:translate-y-0"
-        >
-          Skip to main content
-        </a>
         {children}
         <Scripts />
       </body>
@@ -122,11 +140,16 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const { contact, editorial } = Route.useLoaderData();
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <ContactSettingsProvider value={contact}>
+        <EditorialContentProvider value={editorial}>
+          {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+          <Outlet />
+        </EditorialContentProvider>
+      </ContactSettingsProvider>
     </QueryClientProvider>
   );
 }

@@ -3,10 +3,12 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ChevronLeft, ChevronRight, ExternalLink, MessageSquareQuote, Star } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
+import { useEditorialContent } from "./editorial-content-context";
 import { softTransition } from "@/lib/motion";
 
 export function Testimonials() {
-  const { homepage, testimonials } = getSiteContent();
+  const { homepage } = getSiteContent();
+  const { testimonials } = useEditorialContent();
   const hasTestimonials = testimonials.length > 0;
   const [activeIndex, setActiveIndex] = useState(0);
   const [paused, setPaused] = useState(false);

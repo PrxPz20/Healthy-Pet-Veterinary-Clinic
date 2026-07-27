@@ -1,9 +1,31 @@
 import { ExternalLink, Info, MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
+import type { Product } from "@/content/types";
+import {
+  initialPublicItems,
+  loadPublishedProducts,
+  mergeProductItems,
+} from "@/lib/supabase/public-gallery";
 
 export function Products() {
   const { homepage, products } = getSiteContent();
+  const [items, setItems] = useState<Product[]>(() => initialPublicItems(products));
+
+  useEffect(() => {
+    let mounted = true;
+
+    loadPublishedProducts().then((cmsItems) => {
+      if (mounted) {
+        setItems(mergeProductItems(products, cmsItems));
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [products]);
 
   return (
     <section id="products" className="bg-white py-20 text-ink md:py-28">
@@ -14,23 +36,31 @@ export function Products() {
         </Reveal>
 
         <StaggerGroup className="mt-10 grid grid-cols-1 gap-5 md:mt-12 sm:grid-cols-2 lg:grid-cols-4">
-          {products.map((product) => (
+          {items.map((product) => (
             <StaggerItem key={product.name}>
               <article className="group h-full overflow-hidden rounded-3xl border border-line bg-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_-22px_rgba(24,26,28,0.3)]">
                 <div className="aspect-[4/3] overflow-hidden bg-sage">
-                  <img
-                    src={product.image.src}
-                    alt={product.image.alt}
-                    loading="lazy"
-                    width={900}
-                    height={675}
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
-                  />
+                  {product.image.src ? (
+                    <img
+                      src={product.image.src}
+                      alt={product.image.alt}
+                      loading="lazy"
+                      width={900}
+                      height={675}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                    />
+                  ) : (
+                    <div className="grid h-full place-items-center px-5 text-center text-sm font-bold text-ink/52">
+                      No image added
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-col p-5 md:p-6">
                   <div className="type-label text-vet-green">{product.category}</div>
                   <h3 className="type-card-title mt-2 text-ink">{product.name}</h3>
-                  <p className="type-card-copy mt-3 flex-1 text-ink/62">{product.description}</p>
+                  {product.description ? (
+                    <p className="type-card-copy mt-3 flex-1 text-ink/62">{product.description}</p>
+                  ) : null}
                   {(product.links.wolt || product.links.foody) && (
                     <div className="mt-5 flex flex-wrap gap-2">
                       {product.links.wolt && (

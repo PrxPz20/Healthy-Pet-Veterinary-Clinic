@@ -1,39 +1,49 @@
 import { Clock, Languages, MapPin, MessageCircle, Phone } from "lucide-react";
 import { StaggerGroup, StaggerItem } from "@/components/anim";
-import { getSiteContent } from "@/content/provider";
+import { formatPhone, phoneHref, whatsappHref } from "@/content/contact";
+import { useContactSettings } from "./contact-settings-context";
 
 export function TrustStrip() {
-  const { clinic, openingHours } = getSiteContent();
-  const regularHours = openingHours
+  const contact = useContactSettings();
+  const regularHours = contact.openingHours
     .filter((item) => ["Monday", "Tuesday", "Thursday", "Friday"].includes(item.day))
     .at(0)
     ?.ranges.map((range) => `${range.opens}-${range.closes}`)
     .join(" / ");
 
+  const phone = contact.phones[0];
   const trustItems = [
     {
       icon: MapPin,
       title: "Location",
-      body: "Agios Athanasios, Limassol",
-      href: clinic.mapUrl,
-      external: true,
+      body: `${contact.address.street}, ${contact.address.city}`,
+      href: contact.address.mapUrl || "#contact",
+      external: Boolean(contact.address.mapUrl),
       ariaLabel: "Open clinic location on Google Maps",
     },
-    {
-      icon: Phone,
-      title: "Phone",
-      body: clinic.phoneDisplay,
-      href: `tel:${clinic.phone}`,
-      ariaLabel: `Call the clinic at ${clinic.phoneDisplay}`,
-    },
-    {
-      icon: MessageCircle,
-      title: "WhatsApp",
-      body: clinic.vetPhoneDisplay ?? clinic.whatsappDisplay,
-      href: clinic.whatsapp,
-      external: true,
-      ariaLabel: "Message the clinic on WhatsApp",
-    },
+    ...(phone
+      ? [
+          {
+            icon: Phone,
+            title: "Phone",
+            body: formatPhone(phone.number),
+            href: phoneHref(phone.number),
+            ariaLabel: `Call the clinic at ${formatPhone(phone.number)}`,
+          },
+        ]
+      : []),
+    ...(contact.whatsapp
+      ? [
+          {
+            icon: MessageCircle,
+            title: "WhatsApp",
+            body: formatPhone(contact.whatsapp),
+            href: whatsappHref(contact.whatsapp),
+            external: true,
+            ariaLabel: "Message the clinic on WhatsApp",
+          },
+        ]
+      : []),
     {
       icon: Clock,
       title: "Hours",
@@ -49,6 +59,12 @@ export function TrustStrip() {
       ariaLabel: "View doctor information and spoken languages",
     },
   ];
+  const desktopColumns =
+    trustItems.length === 3
+      ? "md:grid-cols-3"
+      : trustItems.length === 4
+        ? "md:grid-cols-4"
+        : "md:grid-cols-5";
 
   return (
     <section className="relative z-10 border-b border-line bg-white text-ink">
@@ -66,7 +82,9 @@ export function TrustStrip() {
         </div>
       </div>
 
-      <StaggerGroup className="mx-auto hidden max-w-7xl grid-cols-5 gap-3 px-8 py-4 md:grid">
+      <StaggerGroup
+        className={`mx-auto hidden max-w-7xl gap-3 px-8 py-4 md:grid ${desktopColumns}`}
+      >
         {trustItems.map((item) => (
           <StaggerItem key={item.title}>
             <TrustItem item={item} />

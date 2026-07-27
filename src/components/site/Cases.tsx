@@ -1,11 +1,33 @@
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
+import type { CaseItem } from "@/content/types";
+import {
+  initialPublicItems,
+  loadPublishedCases,
+  mergeCaseItems,
+} from "@/lib/supabase/public-gallery";
 import { CaseCard } from "./CaseCard";
 
 export function Cases() {
   const { cases, homepage } = getSiteContent();
-  const previewItems = cases.filter((item) => item.homepagePreview).slice(0, 4);
+  const [items, setItems] = useState<CaseItem[]>(() => initialPublicItems(cases));
+  const previewItems = items.filter((item) => item.homepagePreview).slice(0, 4);
+
+  useEffect(() => {
+    let mounted = true;
+
+    loadPublishedCases().then((cmsItems) => {
+      if (mounted) {
+        setItems(mergeCaseItems(cases, cmsItems));
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [cases]);
 
   return (
     <section id="cases" className="relative bg-white py-20 text-ink md:py-28">
@@ -31,6 +53,10 @@ export function Cases() {
             </StaggerItem>
           ))}
         </StaggerGroup>
+        <p className="type-button mt-8 flex items-center justify-center gap-2 text-center font-semibold text-ink/48">
+          Explore all documented cases
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </p>
       </div>
     </section>
   );

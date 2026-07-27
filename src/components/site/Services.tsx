@@ -1,11 +1,33 @@
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-import { serviceImages } from "./ServiceDetailCard";
+import type { Service } from "@/content/types";
+import {
+  initialPublicItems,
+  loadPublishedServices,
+  mergeServiceItems,
+} from "@/lib/supabase/public-gallery";
+import { serviceImages } from "@/content/cms-media";
 
 export function Services() {
   const { homepage, services } = getSiteContent();
-  const featuredServices = services.slice(0, 3);
+  const [items, setItems] = useState<Service[]>(() => initialPublicItems(services));
+  const featuredServices = items.slice(0, 3);
+
+  useEffect(() => {
+    let mounted = true;
+
+    loadPublishedServices().then((cmsItems) => {
+      if (mounted) {
+        setItems(mergeServiceItems(services, cmsItems));
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [services]);
 
   return (
     <section id="services" className="relative bg-white py-20 text-ink md:py-28">
@@ -26,7 +48,10 @@ export function Services() {
 
         <StaggerGroup className="mt-10 grid grid-cols-1 gap-5 md:mt-12 md:gap-6">
           {featuredServices.map((service, index) => {
-            const image = serviceImages[service.slug];
+            const image =
+              service.image?.src ?? serviceImages[service.slug] ?? serviceImages["pet-shop"];
+            const imageAlt =
+              service.image?.alt ?? `${service.title} at Healthy Pet Veterinary Clinic`;
             const reversed = index % 2 === 1;
 
             return (
@@ -43,7 +68,7 @@ export function Services() {
                     <div className="border-b border-line bg-white lg:border-b-0">
                       <img
                         src={image}
-                        alt={`${service.title} at Healthy Pet Veterinary Clinic`}
+                        alt={imageAlt}
                         loading="lazy"
                         className="aspect-[4/3] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
                       />
@@ -67,6 +92,10 @@ export function Services() {
             );
           })}
         </StaggerGroup>
+        <p className="type-button mt-8 flex items-center justify-center gap-2 text-center font-semibold text-ink/48">
+          Explore all veterinary services
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </p>
       </div>
     </section>
   );

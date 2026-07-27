@@ -9,6 +9,10 @@ export type ImageAsset = {
   alt: string;
 };
 
+export type MediaAsset = ImageAsset & {
+  type?: "image";
+};
+
 export type ClinicInfo = {
   name: string;
   legalName: string;
@@ -41,6 +45,27 @@ export type OpeningHour = {
     opens: string;
     closes: string;
   }[];
+};
+
+export type ContactPhone = {
+  id?: string;
+  label: string;
+  number: string;
+};
+
+export type ContactSettings = {
+  address: {
+    street: string;
+    city: string;
+    region: string;
+    postalCode: string;
+    country: string;
+    mapUrl: string;
+  };
+  phones: ContactPhone[];
+  whatsapp: string;
+  email: string;
+  openingHours: OpeningHour[];
 };
 
 export type HeroContent = {
@@ -114,6 +139,7 @@ export type Service = {
   short: string;
   detail: string;
   highlights: string[];
+  image?: ImageAsset;
 };
 
 export type ServiceCategory = {
@@ -139,6 +165,7 @@ export type GalleryItem = {
   title: string;
   description: string;
   image: ImageAsset;
+  media?: MediaAsset[];
   orientation?: "portrait" | "landscape" | "square";
 };
 
@@ -148,6 +175,7 @@ export type CaseItem = {
   description: string;
   category?: string;
   image: ImageAsset;
+  media?: MediaAsset[];
   isSensitive: boolean;
   homepagePreview?: boolean;
   orientation?: "portrait" | "landscape" | "square";
@@ -160,7 +188,7 @@ export type FaqItem = {
 
 export type Testimonial = {
   name: string;
-  rating: 5;
+  rating: 1 | 2 | 3 | 4 | 5;
   text: string;
 };
 

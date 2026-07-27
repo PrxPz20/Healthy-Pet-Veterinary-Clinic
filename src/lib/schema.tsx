@@ -1,7 +1,9 @@
-import type { FaqItem, Service, SiteContent } from "@/content/types";
+import type { ContactSettings, FaqItem, Service, SiteContent } from "@/content/types";
 
-export function buildClinicSchema(content: SiteContent) {
-  const { clinic, openingHours, services } = content;
+export function buildClinicSchema(content: SiteContent, contact?: ContactSettings) {
+  const { clinic, services } = content;
+  const address = contact?.address ?? clinic.address;
+  const openingHours = contact?.openingHours ?? content.openingHours;
 
   return {
     "@context": "https://schema.org",
@@ -13,16 +15,18 @@ export function buildClinicSchema(content: SiteContent) {
     logo: clinic.logoUrl,
     image: content.media.heroPoster.src,
     description: clinic.tagline,
-    telephone: [clinic.phone, clinic.vetPhone].filter(Boolean),
-    email: clinic.email,
+    telephone:
+      contact?.phones.map((phone) => phone.number) ??
+      [clinic.phone, clinic.vetPhone].filter(Boolean),
+    email: contact?.email || clinic.email,
     isAcceptingNewPatients: true,
     address: {
       "@type": "PostalAddress",
-      streetAddress: clinic.address.street,
-      addressLocality: clinic.address.city,
-      addressRegion: clinic.address.region,
-      postalCode: clinic.address.postalCode,
-      addressCountry: clinic.address.country,
+      streetAddress: address.street,
+      addressLocality: address.city,
+      addressRegion: address.region,
+      postalCode: address.postalCode,
+      addressCountry: address.country,
     },
     areaServed: {
       "@type": "City",

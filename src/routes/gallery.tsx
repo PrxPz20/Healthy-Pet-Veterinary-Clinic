@@ -1,15 +1,21 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { Home, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Home } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { Footer } from "@/components/site/Footer";
 import { GalleryCard } from "@/components/site/GalleryCard";
+import { MediaCarouselModal } from "@/components/site/MediaCarouselModal";
 import { Nav } from "@/components/site/Nav";
+import { useContactSettings } from "@/components/site/contact-settings-context";
+import { itemMedia } from "@/content/media";
 import { getSiteContent } from "@/content/provider";
 import type { GalleryItem } from "@/content/types";
-import { quickTransition, softTransition } from "@/lib/motion";
 import { buildBreadcrumbSchema, buildClinicSchema, JsonLd } from "@/lib/schema";
+import {
+  initialPublicItems,
+  loadPublishedGallery,
+  mergeGalleryItems,
+} from "@/lib/supabase/public-gallery";
 
 const content = getSiteContent();
 const GALLERY_PAGE_SIZE = 6;
@@ -30,21 +36,36 @@ export const Route = createFileRoute("/gallery")({
 });
 
 function GalleryPage() {
+  const contact = useContactSettings();
   const { clinic, gallery } = content;
+  const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(GALLERY_PAGE_SIZE);
-  const reduceMotion = useReducedMotion();
-  const visibleGallery = gallery.slice(0, visibleCount);
-  const hasMore = visibleCount < gallery.length;
+  const visibleGallery = items.slice(0, visibleCount);
+  const hasMore = visibleCount < items.length;
+
+  useEffect(() => {
+    let mounted = true;
+
+    loadPublishedGallery().then((cmsItems) => {
+      if (mounted) {
+        setItems(mergeGalleryItems(gallery, cmsItems));
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [gallery]);
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-hidden bg-white text-ink">
-      <JsonLd data={buildClinicSchema(content)} />
+      <JsonLd data={buildClinicSchema(content, contact)} />
       <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl, "Gallery", "/gallery")} />
       <Nav />
 
-      <section className="bg-ink px-5 pb-18 pt-32 text-white sm:px-8 md:pb-24">
-        <div className="mx-auto max-w-7xl">
+      <section className="bg-ink pb-18 pt-32 text-white md:pb-24">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <nav aria-label="Breadcrumb" className="text-sm text-white/55">
             <a
               href="/"
@@ -95,54 +116,13 @@ function GalleryPage() {
         </div>
       </section>
 
-      <AnimatePresence>
-        {activeItem ? (
-          <motion.div
-            className="fixed inset-0 z-[80] flex items-center justify-center bg-ink/78 px-4 py-6 backdrop-blur-sm"
-            initial={reduceMotion ? false : { opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={reduceMotion ? { duration: 0 } : quickTransition}
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="gallery-modal-title"
-            onClick={() => setActiveItem(null)}
-          >
-            <motion.div
-              className="relative w-full max-w-4xl overflow-hidden rounded-[1.5rem] bg-white text-ink shadow-[0_24px_70px_-38px_rgba(0,0,0,0.72)]"
-              initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.98 }}
-              transition={reduceMotion ? { duration: 0 } : softTransition}
-              onClick={(event) => event.stopPropagation()}
-            >
-              <button
-                type="button"
-                onClick={() => setActiveItem(null)}
-                className="focus-ring absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white/92 text-ink shadow-[0_10px_24px_-18px_rgba(24,26,28,0.6)] transition-colors hover:bg-white"
-                aria-label="Close gallery image"
-              >
-                <X className="h-5 w-5" />
-              </button>
-
-              <div className="max-h-[72vh] bg-white">
-                <img
-                  src={activeItem.image.src}
-                  alt={activeItem.image.alt}
-                  className="max-h-[72vh] w-full object-contain"
-                />
-              </div>
-
-              <div className="p-5 sm:p-6">
-                <h2 id="gallery-modal-title" className="type-card-title">
-                  {activeItem.title}
-                </h2>
-                <p className="type-body mt-2 text-ink/66">{activeItem.description}</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        ) : null}
-      </AnimatePresence>
+      <MediaCarouselModal
+        open={Boolean(activeItem)}
+        title={activeItem?.title ?? ""}
+        description={activeItem?.description}
+        media={activeItem ? itemMedia(activeItem) : []}
+        onClose={() => setActiveItem(null)}
+      />
 
       <Footer />
     </main>

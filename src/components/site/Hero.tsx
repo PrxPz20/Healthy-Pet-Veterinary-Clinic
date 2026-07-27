@@ -1,11 +1,16 @@
 import { useEffect, useRef } from "react";
 import { motion, useReducedMotion } from "framer-motion";
-import { ChevronDown, ChevronRight, Phone } from "lucide-react";
+import { ChevronDown, ChevronRight, Mail, MessageCircle, Phone } from "lucide-react";
 import { getSiteContent } from "@/content/provider";
+import { primaryContactCta } from "@/content/contact";
 import { ease, softTransition } from "@/lib/motion";
+import { useContactSettings } from "./contact-settings-context";
 
 export function Hero() {
   const { hero, homepage, media } = getSiteContent();
+  const contact = useContactSettings();
+  const primaryCta = primaryContactCta(contact);
+  const PrimaryIcon = contact.phones.length ? Phone : contact.whatsapp ? MessageCircle : Mail;
   const reduceMotion = useReducedMotion();
   const videoRef = useRef<HTMLVideoElement>(null);
 
@@ -83,11 +88,11 @@ export function Hero() {
           className="mt-8 flex flex-wrap gap-3"
         >
           <a
-            href={hero.primaryCta.href}
+            href={primaryCta.href}
             className="focus-ring focus-ring-dark type-button group inline-flex min-h-11 items-center gap-2 rounded-full bg-vet-green px-7 py-3.5 text-white shadow-[0_8px_18px_-16px_rgba(59,98,34,0.82)] transition-all duration-200 hover:-translate-y-0.5 hover:bg-vet-green-dark"
           >
-            <Phone className="h-4 w-4" />
-            {hero.primaryCta.label}
+            <PrimaryIcon className="h-4 w-4" />
+            {primaryCta.label}
           </a>
           <a
             href={homepage.servicesCta.href}

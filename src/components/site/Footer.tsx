@@ -2,6 +2,8 @@ import { useMemo, type ComponentType, type SVGProps } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Facebook, Instagram, Youtube } from "lucide-react";
 import { getSiteContent } from "@/content/provider";
+import { formatPhone, phoneHref, whatsappHref } from "@/content/contact";
+import { useContactSettings } from "./contact-settings-context";
 import { isActiveHref, useActiveSection } from "@/hooks/use-active-section";
 import { layoutSpring } from "@/lib/motion";
 import logoUrl from "@/assets/healthy_pet_logo_white.svg";
@@ -15,6 +17,7 @@ const socialIcons: Record<string, ComponentType<SVGProps<SVGSVGElement>>> = {
 
 export function Footer() {
   const { clinic, navigation, services } = getSiteContent();
+  const contact = useContactSettings();
   const reduceMotion = useReducedMotion();
   const navHrefs = useMemo(() => navigation.map((item) => item.href), [navigation]);
   const activeId = useActiveSection(navHrefs);
@@ -34,7 +37,7 @@ export function Footer() {
               className="h-16 w-auto max-w-[260px] object-contain"
             />
             <p className="type-card-copy mt-4 max-w-xs text-white/55">
-              {clinic.tagline} Located in {clinic.address.city}, Cyprus.
+              {clinic.tagline} Located in {contact.address.city}, {contact.address.country}.
             </p>
             <div className="mt-6 flex items-center gap-3" aria-label="Social media">
               {clinic.socialLinks.map((link) => {
@@ -66,13 +69,17 @@ export function Footer() {
           <FooterColumn
             title="Contact"
             links={[
-              { label: clinic.phoneDisplay, href: `tel:${clinic.phone}` },
-              ...(clinic.vetPhone && clinic.vetPhoneDisplay
-                ? [{ label: clinic.vetPhoneDisplay, href: `tel:${clinic.vetPhone}` }]
+              ...contact.phones.map((phone) => ({
+                label: `${phone.label}: ${formatPhone(phone.number)}`,
+                href: phoneHref(phone.number),
+              })),
+              ...(contact.whatsapp
+                ? [{ label: "WhatsApp", href: whatsappHref(contact.whatsapp) }]
                 : []),
-              { label: "WhatsApp", href: clinic.whatsapp },
-              { label: clinic.email, href: `mailto:${clinic.email}` },
-              { label: "Google Maps", href: clinic.mapUrl },
+              ...(contact.email ? [{ label: contact.email, href: `mailto:${contact.email}` }] : []),
+              ...(contact.address.mapUrl
+                ? [{ label: "Google Maps", href: contact.address.mapUrl }]
+                : []),
             ]}
           />
         </div>

@@ -1,11 +1,33 @@
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
+import type { GalleryItem } from "@/content/types";
+import {
+  initialPublicItems,
+  loadPublishedGallery,
+  mergeGalleryItems,
+} from "@/lib/supabase/public-gallery";
 import { GalleryCard } from "./GalleryCard";
 
 export function Gallery() {
   const { gallery, homepage } = getSiteContent();
-  const previewItems = gallery.slice(0, 6);
+  const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
+  const previewItems = items.slice(0, 6);
+
+  useEffect(() => {
+    let mounted = true;
+
+    loadPublishedGallery().then((cmsItems) => {
+      if (mounted) {
+        setItems(mergeGalleryItems(gallery, cmsItems));
+      }
+    });
+
+    return () => {
+      mounted = false;
+    };
+  }, [gallery]);
 
   return (
     <section id="gallery" className="relative bg-white py-20 text-ink md:py-28">
@@ -31,6 +53,10 @@ export function Gallery() {
             </StaggerItem>
           ))}
         </StaggerGroup>
+        <p className="type-button mt-8 flex items-center justify-center gap-2 text-center font-semibold text-ink/48">
+          See the complete clinic gallery
+          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
+        </p>
       </div>
     </section>
   );

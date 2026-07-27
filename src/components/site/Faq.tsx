@@ -3,10 +3,12 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { MessageCircle, Plus } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
+import { useEditorialContent } from "./editorial-content-context";
 import { quickTransition } from "@/lib/motion";
 
 export function Faq() {
-  const { faqs, homepage } = getSiteContent();
+  const { homepage } = getSiteContent();
+  const { faqs } = useEditorialContent();
   const [open, setOpen] = useState<number | null>(0);
   const reduceMotion = useReducedMotion();
 
