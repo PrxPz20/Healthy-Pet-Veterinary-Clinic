@@ -22,7 +22,7 @@ Expected result:
 Apply this migration before running the checks:
 
 ```text
-supabase/migrations/20260722000000_marketplace_url_security.sql
+supabase/migrations/20260731000000_owner_only_admins.sql
 ```
 
 ## 2. Test Accounts And Browsers
@@ -45,6 +45,7 @@ Never run these tests with a service-role key in the browser.
 | Invalid login     | Submit an incorrect email/password repeatedly.                                | Generic login failure; no account details or stack trace are exposed.                                 |
 | Non-admin user    | Sign in with the Auth user not present in `admin_users`.                      | Dashboard is denied and no CMS records can be changed.                                                |
 | Active owner      | Sign in with the owner account.                                               | Dashboard loads all permitted sections.                                                               |
+| Unsupported role  | Try inserting an `admin_users` row with `role='editor'` in SQL Editor.        | The database rejects the row; editor accounts are not supported.                                      |
 | Disabled admin    | Set `admin_users.is_active=false`, refresh, then restore it through Supabase. | Access is denied while disabled.                                                                      |
 | Sign out          | Click Sign out, then use Back and refresh.                                    | Protected dashboard content does not return.                                                          |
 | Direct API access | Run `npm run supabase:check`.                                                 | Anonymous writes and private-table reads are rejected.                                                |

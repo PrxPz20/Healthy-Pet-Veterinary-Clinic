@@ -254,6 +254,7 @@ export async function getAdminSessionState(): Promise<AdminSessionState> {
     .from("admin_users")
     .select("user_id")
     .eq("user_id", user.id)
+    .eq("role", "owner")
     .eq("is_active", true)
     .maybeSingle();
 

@@ -30,6 +30,9 @@ The customer cannot edit layout, colors, fonts, raw HTML, arbitrary JSON, script
    - `supabase/migrations/20260724000000_bulk_restore.sql`
    - `supabase/migrations/20260725000000_editorial_limits.sql`
    - `supabase/migrations/20260726000000_admin_dashboard_counts.sql`
+   - `supabase/migrations/20260729000000_private_case_media.sql`
+   - `supabase/migrations/20260730000000_disallow_static_case_media.sql`
+   - `supabase/migrations/20260731000000_owner_only_admins.sql`
 3. Keep local credentials in `.env.local`. Do not put real credentials in `.env.example`.
 4. Add these environment variables to the hosting provider:
    - `VITE_SUPABASE_URL`
@@ -53,6 +56,9 @@ If the checker says a table is missing, the SQL migration has not been applied y
 Use `ADMIN_ACCEPTANCE_TESTS.md` for the complete localhost and production sign-off workflow.
 
 ## Security Notes
+
+- The dashboard uses an owner-only admin model. `admin_users.role` must be `owner`; editor
+  accounts are not supported.
 
 - Supabase RLS must stay enabled on every CMS table.
 - The service-role key must never be placed in frontend code or committed to git.
