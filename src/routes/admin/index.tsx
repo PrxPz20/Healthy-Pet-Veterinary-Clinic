@@ -3215,15 +3215,13 @@ function CasesManager({
                 updatedAt: item.updated_at,
                 archivedAt: item.archived_at,
                 mediaCount: item.case_media?.length ?? 0,
-                image: publicStorageUrl(
-                  "site-cases",
+                image:
                   item.case_media
                     ?.slice()
                     .sort(
                       (a, b) =>
                         Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order,
-                    )[0]?.image_path,
-                ),
+                    )[0]?.signed_url ?? "",
               }))}
               disabled={disabled}
               onStatus={onStatus}

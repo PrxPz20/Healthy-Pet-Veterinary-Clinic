@@ -1,5 +1,6 @@
 import type { CaseItem, GalleryItem, MediaAsset, Product, Service } from "@/content/types";
 import { resolveStaticCmsImage } from "@/content/cms-media";
+import { createCaseMediaUrlMap } from "./case-media";
 import { getSupabaseBrowserClient } from "./client";
 import { isSupabaseConfigured } from "./config";
 
@@ -51,7 +52,9 @@ type ProductRow = {
   sort_order: number;
 };
 
-function publicImage(bucket: string, path: string) {
+type PublicMediaBucket = "site-gallery" | "site-services" | "site-products" | "site-hero";
+
+function publicImage(bucket: PublicMediaBucket, path: string) {
   const staticImage = resolveStaticCmsImage(path);
   if (staticImage) {
     return staticImage;
@@ -83,14 +86,13 @@ function mapGalleryItem(row: GalleryRow): GalleryItem | null {
   };
 }
 
-function mapCaseItem(row: CaseRow): CaseItem {
+function mapCaseItem(row: CaseRow, mediaUrls: ReadonlyMap<string, string>): CaseItem {
   const media = [...(row.case_media ?? [])]
     .sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order)
-    .map<MediaAsset>((item) => ({
-      src: publicImage("site-cases", item.image_path),
-      alt: item.alt,
-      type: "image",
-    }));
+    .flatMap<MediaAsset>((item) => {
+      const src = mediaUrls.get(item.image_path);
+      return src ? [{ src, alt: item.alt, type: "image" }] : [];
+    });
 
   return {
     id: row.slug,
@@ -191,7 +193,22 @@ export async function loadPublishedCases() {
     return null;
   }
 
-  return ((data ?? []) as CaseRow[]).sort((a, b) => a.sort_order - b.sort_order).map(mapCaseItem);
+  const rows = ((data ?? []) as CaseRow[]).sort((a, b) => a.sort_order - b.sort_order);
+
+  try {
+    const mediaUrls = await createCaseMediaUrlMap(
+      client,
+      rows.flatMap((row) => (row.case_media ?? []).map((item) => item.image_path)),
+      resolveStaticCmsImage,
+    );
+    return rows.map((row) => mapCaseItem(row, mediaUrls));
+  } catch (signingError) {
+    console.warn(
+      "Unable to sign Supabase case media",
+      signingError instanceof Error ? signingError.message : "Unknown signing error",
+    );
+    return null;
+  }
 }
 
 export async function loadPublishedServices() {

@@ -3,6 +3,7 @@ import { resolveStaticCmsImage } from "@/content/cms-media";
 import { getStaticContactSettings } from "@/content/contact";
 import { getSiteContent } from "@/content/provider";
 import type { ContactSettings } from "@/content/types";
+import { createCaseMediaUrlMap } from "@/lib/supabase/case-media";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
 import { slugify, validateAdminImage } from "./validators";
 
@@ -14,6 +15,7 @@ export type CmsBucket =
   | "site-services"
   | "site-products"
   | "site-hero";
+type PublicCmsBucket = Exclude<CmsBucket, "site-cases">;
 export type CmsTable =
   | "gallery_items"
   | "case_items"
@@ -126,6 +128,7 @@ export type MediaRow = {
   alt: string;
   sort_order: number;
   is_cover: boolean;
+  signed_url?: string;
 };
 
 export type AdminOpeningHour = {
@@ -271,7 +274,7 @@ export async function signOutAdmin() {
   return client.auth.signOut();
 }
 
-export function publicStorageUrl(bucket: CmsBucket, path: string | null | undefined) {
+export function publicStorageUrl(bucket: PublicCmsBucket, path: string | null | undefined) {
   if (!path) {
     return "";
   }
@@ -421,7 +424,28 @@ export async function listCases() {
     throw error;
   }
 
-  return (data ?? []) as CaseRow[];
+  const rows = (data ?? []) as CaseRow[];
+
+  try {
+    const mediaUrls = await createCaseMediaUrlMap(
+      client,
+      rows.flatMap((row) => (row.case_media ?? []).map((media) => media.image_path)),
+      resolveStaticCmsImage,
+    );
+    return rows.map((row) => ({
+      ...row,
+      case_media: row.case_media?.map((media) => ({
+        ...media,
+        signed_url: mediaUrls.get(media.image_path),
+      })),
+    }));
+  } catch (signingError) {
+    console.warn(
+      "Unable to sign admin case previews",
+      signingError instanceof Error ? signingError.message : "Unknown signing error",
+    );
+    return rows;
+  }
 }
 
 export async function listServices() {

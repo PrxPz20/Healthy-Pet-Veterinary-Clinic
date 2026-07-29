@@ -61,7 +61,13 @@ Use `ADMIN_ACCEPTANCE_TESTS.md` for the complete localhost and production sign-o
 - Archive is used instead of hard delete so customer mistakes can be recovered.
 - Archived content can be restored for seven days, then is permanently removed on the next admin dashboard load.
 - Contact writes use admin-only database functions; public users have read-only access.
-- Case image blur is a user-experience warning, not real privacy. Any published case image is public.
+- Supabase-uploaded Case images use a private `site-cases` bucket. Public visitors receive
+  short-lived signed URLs only for published, non-archived Cases; active admins may also preview
+  draft and archived Case media.
+- Case image blur remains a user-experience warning. A published image can still be downloaded
+  while its signed URL is valid.
+- Existing `static:case:*` assets are bundled with the public website and remain public until they
+  are migrated into private Storage.
 
 ## Media Rules
 
