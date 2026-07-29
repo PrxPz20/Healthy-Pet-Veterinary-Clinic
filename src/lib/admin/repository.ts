@@ -430,7 +430,6 @@ export async function listCases() {
     const mediaUrls = await createCaseMediaUrlMap(
       client,
       rows.flatMap((row) => (row.case_media ?? []).map((media) => media.image_path)),
-      resolveStaticCmsImage,
     );
     return rows.map((row) => ({
       ...row,
@@ -734,9 +733,6 @@ export async function seedStaticContent() {
   const categorySeeds = [
     ...content.services.map((item) => ({ section: "services", name: item.category })),
     ...content.products.map((item) => ({ section: "products", name: item.category })),
-    ...content.cases
-      .filter((item) => item.category)
-      .map((item) => ({ section: "cases", name: item.category! })),
   ];
   const categoryKeys = new Set(
     (categoryRows ?? []).map((item) => `${item.section}:${item.name.toLowerCase()}`),
@@ -795,51 +791,6 @@ export async function seedStaticContent() {
   });
   if (galleryMedia.length) {
     const { error } = await client.from("gallery_media").insert(galleryMedia);
-    if (error) throw error;
-  }
-
-  const { data: caseRows, error: caseError } = await client
-    .from("case_items")
-    .select("id,slug,case_media(id)");
-  if (caseError) throw caseError;
-  const caseSlugs = new Set((caseRows ?? []).map((item) => item.slug));
-  const missingCases = content.cases.filter((item) => !caseSlugs.has(item.id));
-  let insertedCases: { id: string; slug: string; case_media: { id: string }[] }[] = [];
-  if (missingCases.length) {
-    const { data, error } = await client
-      .from("case_items")
-      .insert(
-        missingCases.map((item, index) => ({
-          slug: item.id,
-          title: item.title,
-          description: item.description || null,
-          category: item.category || null,
-          is_sensitive: item.isSensitive,
-          status: "published",
-          sort_order: index,
-        })),
-      )
-      .select("id,slug");
-    if (error) throw error;
-    insertedCases = (data ?? []).map((item) => ({ ...item, case_media: [] }));
-  }
-  const allCaseRows = [...(caseRows ?? []), ...insertedCases];
-  const caseMedia = allCaseRows.flatMap((row) => {
-    const item = content.cases.find((current) => current.id === row.slug);
-    return item && !row.case_media?.length
-      ? [
-          {
-            case_item_id: row.id,
-            image_path: `static:case:${item.id}`,
-            alt: item.image.alt,
-            sort_order: 0,
-            is_cover: true,
-          },
-        ]
-      : [];
-  });
-  if (caseMedia.length) {
-    const { error } = await client.from("case_media").insert(caseMedia);
     if (error) throw error;
   }
 

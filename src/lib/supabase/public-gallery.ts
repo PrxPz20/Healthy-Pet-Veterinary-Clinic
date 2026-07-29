@@ -199,7 +199,6 @@ export async function loadPublishedCases() {
     const mediaUrls = await createCaseMediaUrlMap(
       client,
       rows.flatMap((row) => (row.case_media ?? []).map((item) => item.image_path)),
-      resolveStaticCmsImage,
     );
     return rows.map((row) => mapCaseItem(row, mediaUrls));
   } catch (signingError) {

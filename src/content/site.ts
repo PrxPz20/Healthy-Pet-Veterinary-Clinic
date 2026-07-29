@@ -10,12 +10,7 @@ import galleryTsitsis from "@/assets/gallery/image_5_TSITSIS.jpg";
 import galleryTedy from "@/assets/gallery/image_6_tedy.jpg";
 import galleryGreta from "@/assets/gallery/image_7_greta.jpg";
 import galleryDj from "@/assets/gallery/image_8_dj.jpg";
-import caseGoldie from "@/assets/cases/GOLDIE_bone_removed.jpg";
-import caseLana from "@/assets/cases/LANA_cesarean.jpg";
-import caseSpongos from "@/assets/cases/SPONGOS_tumor.jpg";
-import caseMavroulias from "@/assets/cases/mavroulias_broken_front_right_leg.jpg";
-import caseRocky from "@/assets/cases/rocky_dog_bite.jpg";
-import caseJiroud from "@/assets/cases/JIROUD_cherry_eye.webp";
+import casesHeroBanner from "@/assets/cases/cases_hero_banner.png";
 import profineSmallDog from "@/assets/profine-Dog_adult-small-chicken-&-potatoes_2kg.jpg";
 import royalCaninStarter from "@/assets/royal-canin-vet-care-starter-small-dog-1-5kg.jpg";
 import type { SiteContent } from "./types";
@@ -496,84 +491,7 @@ export const siteContent: SiteContent = {
       },
     },
   ],
-  cases: [
-    {
-      id: "goldie-care-case",
-      title: "Goldie Care Case",
-      category: "Surgical case",
-      description: "A documented veterinary case from the clinic for educational review.",
-      isSensitive: true,
-      homepagePreview: true,
-      orientation: "landscape",
-      image: {
-        src: caseGoldie,
-        alt: "Sensitive veterinary case image for Goldie documented inside the clinic.",
-      },
-    },
-    {
-      id: "lana-cesarean-case",
-      title: "Lana Cesarean Case",
-      category: "Surgical case",
-      description: "A documented surgical case from the clinic for educational purposes.",
-      isSensitive: true,
-      homepagePreview: true,
-      orientation: "landscape",
-      image: {
-        src: caseLana,
-        alt: "Sensitive veterinary surgical case image for Lana.",
-      },
-    },
-    {
-      id: "spongos-care-case",
-      title: "Spongos Care Case",
-      category: "Veterinary case",
-      description: "A veterinary case image documented for professional review.",
-      isSensitive: true,
-      homepagePreview: true,
-      orientation: "portrait",
-      image: {
-        src: caseSpongos,
-        alt: "Sensitive veterinary case image for Spongos documented at the clinic.",
-      },
-    },
-    {
-      id: "mavroulias-orthopedic-case",
-      title: "Mavroulias Orthopedic Case",
-      category: "Orthopedic case",
-      description: "A documented orthopedic case from the clinic for educational purposes.",
-      isSensitive: true,
-      homepagePreview: true,
-      orientation: "landscape",
-      image: {
-        src: caseMavroulias,
-        alt: "Sensitive veterinary orthopedic case image for Mavroulias.",
-      },
-    },
-    {
-      id: "rocky-wound-care-case",
-      title: "Rocky Wound Care Case",
-      category: "Wound care case",
-      description: "A documented wound care case from the clinic for educational purposes.",
-      isSensitive: true,
-      orientation: "portrait",
-      image: {
-        src: caseRocky,
-        alt: "Sensitive veterinary wound care case image for Rocky.",
-      },
-    },
-    {
-      id: "jiroud-cherry-eye-case",
-      title: "JIROUD",
-      category: "Surgical case",
-      description: "JIROUD had a Cherry eye correction surgery.",
-      isSensitive: true,
-      orientation: "portrait",
-      image: {
-        src: caseJiroud,
-        alt: "Sensitive veterinary cherry eye correction surgery case image for JIROUD.",
-      },
-    },
-  ],
+  cases: [],
   products: [
     {
       name: "Nutribest Puppy with Chicken and Rice 3kg",
@@ -709,7 +627,7 @@ export const siteContent: SiteContent = {
       description:
         "Documented veterinary case examples from Healthy Pet Veterinary Clinic, with sensitive images protected by a viewing warning.",
       canonical: "https://example-vet-clinic.com/cases",
-      ogImage: caseLana,
+      ogImage: casesHeroBanner,
     },
   },
 };

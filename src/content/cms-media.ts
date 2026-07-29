@@ -39,9 +39,6 @@ export function resolveStaticCmsImage(path: string) {
   if (kind === "gallery") {
     return content.gallery.find((item) => item.slug === key)?.image.src ?? "";
   }
-  if (kind === "case") {
-    return content.cases.find((item) => item.id === key)?.image.src ?? "";
-  }
   if (kind === "product") {
     return content.products.find((item) => item.name === key)?.image.src ?? "";
   }

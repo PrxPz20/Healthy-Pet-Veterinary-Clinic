@@ -12,6 +12,10 @@ const migration = readFileSync(
   new URL("../supabase/migrations/20260729000000_private_case_media.sql", import.meta.url),
   "utf8",
 );
+const staticMediaMigration = readFileSync(
+  new URL("../supabase/migrations/20260730000000_disallow_static_case_media.sql", import.meta.url),
+  "utf8",
+);
 
 function caseMediaClient(result: {
   data: Array<{ error: string | null; path: string | null; signedUrl: string | null }> | null;
@@ -72,16 +76,18 @@ test("case media never falls back to a raw or public storage URL", async () => {
   );
 });
 
-test("static case assets stay local and are never sent to Storage", async () => {
+test("static case paths are rejected and never sent to Storage", async () => {
   const path = "static:case:documented-case";
   const { client, calls } = caseMediaClient({ data: [], error: null });
 
-  const urls = await createCaseMediaUrlMap(client, [path], (value) =>
-    value === path ? "/assets/documented-case.webp" : "",
-  );
+  const urls = await createCaseMediaUrlMap(client, [path]);
 
-  assert.equal(urls.get(path), "/assets/documented-case.webp");
+  assert.equal(urls.has(path), false);
   assert.deepEqual(calls, []);
+});
+
+test("database rejects static case media paths", () => {
+  assert.match(staticMediaMigration, /image_path not like 'static:case:%'/);
 });
 
 test("a signing request failure is not converted into a public URL", async () => {

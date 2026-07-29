@@ -66,8 +66,7 @@ Use `ADMIN_ACCEPTANCE_TESTS.md` for the complete localhost and production sign-o
   draft and archived Case media.
 - Case image blur remains a user-experience warning. A published image can still be downloaded
   while its signed URL is valid.
-- Existing `static:case:*` assets are bundled with the public website and remain public until they
-  are migrated into private Storage.
+- Case media must use private `site-cases` Storage paths. `static:case:*` paths are rejected.
 
 ## Media Rules
 
