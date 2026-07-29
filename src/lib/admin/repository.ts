@@ -164,9 +164,7 @@ function requireClient() {
   const client = getSupabaseBrowserClient();
 
   if (!client) {
-    throw new Error(
-      "Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY.",
-    );
+    throw new Error("The admin service is temporarily unavailable.");
   }
 
   return client;

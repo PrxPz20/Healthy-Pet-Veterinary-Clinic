@@ -84,7 +84,7 @@ function AdminLoginPage() {
                 role="alert"
                 className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold leading-relaxed text-red-700"
               >
-                Supabase is not configured. Add `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
+                The admin portal is temporarily unavailable. Please try again later.
               </div>
             ) : null}
 
