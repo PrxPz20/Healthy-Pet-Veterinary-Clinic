@@ -1,4 +1,5 @@
 import type { ContactSettings, FaqItem, Service, SiteContent } from "@/content/types";
+import { serializeJsonLd } from "@/lib/json-ld";
 
 export function buildClinicSchema(content: SiteContent, contact?: ContactSettings) {
   const { clinic, services } = content;
@@ -102,6 +103,9 @@ export function buildBreadcrumbSchema(
 
 export function JsonLd({ data }: { data: unknown }) {
   return (
-    <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: serializeJsonLd(data) }}
+    />
   );
 }
