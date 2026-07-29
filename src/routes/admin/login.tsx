@@ -5,6 +5,7 @@ import { useState } from "react";
 import logoUrl from "@/assets/healthy_pet_logo_admin.png";
 import clinicImageUrl from "@/assets/services/pet_shop_admin.jpg";
 import { signInAdmin } from "@/lib/admin/repository";
+import { reportClientError } from "@/lib/safe-errors";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 
 export const Route = createFileRoute("/admin/login")({
@@ -43,6 +44,7 @@ function AdminLoginPage() {
       if (signInError) throw signInError;
       await navigate({ to: "/admin" });
     } catch (currentError) {
+      reportClientError("Admin sign-in failed", currentError);
       const message =
         currentError instanceof Error && /invalid login credentials/i.test(currentError.message)
           ? "The email or password is incorrect."

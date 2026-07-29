@@ -5,6 +5,7 @@ import { getSiteContent } from "@/content/provider";
 import type { ContactSettings } from "@/content/types";
 import { createCaseMediaUrlMap } from "@/lib/supabase/case-media";
 import { getSupabaseBrowserClient } from "@/lib/supabase/client";
+import { reportClientError, UserSafeError } from "@/lib/safe-errors";
 import { slugify, validateAdminImage } from "./validators";
 
 export type CmsStatus = "draft" | "published";
@@ -164,7 +165,7 @@ function requireClient() {
   const client = getSupabaseBrowserClient();
 
   if (!client) {
-    throw new Error("The admin service is temporarily unavailable.");
+    throw new UserSafeError("The admin service is temporarily unavailable.");
   }
 
   return client;
@@ -202,7 +203,7 @@ async function requireDraft(
   const row = data as unknown as { status: CmsStatus; image_path?: string | null };
 
   if (row.status === "published") {
-    throw new Error("Unpublish this item before editing it.");
+    throw new UserSafeError("Unpublish this item before editing it.");
   }
 
   return row;
@@ -294,7 +295,7 @@ export function publicStorageUrl(bucket: PublicCmsBucket, path: string | null | 
 export async function uploadAdminImage(bucket: CmsBucket, folder: string, file: File) {
   const validationError = validateAdminImage(file);
   if (validationError) {
-    throw new Error(validationError);
+    throw new UserSafeError(validationError);
   }
 
   const client = requireClient();
@@ -438,10 +439,7 @@ export async function listCases() {
       })),
     }));
   } catch (signingError) {
-    console.warn(
-      "Unable to sign admin case previews",
-      signingError instanceof Error ? signingError.message : "Unknown signing error",
-    );
+    reportClientError("Unable to sign admin case previews", signingError);
     return rows;
   }
 }
@@ -887,7 +885,7 @@ export async function createGalleryItem(values: {
   files: File[];
 }) {
   if (!values.files.length) {
-    throw new Error("Add at least one image before saving a gallery item.");
+    throw new UserSafeError("Add at least one image before saving a gallery item.");
   }
 
   const client = requireClient();
@@ -1103,7 +1101,7 @@ export async function createService(values: {
   file?: File | null;
 }) {
   if (!values.file) {
-    throw new Error("Add a service image before saving.");
+    throw new UserSafeError("Add a service image before saving.");
   }
 
   const client = requireClient();
@@ -1144,7 +1142,7 @@ export async function updateService(
   const client = requireClient();
   const current = await requireDraft(client, "services", id, "image_path");
   if (!values.file && !current.image_path) {
-    throw new Error("Add a service image before saving.");
+    throw new UserSafeError("Add a service image before saving.");
   }
   const imagePath = values.file
     ? await uploadAdminImage("site-services", values.title, values.file)
@@ -1178,7 +1176,7 @@ export async function createProduct(values: {
   file?: File | null;
 }) {
   if (!values.file) {
-    throw new Error("Add a product image before saving.");
+    throw new UserSafeError("Add a product image before saving.");
   }
 
   const client = requireClient();
@@ -1221,7 +1219,7 @@ export async function updateProduct(
   const client = requireClient();
   const current = await requireDraft(client, "products", id, "image_path");
   if (!values.file && !current.image_path) {
-    throw new Error("Add a product image before saving.");
+    throw new UserSafeError("Add a product image before saving.");
   }
   const imagePath = values.file
     ? await uploadAdminImage("site-products", values.name, values.file)
@@ -1260,7 +1258,7 @@ export async function updateStatus(table: CmsTable, id: string, status: CmsStatu
     }
 
     if (!count) {
-      throw new Error("Add at least one image before publishing a gallery item.");
+      throw new UserSafeError("Add at least one image before publishing a gallery item.");
     }
   }
 
@@ -1276,7 +1274,7 @@ export async function updateStatus(table: CmsTable, id: string, status: CmsStatu
     }
 
     if (!data.image_path) {
-      throw new Error(`Add a ${table === "services" ? "service" : "product"} image first.`);
+      throw new UserSafeError(`Add a ${table === "services" ? "service" : "product"} image first.`);
     }
   }
 
@@ -1292,7 +1290,7 @@ export async function updateStatus(table: CmsTable, id: string, status: CmsStatu
 export async function reorderRecords(table: CmsTable, orderedIds: string[]) {
   const client = requireClient();
   if (new Set(orderedIds).size !== orderedIds.length) {
-    throw new Error("The new order contains duplicate items. Refresh and try again.");
+    throw new UserSafeError("The new order contains duplicate items. Refresh and try again.");
   }
 
   const results = await Promise.all(
@@ -1315,7 +1313,7 @@ export async function reorderRecords(table: CmsTable, orderedIds: string[]) {
   const savedOrder = new Map((data ?? []).map((item) => [item.id, item.sort_order]));
   const orderWasSaved = orderedIds.every((id, index) => savedOrder.get(id) === index);
   if (!orderWasSaved) {
-    throw new Error("The website order was not saved completely. Refresh and try again.");
+    throw new UserSafeError("The website order was not saved completely. Refresh and try again.");
   }
 
   await logAudit(client, "reorder", table);
@@ -1382,7 +1380,7 @@ async function recordAssetPaths(client: SupabaseClient, table: CmsTable, ids: st
 
 export async function bulkContentAction(table: CmsTable, ids: string[], action: BulkContentAction) {
   if (!ids.length) {
-    throw new Error("Select at least one item.");
+    throw new UserSafeError("Select at least one item.");
   }
 
   const client = requireClient();
@@ -1400,7 +1398,7 @@ export async function bulkContentAction(table: CmsTable, ids: string[], action: 
   if (assets?.paths.length) {
     const { error: storageError } = await client.storage.from(assets.bucket).remove(assets.paths);
     if (storageError) {
-      console.warn("Content deleted, but some stored files need cleanup.", storageError.message);
+      reportClientError("Content deleted, but some stored files need cleanup.", storageError);
     }
   }
 }

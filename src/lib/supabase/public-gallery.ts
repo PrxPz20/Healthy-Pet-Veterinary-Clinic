@@ -3,6 +3,7 @@ import { resolveStaticCmsImage } from "@/content/cms-media";
 import { createCaseMediaUrlMap } from "./case-media";
 import { getSupabaseBrowserClient } from "./client";
 import { isSupabaseConfigured } from "./config";
+import { reportClientError } from "@/lib/safe-errors";
 
 type GalleryMediaRow = {
   image_path: string;
@@ -160,7 +161,7 @@ export async function loadPublishedGallery() {
     .order("id", { ascending: true });
 
   if (error) {
-    console.warn("Unable to load Supabase gallery", error.message);
+    reportClientError("Unable to load gallery content", error);
     return null;
   }
 
@@ -189,7 +190,7 @@ export async function loadPublishedCases() {
     .order("id", { ascending: true });
 
   if (error) {
-    console.warn("Unable to load Supabase cases", error.message);
+    reportClientError("Unable to load case content", error);
     return null;
   }
 
@@ -202,10 +203,7 @@ export async function loadPublishedCases() {
     );
     return rows.map((row) => mapCaseItem(row, mediaUrls));
   } catch (signingError) {
-    console.warn(
-      "Unable to sign Supabase case media",
-      signingError instanceof Error ? signingError.message : "Unknown signing error",
-    );
+    reportClientError("Unable to load case media", signingError);
     return null;
   }
 }
@@ -227,7 +225,7 @@ export async function loadPublishedServices() {
     .order("id", { ascending: true });
 
   if (error) {
-    console.warn("Unable to load Supabase services", error.message);
+    reportClientError("Unable to load service content", error);
     return null;
   }
 
@@ -251,7 +249,7 @@ export async function loadPublishedProducts() {
     .order("id", { ascending: true });
 
   if (error) {
-    console.warn("Unable to load Supabase products", error.message);
+    reportClientError("Unable to load product content", error);
     return null;
   }
 

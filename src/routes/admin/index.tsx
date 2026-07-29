@@ -39,6 +39,7 @@ import {
 } from "lucide-react";
 import type { FormEvent, InvalidEvent, ReactNode } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { reportClientError, userFacingError } from "@/lib/safe-errors";
 import {
   archiveRecord,
   bulkContentAction,
@@ -227,9 +228,8 @@ function AdminDashboardPage() {
       })
       .catch((currentError) => {
         if (!active) return;
-        setError(
-          currentError instanceof Error ? currentError.message : "Unable to load dashboard.",
-        );
+        reportClientError("Unable to load admin session", currentError);
+        setError(userFacingError(currentError, "Unable to load dashboard. Please try again."));
         setSessionStatus("error");
       });
 
@@ -269,10 +269,7 @@ function AdminDashboardPage() {
           }
         })
         .catch((currentError) => {
-          console.warn(
-            "Background dashboard maintenance did not complete.",
-            currentError instanceof Error ? currentError.message : currentError,
-          );
+          reportClientError("Background dashboard maintenance did not complete", currentError);
         });
     }, 3000);
 
@@ -297,7 +294,8 @@ function AdminDashboardPage() {
         });
       }
     } catch (currentError) {
-      setError(currentError instanceof Error ? currentError.message : "Unable to save changes.");
+      reportClientError("Admin action failed", currentError);
+      setError(userFacingError(currentError, "Unable to save changes. Please try again."));
     } finally {
       setBusy(false);
     }
@@ -432,9 +430,10 @@ function AdminDashboardPage() {
                 <section className="rounded-[1.5rem] border border-red-200 bg-white p-6">
                   <p className="type-card-title">This section did not load</p>
                   <p className="mt-2 text-sm font-semibold leading-relaxed text-red-700">
-                    {sectionQuery.error instanceof Error
-                      ? sectionQuery.error.message
-                      : "Unable to load this dashboard section."}
+                    {userFacingError(
+                      sectionQuery.error,
+                      "Unable to load this dashboard section. Please try again.",
+                    )}
                   </p>
                   <button
                     type="button"
@@ -759,15 +758,6 @@ const existingItemsInfo = [
 ];
 
 type ValidatableField = HTMLInputElement | HTMLTextAreaElement;
-
-function errorMessage(error: unknown, fallback = "Unable to save changes.") {
-  if (error instanceof Error) return error.message;
-  if (error && typeof error === "object" && "message" in error) {
-    const message = (error as { message?: unknown }).message;
-    if (typeof message === "string" && message) return message;
-  }
-  return fallback;
-}
 
 function validationMessage(field: ValidatableField, label: string) {
   return field.validity.valueMissing
@@ -1589,7 +1579,7 @@ function ContactManager({
       setNotice({
         panel,
         type: "error",
-        message: errorMessage(currentError),
+        message: userFacingError(currentError, "Unable to save changes. Please try again."),
       });
     } finally {
       setSaving(null);

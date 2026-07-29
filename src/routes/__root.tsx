@@ -15,6 +15,7 @@ import { ContactSettingsProvider } from "@/components/site/ContactSettingsProvid
 import { loadPublicContactSettings } from "@/lib/supabase/public-contact";
 import { EditorialContentProvider } from "@/components/site/EditorialContentProvider";
 import { loadPublicEditorialContent } from "@/lib/supabase/public-editorial";
+import { reportClientError } from "@/lib/safe-errors";
 
 function NotFoundComponent() {
   return (
@@ -39,7 +40,7 @@ function NotFoundComponent() {
 }
 
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
-  console.error(error);
+  reportClientError("Route render failed", error);
   const router = useRouter();
 
   return (
