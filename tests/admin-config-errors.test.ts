@@ -29,3 +29,9 @@ test("unknown backend errors are redacted at browser-facing boundaries", () => {
   assert.match(dashboard, /userFacingError/);
   assert.match(publicCms, /reportClientError/);
 });
+
+test("admin session loading cannot remain pending indefinitely", () => {
+  assert.match(dashboard, /ADMIN_SESSION_TIMEOUT = 10_000/);
+  assert.match(dashboard, /Please check your connection and try again/);
+  assert.match(dashboard, /window\.clearTimeout\(timeout\)/);
+});

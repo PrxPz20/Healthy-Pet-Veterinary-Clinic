@@ -134,6 +134,7 @@ const MAX_FAQS = 12;
 const MAX_REVIEWS = 12;
 const ADMIN_QUERY_KEY = "admin-section";
 const ADMIN_CACHE_TIME = 5 * 60 * 1000;
+const ADMIN_SESSION_TIMEOUT = 10_000;
 const MAINTENANCE_INTERVAL = 24 * 60 * 60 * 1000;
 const MAINTENANCE_KEY = "healthy-pet-admin-maintenance";
 const countedSections = new Set<AdminSection>([
@@ -211,6 +212,12 @@ function AdminDashboardPage() {
 
   useEffect(() => {
     let active = true;
+    const timeout = window.setTimeout(() => {
+      if (!active) return;
+      active = false;
+      setError("Unable to load dashboard. Please check your connection and try again.");
+      setSessionStatus("error");
+    }, ADMIN_SESSION_TIMEOUT);
 
     void getAdminSessionState()
       .then(async (session) => {
@@ -231,10 +238,12 @@ function AdminDashboardPage() {
         reportClientError("Unable to load admin session", currentError);
         setError(userFacingError(currentError, "Unable to load dashboard. Please try again."));
         setSessionStatus("error");
-      });
+      })
+      .finally(() => window.clearTimeout(timeout));
 
     return () => {
       active = false;
+      window.clearTimeout(timeout);
     };
   }, [navigate]);
 

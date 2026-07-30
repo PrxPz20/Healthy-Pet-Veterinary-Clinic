@@ -257,19 +257,19 @@ export async function loadPublishedProducts() {
 }
 
 export function mergeGalleryItems(staticItems: GalleryItem[], cmsItems: GalleryItem[] | null) {
-  return cmsItems ?? initialPublicItems(staticItems);
+  return cmsItems ?? staticItems;
 }
 
 export function mergeCaseItems(staticItems: CaseItem[], cmsItems: CaseItem[] | null) {
-  return cmsItems ?? initialPublicItems(staticItems);
+  return cmsItems ?? staticItems;
 }
 
 export function mergeServiceItems(staticItems: Service[], cmsItems: Service[] | null) {
-  return cmsItems ?? initialPublicItems(staticItems);
+  return cmsItems ?? staticItems;
 }
 
 export function mergeProductItems(staticItems: Product[], cmsItems: Product[] | null) {
-  return cmsItems ?? initialPublicItems(staticItems);
+  return cmsItems ?? staticItems;
 }
 
 export function initialPublicItems<T>(staticItems: T[]) {
