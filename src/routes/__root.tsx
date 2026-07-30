@@ -7,8 +7,11 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
+import { ArrowLeft } from "lucide-react";
 
 import appCss from "../styles.css?url";
+import notFoundImage from "@/assets/404_image.webp";
+import logoUrl from "@/assets/healthy_pet_logo_white.svg";
 import { getStaticContactSettings } from "@/content/contact";
 import { getSiteContent } from "@/content/provider";
 import { ContactSettingsProvider } from "@/components/site/ContactSettingsProvider";
@@ -18,23 +21,68 @@ import { loadPublicEditorialContent } from "@/lib/supabase/public-editorial";
 import { reportClientError } from "@/lib/safe-errors";
 
 function NotFoundComponent() {
+  const router = useRouter();
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-4">
-      <div className="max-w-md text-center">
-        <h1 className="type-page-title text-foreground">404</h1>
-        <h2 className="type-card-title mt-4 text-foreground">Page not found</h2>
-        <p className="type-card-copy mt-2 text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
-        </p>
-        <div className="mt-6">
+    <div className="min-h-screen bg-[#f7f8f4] px-4 pb-10 pt-28 text-ink sm:px-8 sm:pt-32">
+      <header className="absolute inset-x-0 top-0 px-4 pt-4 sm:px-8 sm:pt-5">
+        <nav
+          aria-label="404 navigation"
+          className="mx-auto flex min-h-16 max-w-7xl items-center justify-between gap-4 rounded-full bg-ink px-5 py-3 shadow-[0_18px_40px_-24px_rgba(24,26,28,0.65)] sm:px-7"
+        >
           <Link
             to="/"
-            className="focus-ring type-button inline-flex min-h-11 items-center justify-center rounded-md bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
+            aria-label="Healthy Pet Veterinary Clinic homepage"
+            className="focus-ring focus-ring-dark rounded-lg"
           >
-            Go home
+            <img
+              src={logoUrl}
+              alt="Healthy Pet Veterinary Clinic"
+              width={448}
+              height={115}
+              className="h-auto w-40 object-contain sm:w-48"
+            />
           </Link>
-        </div>
-      </div>
+          <button
+            type="button"
+            onClick={() => {
+              if (window.history.length > 1) {
+                router.history.back();
+              } else {
+                window.location.assign("/");
+              }
+            }}
+            className="focus-ring focus-ring-dark type-button inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-white px-5 text-ink transition-colors hover:bg-sage"
+          >
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Back
+          </button>
+        </nav>
+      </header>
+
+      <main className="mx-auto flex min-h-[calc(100vh-9.5rem)] max-w-3xl flex-col items-center justify-center text-center">
+        <img
+          src={notFoundImage}
+          alt="A puzzled dog and cat looking for the right page"
+          width={2508}
+          height={1412}
+          fetchPriority="high"
+          className="h-auto w-full max-w-[32rem] object-contain"
+        />
+        <p className="mt-1 text-sm font-bold uppercase text-vet-green">404</p>
+        <h1 className="type-section-title mt-4 max-w-2xl text-balance text-ink">
+          Paws! You may have taken a wrong turn.
+        </h1>
+        <p className="type-section-copy mt-4 max-w-xl text-pretty text-ink/64">
+          Double-check the web address, or head back to our homepage.
+        </p>
+        <Link
+          to="/"
+          className="focus-ring focus-ring-dark type-button mt-7 inline-flex min-h-12 items-center justify-center rounded-full bg-vet-green-dark px-6 text-white transition-colors hover:bg-ink"
+        >
+          Go to homepage
+        </Link>
+      </main>
     </div>
   );
 }
