@@ -37,8 +37,8 @@ export function contactAddressLine(contact: ContactSettings) {
   return [street, city, postalCode, country].filter(Boolean).join(", ");
 }
 
-export function mapEmbedUrl(contact: ContactSettings) {
-  return `https://www.google.com/maps?q=${encodeURIComponent(contactAddressLine(contact))}&output=embed`;
+export function mapEmbedUrl(_contact: ContactSettings) {
+  return "https://www.openstreetmap.org/export/embed.html?bbox=33.0312822%2C34.703082%2C33.0552822%2C34.715082&layer=mapnik&marker=34.709082%2C33.0432822";
 }
 
 export function primaryContactCta(contact: ContactSettings): Cta {

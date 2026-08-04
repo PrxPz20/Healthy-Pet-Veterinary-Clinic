@@ -71,15 +71,14 @@ function AdminLoginPage() {
 
         <div className="flex flex-1 items-center py-10 sm:py-14">
           <div className="mx-auto w-full max-w-md">
-            <div className="grid h-11 w-11 place-items-center rounded-xl bg-sage text-vet-green">
-              <LockKeyhole className="h-5 w-5" aria-hidden="true" />
+            <div className="flex items-center gap-3">
+              <div className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-sage text-vet-green">
+                <LockKeyhole className="h-5 w-5" aria-hidden="true" />
+              </div>
+              <h1 className="font-display text-4xl font-bold leading-tight text-ink sm:text-5xl">
+                Welcome back
+              </h1>
             </div>
-            <h1 className="mt-6 font-display text-4xl font-bold leading-tight text-ink sm:text-5xl">
-              Welcome back
-            </h1>
-            <p className="mt-3 max-w-sm text-base leading-relaxed text-ink/64">
-              Sign in to manage Healthy Pet website content.
-            </p>
 
             {!configured ? (
               <div
@@ -111,12 +110,7 @@ function AdminLoginPage() {
               </label>
 
               <label className="grid gap-2">
-                <span className="flex items-center justify-between gap-4">
-                  <span className="text-sm font-semibold text-ink/72">Password</span>
-                  <span className="text-sm font-semibold text-ink/66" title="Coming soon">
-                    Forgot password?
-                  </span>
-                </span>
+                <span className="text-sm font-semibold text-ink/72">Password</span>
                 <span className="relative">
                   <input
                     type={showPassword ? "text" : "password"}
@@ -146,6 +140,9 @@ function AdminLoginPage() {
                     )}
                   </button>
                 </span>
+                <span className="w-fit text-sm font-semibold text-ink/66" title="Coming soon">
+                  Forgot password?
+                </span>
               </label>
 
               {error ? (
@@ -163,19 +160,19 @@ function AdminLoginPage() {
                 {loading ? "Signing in..." : "Sign in"}
               </button>
             </form>
-
-            <p className="mt-10 text-sm leading-relaxed text-ink/64">
-              Access is limited to authorised clinic administrators.
-            </p>
           </div>
         </div>
+
+        <p className="text-center text-xs font-medium text-ink/48 sm:text-left">
+          Powered with care by <span className="font-bold text-ink/68">SONAR STUDIO</span>
+        </p>
       </section>
 
       <aside className="hidden min-h-0 p-3 pl-0 lg:block">
         <div
           role="img"
           aria-label="Healthy Pet Veterinary Clinic reception and pet shop"
-          className="h-[calc(100dvh-1.5rem)] min-h-[36rem] overflow-hidden rounded-2xl bg-sage bg-cover bg-center"
+          className="h-[calc(100dvh-1.5rem)] min-h-[36rem] overflow-hidden rounded-2xl bg-sage bg-cover bg-center shadow-[0_24px_70px_-28px_rgba(24,26,28,0.38)]"
           style={{ backgroundImage: `url(${clinicImageUrl})` }}
         />
       </aside>

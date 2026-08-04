@@ -155,7 +155,7 @@ export function Contact() {
                   src={mapEmbedUrl(contact)}
                   loading="lazy"
                   className="absolute inset-0 h-full w-full border-0 grayscale"
-                  referrerPolicy="no-referrer-when-downgrade"
+                  referrerPolicy="no-referrer"
                 />
               </div>
               <div className="flex flex-col gap-3 border-t border-white/12 p-5 sm:flex-row sm:items-center sm:justify-between">

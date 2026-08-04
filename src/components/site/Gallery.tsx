@@ -53,10 +53,16 @@ export function Gallery() {
             </StaggerItem>
           ))}
         </StaggerGroup>
-        <p className="type-button mt-8 flex items-center justify-center gap-2 text-center font-semibold text-ink/48">
+        <a
+          href="/gallery"
+          className="focus-ring focus-ring-dark type-button group relative mx-auto mt-8 flex w-fit items-center justify-center gap-2 rounded-sm pb-1 text-center font-semibold text-ink/48 transition-colors duration-200 after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:text-ink/68 hover:after:scale-x-100"
+        >
           See the complete clinic gallery
-          <ArrowUpRight className="h-4 w-4" aria-hidden="true" />
-        </p>
+          <ArrowUpRight
+            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
+            aria-hidden="true"
+          />
+        </a>
       </div>
     </section>
   );
