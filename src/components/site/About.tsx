@@ -32,8 +32,7 @@ export function About() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-start gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <Reveal>
-            <div className="eyebrow">{about.label}</div>
-            <h2 className="type-section-title mt-3">{about.heading}</h2>
+            <h2 className="type-section-title">{about.heading}</h2>
             <div className="type-body mt-6 space-y-4 text-ink/68">
               {about.paragraphs.map((paragraph) => (
                 <p key={paragraph}>

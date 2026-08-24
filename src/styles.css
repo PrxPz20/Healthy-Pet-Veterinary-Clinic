@@ -138,13 +138,6 @@
       0 0 0 3px var(--white),
       0 0 0 6px color-mix(in oklab, #dc2626 78%, transparent);
   }
-  .eyebrow {
-    font-family: var(--font-sans);
-    font-size: 0.82rem;
-    font-weight: 800;
-    letter-spacing: 0;
-    color: var(--vet-green);
-  }
   .text-balance {
     text-wrap: balance;
   }
@@ -213,6 +206,27 @@
     font-size: 0.75rem;
     font-weight: 700;
     line-height: 1.2;
+  }
+
+  .legal-copy {
+    text-wrap: pretty;
+  }
+
+  .legal-copy ul {
+    list-style: disc;
+    padding-left: 1.25rem;
+  }
+
+  .legal-copy li + li {
+    margin-top: 0.65rem;
+  }
+
+  .legal-copy a {
+    color: var(--vet-green-dark);
+    font-weight: 700;
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--vet-green-dark) 35%, transparent);
+    text-underline-offset: 0.2em;
   }
   .type-stat-number {
     font-family: var(--font-display);

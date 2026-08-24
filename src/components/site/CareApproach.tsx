@@ -17,8 +17,7 @@ export function CareApproach() {
     <section id="approach" ref={ref} className="relative bg-ink py-20 text-white md:py-28">
       <div className="mx-auto grid max-w-7xl gap-12 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
         <Reveal className="lg:sticky lg:top-28 lg:self-start">
-          <div className="eyebrow text-sage-light">{homepage.approach.label}</div>
-          <h2 className="type-section-title mt-3 max-w-lg">{homepage.approach.heading}</h2>
+          <h2 className="type-section-title max-w-lg">{homepage.approach.heading}</h2>
           <p className="type-section-copy mt-5 max-w-md text-white/72">{homepage.approach.body}</p>
           <div className="mt-8 overflow-hidden rounded-3xl">
             <img

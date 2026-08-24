@@ -34,8 +34,7 @@ export function Services() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
-            <div className="eyebrow">{homepage.services.label}</div>
-            <h2 className="type-section-title mt-3 max-w-3xl">{homepage.services.heading}</h2>
+            <h2 className="type-section-title max-w-3xl">{homepage.services.heading}</h2>
           </div>
           <a
             href="/services"

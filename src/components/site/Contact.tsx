@@ -1,5 +1,6 @@
+import { useState } from "react";
 import { Reveal } from "@/components/anim";
-import { Clock, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Clock, Mail, Map, MapPin, MessageCircle, Phone } from "lucide-react";
 import { getSiteContent } from "@/content/provider";
 import {
   contactAddressLine,
@@ -18,6 +19,7 @@ function formatHourRanges(ranges: { opens: string; closes: string }[]) {
 export function Contact() {
   const { clinic, homepage } = getSiteContent();
   const contact = useContactSettings();
+  const [mapLoaded, setMapLoaded] = useState(false);
   const fullAddress = contactAddressLine(contact);
   const mapUrl =
     contact.address.mapUrl ||
@@ -51,8 +53,7 @@ export function Contact() {
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>
           <div className="max-w-3xl">
-            <div className="eyebrow text-sage-light">{homepage.contact.label}</div>
-            <h2 className="type-section-title mt-3">{homepage.contact.heading}</h2>
+            <h2 className="type-section-title">{homepage.contact.heading}</h2>
             {homepage.contact.body ? (
               <p className="type-section-copy mt-5 max-w-xl text-white/72">
                 {homepage.contact.body}
@@ -150,13 +151,40 @@ export function Contact() {
           <Reveal>
             <div className="overflow-hidden rounded-3xl border border-white/12 bg-white/5">
               <div className="relative h-[360px] bg-white/5 lg:h-[420px]">
-                <iframe
-                  title={`${clinic.name} map`}
-                  src={mapEmbedUrl(contact)}
-                  loading="lazy"
-                  className="absolute inset-0 h-full w-full border-0 grayscale"
-                  referrerPolicy="no-referrer"
-                />
+                {mapLoaded ? (
+                  <iframe
+                    title={`${clinic.name} map`}
+                    src={mapEmbedUrl(contact)}
+                    loading="lazy"
+                    className="absolute inset-0 h-full w-full border-0 grayscale"
+                    referrerPolicy="no-referrer"
+                  />
+                ) : (
+                  <div className="absolute inset-0 grid place-items-center px-6 text-center">
+                    <div className="max-w-sm">
+                      <Map className="mx-auto size-8 text-sage-light" aria-hidden="true" />
+                      <h3 className="type-card-title mt-4">Load Google Map</h3>
+                      <p className="type-card-copy mt-2 text-white/66">
+                        The map connects to Google only after you choose to load it. See our{" "}
+                        <a
+                          href="/privacy"
+                          className="underline decoration-white/40 underline-offset-4 hover:text-sage-light"
+                        >
+                          Privacy Policy
+                        </a>
+                        .
+                      </p>
+                      <button
+                        type="button"
+                        onClick={() => setMapLoaded(true)}
+                        className="focus-ring focus-ring-dark type-button mt-5 inline-flex min-h-11 cursor-pointer items-center gap-2 rounded-full bg-white px-5 py-3 text-ink transition-colors hover:bg-sage"
+                      >
+                        <MapPin className="size-4" aria-hidden="true" />
+                        Load map
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="flex flex-col gap-3 border-t border-white/12 p-5 sm:flex-row sm:items-center sm:justify-between">
                 <div>

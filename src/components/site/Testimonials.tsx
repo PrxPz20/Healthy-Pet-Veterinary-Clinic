@@ -36,7 +36,6 @@ export function Testimonials() {
         <Reveal className="rounded-[1.5rem] border border-line bg-clinic p-6 sm:p-8 md:p-10">
           <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">
             <div>
-              <div className="eyebrow">REVIEWS</div>
               <h2 className="type-section-title">{homepage.testimonials.heading}</h2>
               <p className="type-section-copy mt-5 max-w-xl text-ink/66">
                 {homepage.testimonials.body}
