@@ -117,7 +117,7 @@ export function Testimonials() {
                       <ChevronRight className="h-4 w-4" />
                     </button>
                   </div>
-                  <div className="flex items-center gap-2" aria-label="Review carousel pagination">
+                  <div className="flex items-center" aria-label="Review carousel pagination">
                     {testimonials.map((testimonial, index) => {
                       const isActive = index === activeIndex;
                       return (
@@ -125,12 +125,19 @@ export function Testimonials() {
                           key={testimonial.name}
                           type="button"
                           onClick={() => goTo(index)}
-                          className={`focus-ring focus-ring-dark h-2.5 rounded-full transition-all duration-200 ${
-                            isActive ? "w-8 bg-vet-green" : "w-2.5 bg-ink/18 hover:bg-vet-green/55"
-                          }`}
+                          className="focus-ring focus-ring-dark group grid h-11 w-11 shrink-0 place-items-center rounded-full"
                           aria-label={`Show review from ${testimonial.name}`}
                           aria-current={isActive ? "true" : undefined}
-                        />
+                        >
+                          <span
+                            className={`h-2.5 rounded-full transition-all duration-200 ${
+                              isActive
+                                ? "w-8 bg-vet-green"
+                                : "w-2.5 bg-ink/28 group-hover:bg-vet-green/55"
+                            }`}
+                            aria-hidden="true"
+                          />
+                        </button>
                       );
                     })}
                   </div>

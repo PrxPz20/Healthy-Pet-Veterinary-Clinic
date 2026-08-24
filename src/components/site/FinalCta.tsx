@@ -12,7 +12,7 @@ export function FinalCta() {
   const PrimaryIcon = contact.phones.length ? Phone : contact.whatsapp ? MessageCircle : Mail;
 
   return (
-    <section className="bg-white px-5 py-16 text-ink sm:px-8 md:py-20">
+    <section id="final-cta" className="bg-white px-5 py-16 text-ink sm:px-8 md:py-20">
       <Reveal className="mx-auto max-w-5xl text-center">
         <h2 className="type-section-title">{homepage.finalCta.heading}</h2>
         <p className="type-section-copy mx-auto mt-5 max-w-2xl text-ink/66">

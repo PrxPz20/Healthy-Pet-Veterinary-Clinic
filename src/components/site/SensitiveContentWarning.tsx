@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { AlertTriangle, Check } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { quickTransition, softTransition } from "@/lib/motion";
+import { useModalAccessibility } from "@/hooks/use-modal-accessibility";
 
 const STORAGE_KEY = "healthy-pet-cases-sensitive-consent";
 const COOLDOWN_SECONDS = 5;
@@ -10,11 +11,18 @@ const COOLDOWN_MS = COOLDOWN_SECONDS * 1000;
 export function SensitiveContentWarning() {
   const [visible, setVisible] = useState(false);
   const [elapsedMs, setElapsedMs] = useState(0);
-  const stayButtonRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const leaveButtonRef = useRef<HTMLButtonElement>(null);
   const reduceMotion = useReducedMotion();
   const remaining = Math.ceil(Math.max(0, COOLDOWN_MS - elapsedMs) / 1000);
   const isReady = elapsedMs >= COOLDOWN_MS;
   const progress = Math.min(100, (elapsedMs / COOLDOWN_MS) * 100);
+
+  useModalAccessibility({
+    open: visible,
+    containerRef: dialogRef,
+    initialFocusRef: leaveButtonRef,
+  });
 
   useEffect(() => {
     const accepted = window.localStorage.getItem(STORAGE_KEY) === "accepted";
@@ -24,7 +32,6 @@ export function SensitiveContentWarning() {
   useEffect(() => {
     if (!visible) return;
 
-    stayButtonRef.current?.focus();
     setElapsedMs(0);
 
     const startedAt = Date.now();
@@ -33,17 +40,6 @@ export function SensitiveContentWarning() {
     }, 100);
 
     return () => window.clearInterval(id);
-  }, [visible]);
-
-  useEffect(() => {
-    if (!visible) return;
-
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
   }, [visible]);
 
   function accept() {
@@ -68,10 +64,12 @@ export function SensitiveContentWarning() {
           transition={quickTransition}
         >
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby="sensitive-warning-title"
             aria-describedby="sensitive-warning-description"
+            tabIndex={-1}
             className="relative max-h-[calc(100dvh-2rem)] w-full max-w-4xl overflow-y-auto rounded-[1.5rem] bg-white p-5 text-ink shadow-[0_24px_80px_-40px_rgba(0,0,0,0.8)] sm:rounded-[2rem] sm:p-10 lg:p-14"
             initial={reduceMotion ? false : { opacity: 0, y: 16, filter: "blur(6px)" }}
             animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -100,6 +98,7 @@ export function SensitiveContentWarning() {
 
             <div className="mt-8 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:items-center sm:justify-end">
               <button
+                ref={leaveButtonRef}
                 type="button"
                 onClick={leave}
                 className="focus-ring focus-ring-dark type-button inline-flex min-h-12 items-center justify-center rounded-full px-6 py-3 text-ink/50 transition-colors duration-200 hover:text-ink"
@@ -107,7 +106,6 @@ export function SensitiveContentWarning() {
                 Leave page
               </button>
               <button
-                ref={stayButtonRef}
                 type="button"
                 onClick={accept}
                 disabled={!isReady}

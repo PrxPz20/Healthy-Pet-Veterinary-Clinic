@@ -1,5 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { X } from "lucide-react";
+import { useRef } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -8,6 +9,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import type { MediaAsset } from "@/content/types";
+import { useModalAccessibility } from "@/hooks/use-modal-accessibility";
 import { quickTransition, softTransition } from "@/lib/motion";
 import { SensitiveImage } from "./SensitiveImage";
 
@@ -30,6 +32,16 @@ export function MediaCarouselModal({
 }: MediaCarouselModalProps) {
   const reduceMotion = useReducedMotion();
   const safeMedia = media.length ? media : [];
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+
+  useModalAccessibility({
+    open,
+    containerRef: dialogRef,
+    initialFocusRef: closeButtonRef,
+    onClose,
+    closeOnEscape: true,
+  });
 
   return (
     <AnimatePresence>
@@ -40,12 +52,15 @@ export function MediaCarouselModal({
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={reduceMotion ? { duration: 0 } : quickTransition}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="media-modal-title"
           onClick={onClose}
         >
           <motion.div
+            ref={dialogRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="media-modal-title"
+            aria-describedby={description ? "media-modal-description" : undefined}
+            tabIndex={-1}
             className="relative w-full max-w-4xl overflow-hidden rounded-[1.5rem] bg-white text-ink shadow-[0_24px_70px_-38px_rgba(0,0,0,0.72)]"
             initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -54,6 +69,7 @@ export function MediaCarouselModal({
             onClick={(event) => event.stopPropagation()}
           >
             <button
+              ref={closeButtonRef}
               type="button"
               onClick={onClose}
               className="focus-ring absolute right-4 top-4 z-10 grid h-11 w-11 place-items-center rounded-full bg-white/92 text-ink shadow-[0_10px_24px_-18px_rgba(24,26,28,0.6)] transition-colors hover:bg-white"
@@ -110,7 +126,11 @@ export function MediaCarouselModal({
               <h2 id="media-modal-title" className="type-card-title">
                 {title}
               </h2>
-              {description ? <p className="type-body mt-2 text-ink/66">{description}</p> : null}
+              {description ? (
+                <p id="media-modal-description" className="type-body mt-2 text-ink/66">
+                  {description}
+                </p>
+              ) : null}
             </div>
           </motion.div>
         </motion.div>

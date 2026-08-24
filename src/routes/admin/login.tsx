@@ -140,9 +140,6 @@ function AdminLoginPage() {
                     )}
                   </button>
                 </span>
-                <span className="w-fit text-sm font-semibold text-ink/66" title="Coming soon">
-                  Forgot password?
-                </span>
               </label>
 
               {error ? (
