@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Reorder, useDragControls } from "framer-motion";
+import { motion, Reorder, useDragControls, useReducedMotion } from "framer-motion";
 import {
   AlertTriangle,
   ArrowUpDown,
@@ -626,11 +626,13 @@ function Panel({
   icon,
   title,
   body,
+  highlightBody = false,
   children,
 }: {
   icon: ReactNode;
   title: string;
   body?: string;
+  highlightBody?: boolean;
   children: ReactNode;
 }) {
   return (
@@ -642,7 +644,19 @@ function Panel({
           </div>
           <h2 className="type-card-title">{title}</h2>
         </div>
-        {body ? <p className="type-card-copy mt-3 text-ink/62">{body}</p> : null}
+        {body ? (
+          highlightBody ? (
+            <div
+              role="note"
+              className="mt-4 flex items-start gap-2.5 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-amber-800"
+            >
+              <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
+              <p className="text-sm font-bold leading-relaxed">{body}</p>
+            </div>
+          ) : (
+            <p className="type-card-copy mt-3 text-ink/62">{body}</p>
+          )
+        ) : null}
       </div>
       <div className="mt-5">{children}</div>
     </section>
@@ -664,24 +678,50 @@ function AdminBlock({
   editing?: boolean;
   children: ReactNode;
 }) {
+  const contentId = useId();
+  const reduceMotion = useReducedMotion();
+  const [open, setOpen] = useState(true);
+
+  useEffect(() => {
+    if (editing) setOpen(true);
+  }, [editing]);
+
   return (
     <section
       className={`min-w-0 rounded-[1.25rem] border p-4 transition-colors sm:p-5 ${
         editing ? "border-sky-200 bg-sky-50/80" : "border-line bg-white"
       }`}
     >
-      <div className="mb-4 flex items-start gap-3">
-        {icon ? (
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
-            {icon}
+      <div className="flex items-start gap-2">
+        <button
+          type="button"
+          onClick={() => setOpen((current) => !current)}
+          aria-expanded={open}
+          aria-controls={contentId}
+          className="focus-ring group flex min-h-11 min-w-0 flex-1 cursor-pointer items-start gap-3 rounded-xl text-left"
+        >
+          {icon ? (
+            <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
+              {icon}
+            </span>
+          ) : null}
+          <span className="min-w-0 flex-1">
+            <span role="heading" aria-level={3} className="type-card-title block text-ink">
+              {title}
+            </span>
+            {body ? (
+              <span className="type-card-copy mt-1 block max-w-2xl text-ink/60">{body}</span>
+            ) : null}
           </span>
-        ) : null}
-        <div className="min-w-0">
-          <h3 className="type-card-title text-ink">{title}</h3>
-          {body ? <p className="type-card-copy mt-1 max-w-2xl text-ink/60">{body}</p> : null}
-        </div>
+          <ChevronDown
+            aria-hidden="true"
+            className={`mt-2 h-4 w-4 shrink-0 text-ink/45 transition-[color,transform] duration-200 group-hover:text-vet-green ${
+              open ? "rotate-180" : ""
+            }`}
+          />
+        </button>
         {info?.length ? (
-          <div className="group/info relative ml-auto shrink-0">
+          <div className="group/info relative shrink-0">
             <button
               type="button"
               className="focus-ring grid h-9 w-9 place-items-center rounded-full text-ink/45 transition-colors hover:bg-sage hover:text-vet-green"
@@ -702,7 +742,17 @@ function AdminBlock({
           </div>
         ) : null}
       </div>
-      {children}
+      <motion.div
+        id={contentId}
+        aria-hidden={!open}
+        inert={!open}
+        initial={false}
+        animate={{ height: open ? "auto" : 0, opacity: open ? 1 : 0 }}
+        transition={reduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
+        className={open ? "overflow-visible" : "overflow-hidden"}
+      >
+        <div className="pt-4">{children}</div>
+      </motion.div>
     </section>
   );
 }
@@ -954,7 +1004,10 @@ function CategoryPicker({
   const [newCategory, setNewCategory] = useState("");
   const [editingId, setEditingId] = useState("");
   const [editingName, setEditingName] = useState("");
+  const [categoriesOpen, setCategoriesOpen] = useState(false);
   const [confirmation, setConfirmation] = useState<ConfirmRequest | null>(null);
+  const categoryListId = useId();
+  const reduceMotion = useReducedMotion();
 
   async function addCategory() {
     const next = newCategory.trim();
@@ -1010,118 +1063,144 @@ function CategoryPicker({
       >
         <div className="grid min-w-0 gap-5">
           {categories.length ? (
-            <details className="group/categories min-w-0">
-              <summary className="focus-ring flex min-h-12 cursor-pointer list-none items-center justify-between rounded-2xl border border-line bg-white px-4 text-sm font-semibold text-ink transition-colors marker:hidden hover:border-vet-green hover:bg-sage/35">
+            <div className="min-w-0">
+              <button
+                type="button"
+                onClick={() => setCategoriesOpen((current) => !current)}
+                aria-expanded={categoriesOpen}
+                aria-controls={categoryListId}
+                className="focus-ring flex min-h-12 w-full cursor-pointer items-center justify-between rounded-2xl border border-line bg-white px-4 text-sm font-semibold text-ink transition-colors hover:border-vet-green hover:bg-sage/35"
+              >
                 <span className="flex items-center gap-3">
-                  <span className="group-open/categories:hidden">Show categories</span>
-                  <span className="hidden group-open/categories:inline">Hide categories</span>
+                  <span>{categoriesOpen ? "Hide categories" : "Show categories"}</span>
                   <span className="rounded-full bg-white px-2.5 py-1 text-xs text-ink/48 shadow-sm">
                     {categories.length}
                   </span>
                 </span>
-                <ChevronDown className="h-4 w-4 text-ink/45 transition-transform group-open/categories:rotate-180" />
-              </summary>
-              <div className="grid min-w-0 gap-2 pt-3 sm:grid-cols-2 xl:grid-cols-3">
-                {categories.map((category) => {
-                  const count = itemCounts[category.name.toLowerCase()] ?? 0;
-                  const editing = editingId === category.id;
+                <ChevronDown
+                  className={`h-4 w-4 text-ink/45 transition-transform duration-200 ${
+                    categoriesOpen ? "rotate-180" : ""
+                  }`}
+                />
+              </button>
+              <motion.div
+                id={categoryListId}
+                aria-hidden={!categoriesOpen}
+                inert={!categoriesOpen}
+                initial={false}
+                animate={{
+                  height: categoriesOpen ? "auto" : 0,
+                  opacity: categoriesOpen ? 1 : 0,
+                }}
+                transition={
+                  reduceMotion ? { duration: 0 } : { duration: 0.22, ease: [0.22, 1, 0.36, 1] }
+                }
+                className={categoriesOpen ? "overflow-visible" : "overflow-hidden"}
+              >
+                <div className="grid min-w-0 gap-2 pt-3 sm:grid-cols-2 xl:grid-cols-3">
+                  {categories.map((category) => {
+                    const count = itemCounts[category.name.toLowerCase()] ?? 0;
+                    const editing = editingId === category.id;
 
-                  return (
-                    <div
-                      key={category.id}
-                      inert={Boolean(editingId && !editing)}
-                      className={`grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-2xl border p-3 transition-opacity ${
-                        editing ? "border-sky-200 bg-sky-50" : "border-line bg-white shadow-sm"
-                      } ${editingId && !editing ? "pointer-events-none opacity-35" : ""}`}
-                    >
-                      <div className="min-w-0 flex-1">
-                        {editing ? (
-                          <input
-                            value={editingName}
-                            onChange={(event) => setEditingName(event.target.value)}
-                            onKeyDown={(event) => {
-                              if (event.key === "Enter") {
-                                event.preventDefault();
-                                void saveCategory();
-                              }
-                            }}
-                            className={`${inputClass} min-h-9 rounded-xl px-3 py-1.5`}
-                            {...validationProps("Category name", "Category name")}
-                            minLength={2}
-                            maxLength={80}
-                            required
-                            autoFocus
-                          />
-                        ) : (
-                          <p className="type-button truncate text-ink">{category.name}</p>
-                        )}
-                        <p className="mt-1 text-xs font-semibold text-ink/48">
-                          {count} {count === 1 ? "item" : "items"}
-                        </p>
-                      </div>
-                      <div className="flex shrink-0 items-center gap-1 self-start">
-                        {editing ? (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => void saveCategory()}
-                              disabled={disabled || editingName.trim().length < 2}
-                              className="focus-ring grid h-9 w-9 place-items-center rounded-full text-vet-green transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
-                              aria-label={`Save ${category.name} category`}
-                            >
-                              <CheckCircle2 className="h-4 w-4" />
-                            </button>
+                    return (
+                      <div
+                        key={category.id}
+                        inert={Boolean(editingId && !editing)}
+                        className={`grid min-w-0 grid-cols-[minmax(0,1fr)_auto] items-center gap-2 rounded-2xl border p-3 transition-opacity ${
+                          editing ? "border-sky-200 bg-sky-50" : "border-line bg-white shadow-sm"
+                        } ${editingId && !editing ? "pointer-events-none opacity-35" : ""}`}
+                      >
+                        <div className="min-w-0 flex-1">
+                          {editing ? (
+                            <input
+                              value={editingName}
+                              onChange={(event) => setEditingName(event.target.value)}
+                              onKeyDown={(event) => {
+                                if (event.key === "Enter") {
+                                  event.preventDefault();
+                                  void saveCategory();
+                                }
+                              }}
+                              className={`${inputClass} min-h-9 rounded-xl px-3 py-1.5`}
+                              {...validationProps("Category name", "Category name")}
+                              minLength={2}
+                              maxLength={80}
+                              required
+                              autoFocus
+                            />
+                          ) : (
+                            <p className="type-button truncate text-ink">{category.name}</p>
+                          )}
+                          <p className="mt-1 text-xs font-semibold text-ink/48">
+                            {count} {count === 1 ? "item" : "items"}
+                          </p>
+                        </div>
+                        <div className="flex shrink-0 items-center gap-1 self-start">
+                          {editing ? (
+                            <>
+                              <button
+                                type="button"
+                                onClick={() => void saveCategory()}
+                                disabled={disabled || editingName.trim().length < 2}
+                                className="focus-ring grid h-9 w-9 place-items-center rounded-full text-vet-green transition-colors hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+                                aria-label={`Save ${category.name} category`}
+                              >
+                                <CheckCircle2 className="h-4 w-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  cancelEditing();
+                                }}
+                                className="focus-ring grid h-9 w-9 place-items-center rounded-full text-ink/52 transition-colors hover:bg-white hover:text-ink"
+                                aria-label="Cancel category edit"
+                              >
+                                <X className="h-4 w-4" />
+                              </button>
+                            </>
+                          ) : (
                             <button
                               type="button"
                               onClick={() => {
-                                cancelEditing();
+                                setEditingId(category.id);
+                                setEditingName(category.name);
+                                onEditingChange?.(true);
                               }}
-                              className="focus-ring grid h-9 w-9 place-items-center rounded-full text-ink/52 transition-colors hover:bg-white hover:text-ink"
-                              aria-label="Cancel category edit"
+                              disabled={disabled}
+                              className="focus-ring grid h-9 w-9 place-items-center rounded-full text-ink/58 transition-colors hover:bg-white hover:text-vet-green disabled:cursor-not-allowed disabled:opacity-40"
+                              aria-label={`Rename ${category.name} category`}
                             >
-                              <X className="h-4 w-4" />
+                              <Pencil className="h-4 w-4" />
                             </button>
-                          </>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setEditingId(category.id);
-                              setEditingName(category.name);
-                              onEditingChange?.(true);
-                            }}
-                            disabled={disabled}
-                            className="focus-ring grid h-9 w-9 place-items-center rounded-full text-ink/58 transition-colors hover:bg-white hover:text-vet-green disabled:cursor-not-allowed disabled:opacity-40"
-                            aria-label={`Rename ${category.name} category`}
-                          >
-                            <Pencil className="h-4 w-4" />
-                          </button>
-                        )}
-                        {!editing ? (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setConfirmation({
-                                title: "Delete category?",
-                                message: `Delete the empty “${category.name}” category? This cannot be undone.`,
-                                confirmLabel: "Delete category",
-                                action: () => onDelete(category.id),
-                              });
-                            }}
-                            disabled={disabled || count > 0}
-                            title={count > 0 ? "Move or delete its items first" : "Delete category"}
-                            className="focus-ring grid h-9 w-9 place-items-center rounded-full text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-30"
-                            aria-label={`Delete ${category.name} category`}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        ) : null}
+                          )}
+                          {!editing ? (
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setConfirmation({
+                                  title: "Delete category?",
+                                  message: `Delete the empty “${category.name}” category? This cannot be undone.`,
+                                  confirmLabel: "Delete category",
+                                  action: () => onDelete(category.id),
+                                });
+                              }}
+                              disabled={disabled || count > 0}
+                              title={
+                                count > 0 ? "Move or delete its items first" : "Delete category"
+                              }
+                              className="focus-ring grid h-9 w-9 place-items-center rounded-full text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-30"
+                              aria-label={`Delete ${category.name} category`}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          ) : null}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </details>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-line bg-sage/40 p-4 text-sm font-semibold text-ink/52">
               No categories yet.
@@ -1236,9 +1315,9 @@ function AdminSelect({
         />
       </summary>
       <div
-        className={`absolute left-0 z-40 max-h-64 w-full min-w-48 overflow-y-auto rounded-2xl border border-line bg-white p-2 shadow-xl ${
-          openUpwards ? "bottom-[calc(100%+0.5rem)]" : "top-[calc(100%+0.5rem)]"
-        }`}
+        className={`absolute left-0 z-40 max-h-64 w-full min-w-48 overflow-y-auto rounded-2xl border border-line bg-white p-2 shadow-xl motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200 ${
+          openUpwards ? "motion-safe:slide-in-from-bottom-1" : "motion-safe:slide-in-from-top-1"
+        } ${openUpwards ? "bottom-[calc(100%+0.5rem)]" : "top-[calc(100%+0.5rem)]"}`}
       >
         {options.map((option) => {
           const active = option.value === value;
@@ -2375,9 +2454,9 @@ function TimePicker({
       {open ? (
         <div
           id={`${id}-time-options`}
-          className={`absolute left-0 z-50 w-[min(16rem,calc(100vw-2rem))] rounded-2xl border border-line bg-white p-2 shadow-xl ${
-            openUpwards ? "bottom-[calc(100%+0.5rem)]" : "top-[calc(100%+0.5rem)]"
-          }`}
+          className={`absolute left-0 z-50 w-[min(16rem,calc(100vw-2rem))] rounded-2xl border border-line bg-white p-2 shadow-xl motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200 ${
+            openUpwards ? "motion-safe:slide-in-from-bottom-1" : "motion-safe:slide-in-from-top-1"
+          } ${openUpwards ? "bottom-[calc(100%+0.5rem)]" : "top-[calc(100%+0.5rem)]"}`}
         >
           <div className="grid grid-cols-2 gap-2">
             <div className="min-w-0">
@@ -2479,7 +2558,8 @@ function FaqManager({
     <Panel
       icon={<HelpCircle className="h-5 w-5" />}
       title="FAQ"
-      body={`Add up to ${MAX_FAQS} FAQs to keep the website clear and fast. ${activeCount}/${MAX_FAQS} used.`}
+      body={`Maximum ${MAX_FAQS} FAQs. ${activeCount}/${MAX_FAQS} currently used.`}
+      highlightBody
     >
       <div className="space-y-5">
         <AdminBlock
@@ -2608,7 +2688,8 @@ function TestimonialsManager({
     <Panel
       icon={<Star className="h-5 w-5" />}
       title="Google reviews"
-      body={`${MAX_REVIEWS} reviews are allowed so the website stays clean and organised. ${activeCount}/${MAX_REVIEWS} used.`}
+      body={`Maximum ${MAX_REVIEWS} reviews. ${activeCount}/${MAX_REVIEWS} currently used.`}
+      highlightBody
     >
       <div className="space-y-5">
         <AdminBlock
@@ -3939,7 +4020,7 @@ function RecordList({
               <ListFilter className="h-4 w-4" />
               <span className="sr-only">Filter existing items</span>
             </summary>
-            <div className="absolute left-0 top-[3.25rem] z-30 w-56 rounded-2xl border border-line bg-white p-2 shadow-xl">
+            <div className="absolute left-0 top-[3.25rem] z-30 w-56 rounded-2xl border border-line bg-white p-2 shadow-xl motion-safe:animate-in motion-safe:fade-in-0 motion-safe:slide-in-from-top-1 motion-safe:duration-200">
               <div className="flex items-center justify-between gap-3 px-3 pb-1 pt-2">
                 <p className="text-xs font-bold uppercase text-ink/40">Status</p>
                 {hasActiveFilters ? (
