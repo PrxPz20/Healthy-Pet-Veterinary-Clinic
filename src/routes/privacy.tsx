@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalPage, type LegalSection } from "@/components/site/LegalPage";
+import privacyHero from "@/assets/legal/privacy-hero.webp";
 
 const controllerDetails = [
   ["Registered legal business name", "[REGISTERED LEGAL BUSINESS NAME]"],
@@ -294,6 +295,7 @@ function PrivacyPage() {
     <LegalPage
       title="Privacy Policy"
       intro="This policy explains what information is processed through this website, why it is used, and the choices and rights available to you."
+      heroImage={privacyHero}
       sections={sections}
     />
   );

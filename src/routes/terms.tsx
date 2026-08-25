@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { LegalPage, type LegalSection } from "@/components/site/LegalPage";
+import termsHero from "@/assets/legal/terms-hero.webp";
 
 const operatorDetails = [
   ["Registered legal business name", "[REGISTERED LEGAL BUSINESS NAME]"],
@@ -266,6 +267,7 @@ function TermsPage() {
     <LegalPage
       title="Terms and Conditions"
       intro="These terms explain how this informational website may be used and the limits that apply to its veterinary, product, gallery, and case content."
+      heroImage={termsHero}
       sections={sections}
     />
   );

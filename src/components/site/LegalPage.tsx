@@ -12,18 +12,30 @@ export type LegalSection = {
 export function LegalPage({
   title,
   intro,
+  heroImage,
   sections,
 }: {
   title: string;
   intro: string;
+  heroImage: string;
   sections: LegalSection[];
 }) {
   return (
     <main id="main-content" className="min-h-screen bg-white text-ink">
       <Nav />
 
-      <header className="bg-ink pb-16 pt-32 text-white md:pb-20 md:pt-36">
-        <div className="mx-auto max-w-7xl px-5 sm:px-8">
+      <header className="relative overflow-hidden bg-ink pb-16 pt-32 text-white md:pb-20 md:pt-36">
+        <img
+          src={heroImage}
+          alt=""
+          aria-hidden="true"
+          width={1672}
+          height={941}
+          className="absolute inset-0 h-full w-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/88 to-ink/35" />
+        <div className="absolute inset-0 bg-ink/20" />
+        <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
           <nav aria-label="Breadcrumb" className="text-sm text-white/58">
             <a
               href="/"
