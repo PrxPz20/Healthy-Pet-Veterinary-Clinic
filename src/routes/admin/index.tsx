@@ -15,6 +15,7 @@ import {
   ImagePlus,
   List,
   ListFilter,
+  LifeBuoy,
   Loader2,
   LogOut,
   Mail,
@@ -134,7 +135,8 @@ type AdminSection =
   | "contact"
   | "faq"
   | "about"
-  | "reviews";
+  | "reviews"
+  | "help";
 
 const MAX_FAQS = 12;
 const MAX_REVIEWS = 12;
@@ -169,6 +171,12 @@ const adminSections: {
   { id: "contact", label: "Contact", icon: <Phone className="h-4 w-4" /> },
 ];
 
+const helpSection = {
+  id: "help" as const,
+  label: "Help",
+  icon: <LifeBuoy className="h-4 w-4" />,
+};
+
 type AdminSectionData =
   | { section: "overview"; counts: DashboardCounts }
   | { section: "gallery"; items: GalleryRow[] }
@@ -178,7 +186,8 @@ type AdminSectionData =
   | { section: "faq"; items: FaqRow[] }
   | { section: "about"; value: AboutSettingsRow }
   | { section: "reviews"; items: TestimonialRow[] }
-  | { section: "contact"; value: AdminContactSettings };
+  | { section: "contact"; value: AdminContactSettings }
+  | { section: "help" };
 
 async function loadAdminSection(section: AdminSection): Promise<AdminSectionData> {
   switch (section) {
@@ -206,6 +215,8 @@ async function loadAdminSection(section: AdminSection): Promise<AdminSectionData
       return { section, items: await listTestimonials() };
     case "contact":
       return { section, value: await getContactSettings() };
+    case "help":
+      return { section };
   }
 }
 
@@ -404,28 +415,45 @@ function AdminDashboardPage() {
         {sessionStatus === "ready" ? (
           <div className="grid min-w-0 gap-5 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
             <aside className="min-w-0 rounded-[1.5rem] border border-line bg-white p-2 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] lg:sticky lg:top-6 lg:p-3">
-              <nav
-                aria-label="Admin sections"
-                className="flex min-w-0 gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0"
-              >
-                {adminSections.map((section) => {
-                  const active = activeSection === section.id;
+              <div className="flex min-w-0 gap-2 lg:block">
+                <nav
+                  aria-label="Admin sections"
+                  className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0"
+                >
+                  {adminSections.map((section) => {
+                    const active = activeSection === section.id;
 
-                  return (
-                    <button
-                      key={section.id}
-                      type="button"
-                      onClick={() => setActiveSection(section.id)}
-                      className={`focus-ring focus-ring-dark type-button inline-flex min-h-11 shrink-0 items-center gap-3 rounded-2xl px-4 text-left transition-colors lg:w-full ${
-                        active ? "bg-ink text-white" : "text-ink/68 hover:bg-sage hover:text-ink"
-                      }`}
-                    >
-                      {section.icon}
-                      {section.label}
-                    </button>
-                  );
-                })}
-              </nav>
+                    return (
+                      <button
+                        key={section.id}
+                        type="button"
+                        onClick={() => setActiveSection(section.id)}
+                        className={`focus-ring focus-ring-dark type-button inline-flex min-h-11 shrink-0 items-center gap-3 rounded-2xl px-4 text-left transition-colors lg:w-full ${
+                          active ? "bg-ink text-white" : "text-ink/68 hover:bg-sage hover:text-ink"
+                        }`}
+                      >
+                        {section.icon}
+                        {section.label}
+                      </button>
+                    );
+                  })}
+                </nav>
+
+                <div className="shrink-0 border-l border-line pl-2 lg:mt-3 lg:border-l-0 lg:border-t lg:pl-0 lg:pt-3">
+                  <button
+                    type="button"
+                    onClick={() => setActiveSection(helpSection.id)}
+                    className={`focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-3 rounded-2xl px-4 text-left transition-colors lg:w-full ${
+                      activeSection === helpSection.id
+                        ? "bg-ink text-white"
+                        : "text-ink/68 hover:bg-sage hover:text-ink"
+                    }`}
+                  >
+                    {helpSection.icon}
+                    {helpSection.label}
+                  </button>
+                </div>
+              </div>
             </aside>
 
             <div className="min-w-0 space-y-6">
@@ -436,7 +464,10 @@ function AdminDashboardPage() {
                 >
                   <span className="inline-flex items-center gap-3 text-sm font-semibold text-ink/62">
                     <Loader2 className="h-5 w-5 animate-spin text-vet-green" aria-hidden="true" />
-                    Loading {adminSections.find((section) => section.id === activeSection)?.label}
+                    Loading{" "}
+                    {activeSection === helpSection.id
+                      ? helpSection.label
+                      : adminSections.find((section) => section.id === activeSection)?.label}
                     ...
                   </span>
                 </section>
@@ -615,11 +646,359 @@ function AdminDashboardPage() {
                   onSaveHours={(values) => withRefresh(() => saveOpeningHours(values), "contact")}
                 />
               ) : null}
+
+              {activeSection === "help" && sectionQuery.data?.section === "help" ? (
+                <HelpManager />
+              ) : null}
             </div>
           </div>
         ) : null}
       </div>
     </main>
+  );
+}
+
+function HelpManager() {
+  return (
+    <Panel
+      icon={<LifeBuoy className="h-5 w-5" />}
+      title="Dashboard guide"
+      body="Step-by-step instructions and examples for managing website content safely."
+    >
+      <div className="grid gap-6">
+        <section className="rounded-[1.25rem] border border-vet-green/20 bg-sage/70 p-4 sm:p-5">
+          <p className="type-label text-vet-green">Quick start</p>
+          <ol className="mt-4 grid gap-3 md:grid-cols-3">
+            {[
+              ["1", "Choose a section", "Open the content area you want to update."],
+              ["2", "Complete the form", "Fill every field marked with an asterisk."],
+              ["3", "Save and check", "Wait for success, then review the public page."],
+            ].map(([number, title, copy]) => (
+              <li key={number} className="flex gap-3 rounded-2xl bg-white p-4">
+                <span className="grid size-8 shrink-0 place-items-center rounded-full bg-ink text-sm font-bold text-white">
+                  {number}
+                </span>
+                <span className="min-w-0">
+                  <strong className="block text-sm text-ink">{title}</strong>
+                  <span className="mt-1 block text-sm font-medium leading-relaxed text-ink/62">
+                    {copy}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ol>
+        </section>
+
+        <div>
+          <p className="type-label mb-3 text-ink/48">Publishing and content</p>
+          <div className="grid gap-4">
+            <AdminBlock
+              icon={<Pencil className="h-4 w-4" />}
+              title="Save, review, and publish"
+              body="Use Unpublished when content needs checking before visitors can see it."
+            >
+              <HelpList
+                items={[
+                  "New items are set to Published by default. Choose Unpublished before saving when the content is not ready for visitors.",
+                  "A published item must be unpublished before its Edit button becomes available. Publish it again after checking the changes.",
+                  "A save is complete only after the dashboard shows a success message. Field errors must be corrected before trying again.",
+                ]}
+              />
+              <HelpExample
+                title="Example workflow"
+                rows={[
+                  ["Status", "Unpublished"],
+                  ["Action", "Save the item and check its text and images"],
+                  ["When ready", "Change the status to Published"],
+                ]}
+              />
+            </AdminBlock>
+
+            <AdminBlock
+              icon={<ImagePlus className="h-4 w-4" />}
+              title="Gallery and Cases"
+              body="Both support multiple images, but their required fields are different."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Gallery items require a title and at least one image when created. Their description is optional.",
+                  "Cases require a title. Their image, description, and category are optional; Sensitive image is enabled by default.",
+                  "Uploads accept JPG, PNG, or WebP images up to 10 MB each. Gallery items and cases can contain multiple images, and the cover image is shown first.",
+                ]}
+              />
+              <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                <HelpExample
+                  title="Gallery example"
+                  rows={[
+                    ["Title *", "Clinic visit"],
+                    ["Description", "A calm visit at the clinic."],
+                    ["Images *", "clinic-visit.webp"],
+                  ]}
+                />
+                <HelpExample
+                  title="Case example"
+                  rows={[
+                    ["Title *", "Dental care case"],
+                    ["Category", "Dental care"],
+                    ["Sensitive media", "Keep enabled for graphic images"],
+                  ]}
+                />
+              </div>
+            </AdminBlock>
+
+            <AdminBlock
+              icon={<Stethoscope className="h-4 w-4" />}
+              title="Services and Products"
+              body="Use clear names, the correct category, and a representative image."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Services require a title, category, full description, and image.",
+                  "Products require a name, category, and image. Their description, Wolt link, and Foody link are optional.",
+                  "Marketplace links must use HTTPS and must point to the matching Wolt or Foody website.",
+                ]}
+              />
+              <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                <HelpExample
+                  title="Service example"
+                  rows={[
+                    ["Title *", "Dental care"],
+                    ["Category *", "Dental care"],
+                    ["Full description *", "Explain what the service includes."],
+                    ["Image *", "dental-care.webp"],
+                  ]}
+                />
+                <HelpExample
+                  title="Product example"
+                  rows={[
+                    ["Name *", "Adult dog food"],
+                    ["Category *", "Food"],
+                    ["Wolt URL", "https://wolt.com/..."],
+                    ["Image *", "adult-dog-food.webp"],
+                  ]}
+                />
+              </div>
+            </AdminBlock>
+
+            <AdminBlock
+              icon={<Tags className="h-4 w-4" />}
+              title="Categories"
+              body="Categories are managed independently in Cases, Services, and Products."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Create the category before adding an item, then select it from the Category field.",
+                  "Use short, reusable names such as Dental care, Surgery, Food, or Accessories.",
+                  "Renaming a category updates its existing items. It can be deleted only when no active or archived item still uses it.",
+                ]}
+              />
+              <HelpExample
+                title="Good category names"
+                rows={[
+                  ["Service", "Preventive care"],
+                  ["Case", "Surgery"],
+                  ["Product", "Nutrition"],
+                ]}
+              />
+            </AdminBlock>
+          </div>
+        </div>
+
+        <div>
+          <p className="type-label mb-3 text-ink/48">Website information</p>
+          <div className="grid gap-4">
+            <AdminBlock
+              icon={<Phone className="h-4 w-4" />}
+              title="Contact, social links, and opening hours"
+              body="Each contact group saves independently, so update only the group that changed."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Contact methods allow up to three labelled phone numbers. Keep at least one phone number, WhatsApp number, or email, and enter phone numbers in international format, such as +35725101352.",
+                  "Social links allow up to 12 approved HTTPS profile links. A platform can appear more than once, but the same profile URL cannot be added twice.",
+                  "Opening hours must cover all seven days with at least one open day. Open days need a complete first period; the second period is optional and must begin after the first period ends.",
+                ]}
+              />
+              <HelpExample
+                title="Formatting examples"
+                rows={[
+                  ["Phone", "+35725101352"],
+                  ["Google Maps", "https://www.google.com/maps/..."],
+                  ["Social profile", "https://www.instagram.com/account-name"],
+                  ["Split hours", "09:00-13:00 and 15:00-19:00"],
+                ]}
+              />
+            </AdminBlock>
+
+            <AdminBlock
+              icon={<UserRound className="h-4 w-4" />}
+              title="FAQ, reviews, and About Us"
+              body="Editorial limits keep these public sections manageable."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "FAQ and Google reviews each allow up to 12 active items. Archive an existing item before adding another when the limit is reached.",
+                  "About Us saves its text, optional counters, and doctor image together. Selecting a new image replaces the one shown on the website after saving.",
+                  "Review names, ratings, and review text are required. FAQ questions and answers are also required.",
+                ]}
+              />
+              <div className="mt-4 grid gap-3 lg:grid-cols-2">
+                <HelpExample
+                  title="FAQ example"
+                  rows={[
+                    ["Question *", "What should I bring to my appointment?"],
+                    ["Answer *", "Provide a clear, complete answer for pet owners."],
+                  ]}
+                />
+                <HelpExample
+                  title="Review example"
+                  rows={[
+                    ["Reviewer name *", "Name shown on Google"],
+                    ["Rating *", "5"],
+                    ["Review *", "Use the review text as published."],
+                  ]}
+                />
+              </div>
+            </AdminBlock>
+
+            <AdminBlock
+              icon={<AlertTriangle className="h-4 w-4" />}
+              title="Sensitive case content"
+              body="Use the Cases controls carefully when an image may be graphic."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Leave Sensitive image enabled for graphic, surgical, wound-related, or otherwise uncomfortable media.",
+                  "Published sensitive cases appear behind the website warning and remain blurred until a visitor chooses to reveal them.",
+                  "Unpublished and archived cases do not appear on the public Cases page.",
+                ]}
+              />
+            </AdminBlock>
+          </div>
+        </div>
+
+        <div>
+          <p className="type-label mb-3 text-ink/48">Managing existing content</p>
+          <div className="grid gap-4">
+            <AdminBlock
+              icon={<ListFilter className="h-4 w-4" />}
+              title="Find, select, and reorder items"
+              body="Use the Existing items tools when a section contains many entries."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Switch between All and Archived, search by title, and filter by publication status or one or more categories where available.",
+                  "Choose 10, 25, or 50 items per page. Select All selects only the items currently shown on that page.",
+                  "Use Reorder, drag items into place, and save the order to update their sequence on the public website.",
+                ]}
+              />
+              <HelpExample
+                title="Example"
+                rows={[
+                  ["Goal", "Show only unpublished Food products"],
+                  ["Filters", "Status: Unpublished; Category: Food"],
+                  ["Finish", "Reset filters to show the full list again"],
+                ]}
+              />
+            </AdminBlock>
+
+            <AdminBlock
+              icon={<Trash2 className="h-4 w-4" />}
+              title="Archive, restore, and permanently delete"
+              body="Removing content is a two-step process to prevent accidental data loss."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Delete moves content to Archived and unpublishes it; it does not remove the record immediately.",
+                  "Archived items can be restored during the seven-day recovery period.",
+                  "Permanent delete and automatic removal after the recovery period cannot be undone. Check selected items carefully before confirming a bulk action.",
+                ]}
+              />
+            </AdminBlock>
+
+            <AdminBlock
+              icon={<RotateCcw className="h-4 w-4" />}
+              title="When a change is not visible"
+              body="Check these points before contacting support."
+              defaultOpen={false}
+            >
+              <HelpList
+                items={[
+                  "Confirm the item is Published, not Archived, and saved in the intended section and category.",
+                  "Check for a success message, then refresh the relevant public page. New images may need a moment to finish loading.",
+                  "If the problem remains, take a screenshot and note the section, item name, action, and error message shown by the dashboard.",
+                ]}
+              />
+            </AdminBlock>
+          </div>
+        </div>
+
+        <section className="rounded-[1.25rem] border border-ink/10 bg-ink p-5 text-white sm:p-6">
+          <div className="flex flex-col gap-5 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <div className="flex items-center gap-3">
+                <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white/10 text-lime">
+                  <Mail className="h-4 w-4" aria-hidden="true" />
+                </span>
+                <h3 className="type-card-title text-white">Still need help?</h3>
+              </div>
+              <p className="mt-3 max-w-2xl text-sm font-medium leading-relaxed text-white/65">
+                Email SONAR STUDIO with a short description and screenshot of the issue.
+              </p>
+            </div>
+            <a
+              href="mailto:nikolasmarchall@hotmail.com?subject=Healthy%20Pet%20dashboard%20support"
+              className="focus-ring focus-ring-dark type-button inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-full bg-white px-5 text-ink transition-colors hover:bg-sage"
+            >
+              <Mail className="h-4 w-4" aria-hidden="true" />
+              Email support
+            </a>
+          </div>
+        </section>
+      </div>
+    </Panel>
+  );
+}
+
+function HelpList({ items }: { items: string[] }) {
+  return (
+    <ul className="grid gap-3 text-sm font-medium leading-relaxed text-ink/68">
+      {items.map((item) => (
+        <li key={item} className="flex gap-3">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-vet-green" aria-hidden="true" />
+          <span>{item}</span>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+function HelpExample({ title, rows }: { title: string; rows: [string, string][] }) {
+  return (
+    <div className="mt-4 overflow-hidden rounded-2xl border border-line bg-sage/35">
+      <p className="type-label border-b border-line px-4 py-3 text-ink/48">{title}</p>
+      <dl className="divide-y divide-line">
+        {rows.map(([label, value]) => (
+          <div
+            key={label}
+            className="grid gap-1 px-4 py-3 sm:grid-cols-[9rem_minmax(0,1fr)] sm:gap-4"
+          >
+            <dt className="text-xs font-bold text-ink/52">{label}</dt>
+            <dd className="min-w-0 break-words text-sm font-semibold leading-relaxed text-ink/78">
+              {value}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </div>
   );
 }
 
@@ -679,6 +1058,7 @@ function AdminBlock({
   body,
   info,
   editing = false,
+  defaultOpen = true,
   children,
 }: {
   icon?: ReactNode;
@@ -686,11 +1066,12 @@ function AdminBlock({
   body?: string;
   info?: string[];
   editing?: boolean;
+  defaultOpen?: boolean;
   children: ReactNode;
 }) {
   const contentId = useId();
   const reduceMotion = useReducedMotion();
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(defaultOpen);
 
   useEffect(() => {
     if (editing) setOpen(true);
