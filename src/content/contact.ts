@@ -12,6 +12,7 @@ export function getStaticContactSettings(): ContactSettings {
     ],
     whatsapp: clinic.vetPhone ?? "",
     email: clinic.email,
+    socialLinks: clinic.socialLinks,
     openingHours,
   };
 }

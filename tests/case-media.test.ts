@@ -16,6 +16,10 @@ const staticMediaMigration = readFileSync(
   new URL("../supabase/migrations/20260730000000_disallow_static_case_media.sql", import.meta.url),
   "utf8",
 );
+const aboutImageMigration = readFileSync(
+  new URL("../supabase/migrations/20260826000000_about_image.sql", import.meta.url),
+  "utf8",
+);
 
 function caseMediaClient(result: {
   data: Array<{ error: string | null; path: string | null; signedUrl: string | null }> | null;
@@ -112,4 +116,14 @@ test("site-cases Storage policy is private and parent-state constrained", () => 
 
 test("draft and archived Case previews require an active admin policy", () => {
   assert.match(migration, /for select to authenticated using \([\s\S]*public\.is_admin\(\)/);
+});
+
+test("About image policy stays public without exposing Case media", () => {
+  assert.match(aboutImageMigration, /'site-about'/);
+  assert.match(aboutImageMigration, /Admins upload site assets[\s\S]*public\.is_admin\(\)/);
+  const publicPolicy = aboutImageMigration.match(
+    /create policy "Public reads site assets"[\s\S]*?\);/,
+  )?.[0];
+  assert.ok(publicPolicy);
+  assert.doesNotMatch(publicPolicy, /'site-cases'/);
 });

@@ -15,6 +15,7 @@ type ContactRow = {
 };
 
 type PhoneRow = { id: string; label: string; phone: string; sort_order: number };
+type SocialLinkRow = { platform: string; url: string; sort_order: number };
 type HoursRow = {
   day_index: number;
   day_name: string;
@@ -46,7 +47,7 @@ export async function loadPublicContactSettings(): Promise<ContactSettings> {
   const client = createClient(config.url, config.anonKey, {
     auth: { persistSession: false, autoRefreshToken: false, detectSessionInUrl: false },
   });
-  const [settingsResult, phonesResult, hoursResult] = await Promise.all([
+  const [settingsResult, phonesResult, hoursResult, socialResult] = await Promise.all([
     client
       .from("contact_settings")
       .select("street,city,region,postal_code,country,map_url,email,whatsapp")
@@ -57,6 +58,7 @@ export async function loadPublicContactSettings(): Promise<ContactSettings> {
       .from("opening_hours")
       .select("day_index,day_name,is_closed,opens_1,closes_1,opens_2,closes_2")
       .order("day_index"),
+    client.from("contact_social_links").select("platform,url,sort_order").order("sort_order"),
   ]);
 
   if (settingsResult.error || !settingsResult.data) return fallback;
@@ -79,6 +81,13 @@ export async function loadPublicContactSettings(): Promise<ContactSettings> {
         })),
     whatsapp: settings.whatsapp,
     email: settings.email,
+    socialLinks: socialResult.error
+      ? fallback.socialLinks
+      : ((socialResult.data ?? []) as SocialLinkRow[]).map((link) => ({
+          label: link.platform,
+          href: link.url,
+          external: true,
+        })),
     openingHours: hoursResult.error
       ? fallback.openingHours
       : ((hoursResult.data ?? []) as HoursRow[]).map(mapHours),

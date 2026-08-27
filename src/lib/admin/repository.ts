@@ -15,7 +15,8 @@ export type CmsBucket =
   | "site-cases"
   | "site-services"
   | "site-products"
-  | "site-hero";
+  | "site-hero"
+  | "site-about";
 type PublicCmsBucket = Exclude<CmsBucket, "site-cases">;
 export type CmsTable =
   | "gallery_items"
@@ -114,6 +115,7 @@ export type AboutSettingsRow = {
   paragraph_two: string;
   years_experience: number | null;
   completed_cases: number | null;
+  image_path: string | null;
 };
 
 export type CategoryRow = {
@@ -515,14 +517,30 @@ export async function getAboutSettings(): Promise<AboutSettingsRow> {
       paragraph_two: fallback.paragraphs[1] ?? "",
       years_experience: fallback.metrics[0]?.value ?? null,
       completed_cases: fallback.metrics[1]?.value ?? null,
+      image_path: null,
     }
   );
 }
 
-export async function saveAboutSettings(values: AboutSettingsRow) {
+export async function saveAboutSettings(values: AboutSettingsRow, file?: File | null) {
   const client = requireClient();
-  const { error } = await client.from("about_settings").upsert({ id: true, ...values });
-  if (error) throw error;
+  const uploadedPath = file ? await uploadAdminImage("site-about", "doctor", file) : null;
+  const { error } = await client.from("about_settings").upsert({
+    id: true,
+    ...values,
+    image_path: uploadedPath ?? values.image_path,
+  });
+  if (error) {
+    if (uploadedPath) await client.storage.from("site-about").remove([uploadedPath]);
+    throw error;
+  }
+
+  if (uploadedPath && values.image_path && values.image_path !== uploadedPath) {
+    const { error: cleanupError } = await client.storage
+      .from("site-about")
+      .remove([values.image_path]);
+    if (cleanupError) reportClientError("Previous About image cleanup failed", cleanupError);
+  }
   await logAudit(client, "save", "about_settings");
 }
 
@@ -599,7 +617,7 @@ export async function listCategories(section?: CategorySection) {
 export async function getContactSettings(): Promise<AdminContactSettings> {
   const client = requireClient();
   const fallback = getStaticContactSettings();
-  const [settingsResult, phonesResult, hoursResult] = await Promise.all([
+  const [settingsResult, phonesResult, hoursResult, socialResult] = await Promise.all([
     client
       .from("contact_settings")
       .select("street,city,region,postal_code,country,map_url,email,whatsapp")
@@ -610,6 +628,7 @@ export async function getContactSettings(): Promise<AdminContactSettings> {
       .from("opening_hours")
       .select("day_index,day_name,is_closed,opens_1,closes_1,opens_2,closes_2")
       .order("day_index"),
+    client.from("contact_social_links").select("platform,url,sort_order").order("sort_order"),
   ]);
 
   if (settingsResult.error || !settingsResult.data) {
@@ -646,6 +665,13 @@ export async function getContactSettings(): Promise<AdminContactSettings> {
         })),
     whatsapp: settings.whatsapp,
     email: settings.email,
+    socialLinks: socialResult.error
+      ? fallback.socialLinks
+      : (socialResult.data ?? []).map((link) => ({
+          label: link.platform,
+          href: link.url,
+          external: true,
+        })),
     openingHours: hoursResult.error
       ? []
       : (hoursResult.data ?? []).map((day) => ({
@@ -688,6 +714,14 @@ export async function saveContactMethods(
 export async function saveOpeningHours(hours: AdminOpeningHour[]) {
   const client = requireClient();
   const { error } = await client.rpc("save_opening_hours", { next_hours: hours });
+  if (error) throw error;
+}
+
+export async function saveContactSocialLinks(socialLinks: AdminContactSettings["socialLinks"]) {
+  const client = requireClient();
+  const { error } = await client.rpc("save_contact_social_links", {
+    next_links: socialLinks,
+  });
   if (error) throw error;
 }
 

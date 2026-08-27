@@ -5,6 +5,7 @@ import { getSupabasePublicConfig } from "./config";
 
 export type PublicEditorialContent = {
   about: ReturnType<typeof getSiteContent>["about"];
+  aboutImage: ReturnType<typeof getSiteContent>["media"]["about"];
   faqs: FaqItem[];
   testimonials: Testimonial[];
 };
@@ -13,7 +14,12 @@ export async function loadPublicEditorialContent(): Promise<PublicEditorialConte
   const fallback = getSiteContent();
   const config = getSupabasePublicConfig();
   if (!config) {
-    return { about: fallback.about, faqs: fallback.faqs, testimonials: fallback.testimonials };
+    return {
+      about: fallback.about,
+      aboutImage: fallback.media.about,
+      faqs: fallback.faqs,
+      testimonials: fallback.testimonials,
+    };
   }
 
   const client = createClient(config.url, config.anonKey, {
@@ -22,7 +28,9 @@ export async function loadPublicEditorialContent(): Promise<PublicEditorialConte
   const [aboutResult, faqResult, reviewResult] = await Promise.all([
     client
       .from("about_settings")
-      .select("label,heading,paragraph_one,paragraph_two,years_experience,completed_cases")
+      .select(
+        "label,heading,paragraph_one,paragraph_two,years_experience,completed_cases,image_path",
+      )
       .eq("id", true)
       .maybeSingle(),
     client.from("faq_items").select("question,answer").order("sort_order").order("created_at"),
@@ -59,6 +67,13 @@ export async function loadPublicEditorialContent(): Promise<PublicEditorialConte
 
   return {
     about,
+    aboutImage: aboutResult.data?.image_path
+      ? {
+          src: client.storage.from("site-about").getPublicUrl(aboutResult.data.image_path).data
+            .publicUrl,
+          alt: "Dr. Avgoustinos Theodorou at Healthy Pet Veterinary Clinic",
+        }
+      : fallback.media.about,
     faqs: faqResult.error ? fallback.faqs : (faqResult.data ?? []),
     testimonials: reviewResult.error
       ? fallback.testimonials

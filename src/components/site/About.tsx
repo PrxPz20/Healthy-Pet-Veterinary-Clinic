@@ -1,6 +1,5 @@
 import { motion, useReducedMotion } from "framer-motion";
 import { CountUp, Reveal } from "@/components/anim";
-import { getSiteContent } from "@/content/provider";
 import { useEditorialContent } from "./editorial-content-context";
 import { ease } from "@/lib/motion";
 
@@ -22,8 +21,7 @@ function HighlightDoctor({ text }: { text: string }) {
 }
 
 export function About() {
-  const { media } = getSiteContent();
-  const { about } = useEditorialContent();
+  const { about, aboutImage } = useEditorialContent();
   const confirmedMetrics = about.metrics.filter((metric) => typeof metric.value === "number");
   const reduceMotion = useReducedMotion();
 
@@ -64,8 +62,8 @@ export function About() {
           <Reveal delay={0.1}>
             <div className="relative aspect-[4/5] overflow-hidden rounded-3xl bg-sage">
               <img
-                src={media.about.src}
-                alt={media.about.alt}
+                src={aboutImage.src}
+                alt={aboutImage.alt}
                 loading="lazy"
                 width={1280}
                 height={1280}

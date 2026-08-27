@@ -128,6 +128,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         contact: getStaticContactSettings(),
         editorial: {
           about: content.about,
+          aboutImage: content.media.about,
           faqs: content.faqs,
           testimonials: content.testimonials,
         },

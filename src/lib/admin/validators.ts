@@ -74,7 +74,68 @@ export const aboutFormSchema = z.object({
   paragraph_two: z.string().trim().max(1200),
   years_experience: z.number().int().min(0).max(100).nullable(),
   completed_cases: z.number().int().min(0).max(1000000).nullable(),
+  image_path: z.string().max(500).nullable(),
 });
+
+export const socialMediaPlatforms = [
+  "Instagram",
+  "Facebook",
+  "TikTok",
+  "YouTube",
+  "X",
+  "Threads",
+  "Pinterest",
+  "WhatsApp",
+] as const;
+
+const socialHosts: Record<(typeof socialMediaPlatforms)[number], string[]> = {
+  Instagram: ["instagram.com"],
+  Facebook: ["facebook.com"],
+  TikTok: ["tiktok.com"],
+  YouTube: ["youtube.com", "youtu.be"],
+  X: ["x.com", "twitter.com"],
+  Threads: ["threads.net"],
+  Pinterest: ["pinterest.com", "pin.it"],
+  WhatsApp: ["wa.me", "whatsapp.com"],
+};
+
+export const socialLinksSchema = z
+  .array(
+    z
+      .object({
+        label: z.enum(socialMediaPlatforms),
+        href: z.string().trim().url("Enter a valid profile link."),
+      })
+      .superRefine((link, context) => {
+        const url = new URL(link.href);
+        const approvedHost = socialHosts[link.label].some(
+          (host) => url.hostname === host || url.hostname.endsWith(`.${host}`),
+        );
+        if (url.protocol !== "https:" || !approvedHost) {
+          context.addIssue({
+            code: z.ZodIssueCode.custom,
+            path: ["href"],
+            message: `Enter a valid HTTPS ${link.label} profile link.`,
+          });
+        }
+      }),
+  )
+  .max(12, "A maximum of 12 social media links is allowed.")
+  .superRefine((links, context) => {
+    links.forEach((link, index) => {
+      if (
+        links.findIndex(
+          (item) => item.href.trim().toLowerCase() === link.href.trim().toLowerCase(),
+        ) !== index
+      ) {
+        context.addIssue({
+          code: z.ZodIssueCode.custom,
+          path: [index, "href"],
+          message: "This profile link has already been added.",
+        });
+      }
+    });
+  });
 
 const internationalPhoneSchema = z
   .string()

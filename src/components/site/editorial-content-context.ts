@@ -6,6 +6,7 @@ const fallback = getSiteContent();
 
 export const EditorialContentContext = createContext<PublicEditorialContent>({
   about: fallback.about,
+  aboutImage: fallback.media.about,
   faqs: fallback.faqs,
   testimonials: fallback.testimonials,
 });

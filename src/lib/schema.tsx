@@ -33,7 +33,7 @@ export function buildClinicSchema(content: SiteContent, contact?: ContactSetting
       "@type": "City",
       name: "Limassol",
     },
-    sameAs: clinic.socialLinks.map((link) => link.href),
+    sameAs: (contact?.socialLinks ?? clinic.socialLinks).map((link) => link.href),
     openingHoursSpecification: openingHours.flatMap((row) =>
       row.ranges.map((range) => ({
         "@type": "OpeningHoursSpecification",

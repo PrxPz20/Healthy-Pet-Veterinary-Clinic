@@ -60,6 +60,7 @@ const tables = [
   "content_categories",
   "contact_settings",
   "contact_phones",
+  "contact_social_links",
   "opening_hours",
 ];
 

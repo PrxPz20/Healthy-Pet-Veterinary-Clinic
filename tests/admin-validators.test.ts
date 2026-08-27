@@ -10,6 +10,7 @@ import {
   openingHoursSchema,
   productFormSchema,
   serviceFormSchema,
+  socialLinksSchema,
   slugify,
   testimonialFormSchema,
   validateAdminImage,
@@ -92,9 +93,39 @@ test("about counters reject negative or unrealistic values", () => {
     paragraph_one: "Professional veterinary care in Limassol.",
     paragraph_two: "",
     completed_cases: 1000,
+    image_path: null,
   };
   assert.equal(aboutFormSchema.safeParse({ ...base, years_experience: 20 }).success, true);
   assert.equal(aboutFormSchema.safeParse({ ...base, years_experience: -1 }).success, false);
+});
+
+test("social links allow repeated platforms but reject unsafe or duplicate links", () => {
+  assert.equal(
+    socialLinksSchema.safeParse([
+      { label: "Instagram", href: "https://www.instagram.com/healthypet/" },
+      { label: "Instagram", href: "https://www.instagram.com/healthypet.shop/" },
+      { label: "YouTube", href: "https://www.youtube.com/@healthypet" },
+      { label: "X", href: "https://x.com/healthypet" },
+      { label: "Threads", href: "https://www.threads.net/@healthypet" },
+      { label: "Pinterest", href: "https://www.pinterest.com/healthypet" },
+      { label: "WhatsApp", href: "https://wa.me/35795952663" },
+    ]).success,
+    true,
+  );
+  assert.equal(
+    socialLinksSchema.safeParse([
+      { label: "Instagram", href: "https://example.com/fake" },
+      { label: "Instagram", href: "https://example.com/duplicate" },
+    ]).success,
+    false,
+  );
+  assert.equal(
+    socialLinksSchema.safeParse([
+      { label: "Instagram", href: "https://instagram.com/duplicate" },
+      { label: "Instagram", href: "https://instagram.com/duplicate" },
+    ]).success,
+    false,
+  );
 });
 
 test("image validation accepts supported images within 10MB", () => {

@@ -27,6 +27,7 @@ import {
   RotateCcw,
   Save,
   Search,
+  Share2,
   Phone,
   Stethoscope,
   Tags,
@@ -70,6 +71,7 @@ import {
   saveAboutSettings,
   saveContactAddress,
   saveContactMethods,
+  saveContactSocialLinks,
   saveOpeningHours,
   seedStaticContent,
   signOutAdmin,
@@ -105,10 +107,14 @@ import {
   aboutFormSchema,
   productFormSchema,
   serviceFormSchema,
+  socialLinksSchema,
+  socialMediaPlatforms,
   testimonialFormSchema,
   validateAdminImage,
 } from "@/lib/admin/validators";
+import defaultAboutImage from "@/assets/about.jpg";
 import logoUrl from "@/assets/healthy_pet_logo_admin_white.png";
+import { SocialIcon } from "@/components/site/SocialIcon";
 
 export const Route = createFileRoute("/admin/")({
   head: () => ({
@@ -132,6 +138,7 @@ type AdminSection =
 
 const MAX_FAQS = 12;
 const MAX_REVIEWS = 12;
+const MAX_SOCIAL_LINKS = 12;
 const ADMIN_QUERY_KEY = "admin-section";
 const ADMIN_CACHE_TIME = 5 * 60 * 1000;
 const ADMIN_SESSION_TIMEOUT = 10_000;
@@ -571,7 +578,7 @@ function AdminDashboardPage() {
                 <AboutManager
                   value={sectionQuery.data.value}
                   disabled={busy}
-                  onSave={(values) => withRefresh(() => saveAboutSettings(values))}
+                  onSave={(values, file) => withRefresh(() => saveAboutSettings(values, file))}
                 />
               ) : null}
 
@@ -601,6 +608,9 @@ function AdminDashboardPage() {
                   }
                   onSaveMethods={(values) =>
                     withRefresh(() => saveContactMethods(values), "contact")
+                  }
+                  onSaveSocial={(values) =>
+                    withRefresh(() => saveContactSocialLinks(values), "contact")
                   }
                   onSaveHours={(values) => withRefresh(() => saveOpeningHours(values), "contact")}
                 />
@@ -1622,7 +1632,7 @@ function RecordActions({
   );
 }
 
-type ContactPanel = "address" | "methods" | "hours";
+type ContactPanel = "address" | "methods" | "social" | "hours";
 type ContactNotice = { panel: ContactPanel; type: "success" | "error"; message: string } | null;
 type ContactErrors = Record<string, string>;
 
@@ -1630,6 +1640,7 @@ function ContactManager({
   contact,
   onSaveAddress,
   onSaveMethods,
+  onSaveSocial,
   onSaveHours,
 }: {
   contact: AdminContactSettings;
@@ -1637,12 +1648,14 @@ function ContactManager({
   onSaveMethods: (
     values: Pick<AdminContactSettings, "phones" | "whatsapp" | "email">,
   ) => Promise<void>;
+  onSaveSocial: (values: AdminContactSettings["socialLinks"]) => Promise<void>;
   onSaveHours: (values: AdminOpeningHour[]) => Promise<void>;
 }) {
   const [address, setAddress] = useState(contact.address);
   const [phones, setPhones] = useState(contact.phones);
   const [whatsapp, setWhatsapp] = useState(contact.whatsapp);
   const [email, setEmail] = useState(contact.email);
+  const [socialLinks, setSocialLinks] = useState(contact.socialLinks);
   const [hours, setHours] = useState(contact.openingHours);
   const [saving, setSaving] = useState<ContactPanel | null>(null);
   const [notice, setNotice] = useState<ContactNotice>(null);
@@ -1654,6 +1667,7 @@ function ContactManager({
     setPhones(contact.phones);
     setWhatsapp(contact.whatsapp);
     setEmail(contact.email);
+    setSocialLinks(contact.socialLinks);
     setHours(contact.openingHours);
   }, [contact, saving]);
 
@@ -1818,7 +1832,7 @@ function ContactManager({
                 />
               </Field>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <SubmitButton
                 disabled={saving === "address"}
                 icon={
@@ -2039,7 +2053,7 @@ function ContactManager({
                 />
               </Field>
             </div>
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <SubmitButton
                 disabled={saving === "methods"}
                 icon={
@@ -2053,6 +2067,161 @@ function ContactManager({
                 {saving === "methods" ? "Saving..." : "Save contact methods"}
               </SubmitButton>
               {contactNotice("methods")}
+            </div>
+          </form>
+        </AdminBlock>
+
+        <AdminBlock
+          icon={<Share2 className="h-4 w-4" />}
+          title="Social media"
+          info={[
+            "Choose a platform to add its matching website icon.",
+            "Only approved HTTPS profile links are accepted.",
+            "You can add more than one account from the same platform.",
+          ]}
+        >
+          <form
+            noValidate
+            className="grid gap-5"
+            onSubmit={(event) => {
+              event.preventDefault();
+              const result = socialLinksSchema.safeParse(
+                socialLinks.map((link) => ({ label: link.label, href: link.href.trim() })),
+              );
+              if (!result.success) {
+                const nextErrors = Object.fromEntries(
+                  result.error.issues.map((issue) => [
+                    `socialLinks.${issue.path.join(".")}`,
+                    issue.message,
+                  ]),
+                );
+                setErrors(nextErrors);
+                setNotice({
+                  panel: "social",
+                  type: "error",
+                  message: result.error.issues[0]?.message ?? "Check the highlighted links.",
+                });
+                return;
+              }
+              setErrors({});
+              setSocialLinks(result.data);
+              void submit("social", () => onSaveSocial(result.data));
+            }}
+          >
+            <div className="grid gap-3">
+              {socialLinks.map((link, index) => {
+                const platformError = errors[`socialLinks.${index}.label`];
+                const urlError = errors[`socialLinks.${index}.href`];
+                const options = socialMediaPlatforms.map((platform) => ({
+                  value: platform,
+                  label: platform,
+                }));
+
+                return (
+                  <div
+                    key={`${link.label}-${index}`}
+                    className={`grid gap-3 rounded-2xl border p-3 transition-colors sm:grid-cols-[minmax(0,0.6fr)_auto_minmax(0,1.4fr)_auto] sm:items-end ${
+                      platformError || urlError
+                        ? "border-red-300 bg-red-50/60"
+                        : "border-line bg-[#fafbf8]"
+                    }`}
+                  >
+                    <div>
+                      <p className="type-label text-ink/62">
+                        Platform <span className="text-red-600">*</span>
+                      </p>
+                      <div className="mt-2">
+                        <AdminSelect
+                          value={link.label}
+                          options={options}
+                          onChange={(label) => {
+                            setSocialLinks((current) =>
+                              current.map((item, itemIndex) =>
+                                itemIndex === index ? { ...item, label } : item,
+                              ),
+                            );
+                            clearError(`socialLinks.${index}.label`, "social");
+                          }}
+                        />
+                      </div>
+                      {platformError ? (
+                        <p role="alert" className="mt-2 text-sm font-semibold text-red-600">
+                          {platformError}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div>
+                      <p className="type-label text-ink/62">Icon</p>
+                      <div className="mt-2 grid size-11 place-items-center rounded-full border border-white/10 bg-ink text-white/70">
+                        <SocialIcon platform={link.label} className="h-5 w-5" aria-hidden="true" />
+                      </div>
+                    </div>
+                    <Field label="Profile link" required error={urlError}>
+                      <input
+                        type="url"
+                        value={link.href}
+                        onChange={(event) => {
+                          setSocialLinks((current) =>
+                            current.map((item, itemIndex) =>
+                              itemIndex === index ? { ...item, href: event.target.value } : item,
+                            ),
+                          );
+                          clearError(`socialLinks.${index}.href`, "social");
+                        }}
+                        {...invalid(`socialLinks.${index}.href`)}
+                        {...validationProps("Profile link", "https://www.example.com/profile")}
+                        className={inputClass}
+                        maxLength={1000}
+                        required
+                      />
+                    </Field>
+                    <div className="flex min-h-11 items-center justify-end">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setSocialLinks((current) =>
+                            current.filter((_, itemIndex) => itemIndex !== index),
+                          )
+                        }
+                        disabled={saving === "social"}
+                        className="focus-ring grid h-10 w-10 cursor-pointer place-items-center rounded-full text-red-600 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+                        aria-label={`Remove ${link.label}`}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+
+              {socialLinks.length < MAX_SOCIAL_LINKS ? (
+                <button
+                  type="button"
+                  onClick={() =>
+                    setSocialLinks((current) => [...current, { label: "Instagram", href: "" }])
+                  }
+                  className="focus-ring type-button inline-flex min-h-11 w-fit cursor-pointer items-center gap-2 rounded-full border border-line px-5 text-ink transition-colors hover:border-vet-green hover:bg-sage"
+                >
+                  <Plus className="h-4 w-4" aria-hidden="true" />
+                  Add social media
+                </button>
+              ) : null}
+            </div>
+
+            <div className="flex flex-wrap items-center gap-3 pt-2">
+              <SubmitButton
+                disabled={saving === "social"}
+                icon={
+                  saving === "social" ? (
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                  ) : (
+                    <Save className="h-4 w-4" />
+                  )
+                }
+              >
+                {saving === "social" ? "Saving..." : "Save social media"}
+              </SubmitButton>
+              {contactNotice("social")}
             </div>
           </form>
         </AdminBlock>
@@ -2226,7 +2395,7 @@ function ContactManager({
                 {errors.hours}
               </p>
             ) : null}
-            <div className="flex flex-wrap items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <SubmitButton
                 disabled={saving === "hours"}
                 icon={
@@ -2594,7 +2763,7 @@ function FaqManager({
             <Field label="Status" required>
               <StatusSelect value={status} onChange={setStatus} />
             </Field>
-            <div className="flex flex-wrap gap-3">
+            <div className="flex flex-wrap gap-3 pt-2">
               <SubmitButton disabled={disabled || limitReached}>
                 {editingId ? "Save FAQ" : limitReached ? "FAQ limit reached" : "Add FAQ"}
               </SubmitButton>
@@ -2739,7 +2908,7 @@ function TestimonialsManager({
             <Field label="Status" required>
               <StatusSelect value={status} onChange={setStatus} />
             </Field>
-            <div className="flex flex-wrap items-end gap-3 md:col-span-2">
+            <div className="flex flex-wrap items-end gap-3 pt-2 md:col-span-2">
               <SubmitButton disabled={disabled || limitReached}>
                 {editingId ? "Save review" : limitReached ? "Review limit reached" : "Add review"}
               </SubmitButton>
@@ -2784,14 +2953,18 @@ function AboutManager({
 }: {
   value: AboutSettingsRow;
   disabled?: boolean;
-  onSave: (values: AboutSettingsRow) => Promise<void>;
+  onSave: (values: AboutSettingsRow, file?: File | null) => Promise<void>;
 }) {
   const [draft, setDraft] = useState(value);
-  useEffect(() => setDraft(value), [value]);
+  const [file, setFile] = useState<File | null>(null);
+  useEffect(() => {
+    setDraft(value);
+    setFile(null);
+  }, [value]);
   const numberValue = (value: string) => (value === "" ? null : Number(value));
   const submit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    await onSave(aboutFormSchema.parse(draft));
+    await onSave(aboutFormSchema.parse(draft), file);
   };
   return (
     <Panel icon={<UserRound className="h-5 w-5" />} title="About Us">
@@ -2880,6 +3053,31 @@ function AboutManager({
             />
           </Field>
           <div className="md:col-span-2">
+            <div>
+              <p className="type-label text-ink/62">Doctor image</p>
+              <div className="mt-2">
+                <ImageUploadField
+                  files={file ? [file] : []}
+                  onChange={(files) => setFile(files[0] ?? null)}
+                />
+                <div className="mt-3 flex items-center gap-3">
+                  <img
+                    src={
+                      draft.image_path
+                        ? publicStorageUrl("site-about", draft.image_path)
+                        : defaultAboutImage
+                    }
+                    alt="Current About Us doctor"
+                    width={48}
+                    height={48}
+                    className="h-12 w-12 shrink-0 rounded-full border border-line object-cover"
+                  />
+                  <p className="text-sm font-semibold text-ink/58">Current website image</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="pt-2 md:col-span-2">
             <SubmitButton disabled={disabled} icon={<Save className="h-4 w-4" />}>
               Save About Us
             </SubmitButton>
@@ -3011,7 +3209,7 @@ function GalleryManager({
                   required={!editingId}
                 />
               </Field>
-              <div className="flex flex-wrap items-end gap-3 pt-1 md:col-span-2">
+              <div className="flex flex-wrap items-end gap-3 pt-2 md:col-span-2">
                 <SubmitButton disabled={disabled}>
                   {editingId ? "Save gallery item" : "Add gallery item"}
                 </SubmitButton>
@@ -3257,7 +3455,7 @@ function CasesManager({
                   <span className="type-button">Sensitive images</span>
                 </label>
               </Field>
-              <div className="flex flex-wrap items-end gap-3 pt-1 md:col-span-2">
+              <div className="flex flex-wrap items-end gap-3 pt-2 md:col-span-2">
                 <SubmitButton disabled={disabled}>
                   {editingId ? "Save case" : "Add case"}
                 </SubmitButton>
@@ -3490,7 +3688,7 @@ function ServicesManager({
                   required={imageRequired}
                 />
               </Field>
-              <div className="flex flex-wrap items-end gap-3 pt-1 md:col-span-2">
+              <div className="flex flex-wrap items-end gap-3 pt-2 md:col-span-2">
                 <SubmitButton disabled={disabled}>
                   {editingId ? "Save service" : "Add service"}
                 </SubmitButton>
@@ -3749,7 +3947,7 @@ function ProductsManager({
                   required={imageRequired}
                 />
               </Field>
-              <div className="flex flex-wrap items-end gap-3 pt-1 md:col-span-2">
+              <div className="flex flex-wrap items-end gap-3 pt-2 md:col-span-2">
                 <SubmitButton disabled={disabled}>
                   {editingId ? "Save product" : "Add product"}
                 </SubmitButton>
