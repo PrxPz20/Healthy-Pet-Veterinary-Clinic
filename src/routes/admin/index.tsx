@@ -11,11 +11,13 @@ import {
   ChevronLeft,
   ChevronRight,
   GripVertical,
+  HardDrive,
   Info,
   ImagePlus,
   List,
   ListFilter,
   LifeBuoy,
+  Lightbulb,
   Loader2,
   LogOut,
   Mail,
@@ -146,6 +148,23 @@ const ADMIN_CACHE_TIME = 5 * 60 * 1000;
 const ADMIN_SESSION_TIMEOUT = 10_000;
 const MAINTENANCE_INTERVAL = 24 * 60 * 60 * 1000;
 const MAINTENANCE_KEY = "healthy-pet-admin-maintenance";
+const OVERVIEW_TIP_SETS: string[][] = [
+  [
+    "Use Unpublished when an item still needs review, then publish it when the text and images are ready.",
+    "Prefer clear JPG or WebP images and keep every upload within the 10 MB limit.",
+    "Archive content when unsure. It can be restored during the seven-day recovery period.",
+  ],
+  [
+    "Keep titles concise and descriptions factual so visitors can scan the website quickly.",
+    "Use consistent category names instead of creating slightly different versions of the same category.",
+    "Review the public Contact section after changing phone numbers, social links, or opening hours.",
+  ],
+  [
+    "Put the strongest image first in Gallery and Cases because it becomes the cover image.",
+    "Unpublish a live item before editing it, then publish it again after checking the changes.",
+    "FAQ and Google reviews each allow up to 12 active items; archive an older item before adding another at the limit.",
+  ],
+];
 const countedSections = new Set<AdminSection>([
   "gallery",
   "cases",
@@ -227,6 +246,17 @@ function AdminDashboardPage() {
   const [error, setError] = useState("");
   const [busy, setBusy] = useState(false);
   const [activeSection, setActiveSection] = useState<AdminSection>("overview");
+  const [overviewTipIndex, setOverviewTipIndex] = useState(0);
+
+  useEffect(() => {
+    const updateTips = () => {
+      setOverviewTipIndex(Math.floor(Date.now() / 86_400_000) % OVERVIEW_TIP_SETS.length);
+    };
+
+    updateTips();
+    const interval = window.setInterval(updateTips, 60 * 60 * 1000);
+    return () => window.clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     let active = true;
@@ -391,17 +421,32 @@ function AdminDashboardPage() {
               fetchPriority="high"
               className="h-12 w-auto max-w-[12rem] object-contain sm:h-14 sm:max-w-[14rem]"
             />
-            <span className="hidden h-9 w-px bg-white/18 sm:block" aria-hidden="true" />
-            <h1 className="type-card-title hidden text-white/88 sm:block">Content dashboard</h1>
+            <span className="hidden h-9 w-px bg-white/18 lg:block" aria-hidden="true" />
+            <h1 className="type-card-title hidden text-white/88 lg:block">Content dashboard</h1>
           </div>
-          <button
-            type="button"
-            onClick={handleSignOut}
-            className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-ink transition-colors hover:bg-sage"
-          >
-            <LogOut className="h-4 w-4" />
-            Sign out
-          </button>
+          <div className="flex w-full items-center gap-2 sm:w-auto">
+            <button
+              type="button"
+              onClick={() => setActiveSection(helpSection.id)}
+              aria-current={activeSection === helpSection.id ? "page" : undefined}
+              className={`focus-ring focus-ring-dark type-button inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full border px-5 transition-colors sm:flex-none ${
+                activeSection === helpSection.id
+                  ? "border-sage bg-sage text-ink"
+                  : "border-white/20 bg-white/5 text-white hover:border-white/35 hover:bg-white/10"
+              }`}
+            >
+              <LifeBuoy className="h-4 w-4" aria-hidden="true" />
+              Help
+            </button>
+            <button
+              type="button"
+              onClick={handleSignOut}
+              className="focus-ring focus-ring-dark type-button inline-flex min-h-11 flex-1 items-center justify-center gap-2 rounded-full bg-white px-5 text-ink transition-colors hover:bg-sage sm:flex-none"
+            >
+              <LogOut className="h-4 w-4" aria-hidden="true" />
+              Sign out
+            </button>
+          </div>
         </div>
       </header>
 
@@ -415,45 +460,28 @@ function AdminDashboardPage() {
         {sessionStatus === "ready" ? (
           <div className="grid min-w-0 gap-5 lg:grid-cols-[15rem_minmax(0,1fr)] lg:items-start">
             <aside className="min-w-0 rounded-[1.5rem] border border-line bg-white p-2 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] lg:sticky lg:top-6 lg:p-3">
-              <div className="flex min-w-0 gap-2 lg:block">
-                <nav
-                  aria-label="Admin sections"
-                  className="flex min-w-0 flex-1 gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0"
-                >
-                  {adminSections.map((section) => {
-                    const active = activeSection === section.id;
+              <nav
+                aria-label="Admin sections"
+                className="flex min-w-0 gap-2 overflow-x-auto pb-1 lg:flex-col lg:overflow-visible lg:pb-0"
+              >
+                {adminSections.map((section) => {
+                  const active = activeSection === section.id;
 
-                    return (
-                      <button
-                        key={section.id}
-                        type="button"
-                        onClick={() => setActiveSection(section.id)}
-                        className={`focus-ring focus-ring-dark type-button inline-flex min-h-11 shrink-0 items-center gap-3 rounded-2xl px-4 text-left transition-colors lg:w-full ${
-                          active ? "bg-ink text-white" : "text-ink/68 hover:bg-sage hover:text-ink"
-                        }`}
-                      >
-                        {section.icon}
-                        {section.label}
-                      </button>
-                    );
-                  })}
-                </nav>
-
-                <div className="shrink-0 border-l border-line pl-2 lg:mt-3 lg:border-l-0 lg:border-t lg:pl-0 lg:pt-3">
-                  <button
-                    type="button"
-                    onClick={() => setActiveSection(helpSection.id)}
-                    className={`focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-3 rounded-2xl px-4 text-left transition-colors lg:w-full ${
-                      activeSection === helpSection.id
-                        ? "bg-ink text-white"
-                        : "text-ink/68 hover:bg-sage hover:text-ink"
-                    }`}
-                  >
-                    {helpSection.icon}
-                    {helpSection.label}
-                  </button>
-                </div>
-              </div>
+                  return (
+                    <button
+                      key={section.id}
+                      type="button"
+                      onClick={() => setActiveSection(section.id)}
+                      className={`focus-ring focus-ring-dark type-button inline-flex min-h-11 shrink-0 items-center gap-3 rounded-2xl px-4 text-left transition-colors lg:w-full ${
+                        active ? "bg-ink text-white" : "text-ink/68 hover:bg-sage hover:text-ink"
+                      }`}
+                    >
+                      {section.icon}
+                      {section.label}
+                    </button>
+                  );
+                })}
+              </nav>
             </aside>
 
             <div className="min-w-0 space-y-6">
@@ -494,14 +522,98 @@ function AdminDashboardPage() {
               ) : null}
 
               {activeSection === "overview" && sectionQuery.data?.section === "overview" ? (
-                <section className="grid grid-cols-2 gap-3 md:grid-cols-3">
-                  <Metric title="Gallery" value={sectionQuery.data.counts.gallery} />
-                  <Metric title="Cases" value={sectionQuery.data.counts.cases} />
-                  <Metric title="Services" value={sectionQuery.data.counts.services} />
-                  <Metric title="Products" value={sectionQuery.data.counts.products} />
-                  <Metric title="FAQs" value={sectionQuery.data.counts.faqs} />
-                  <Metric title="Reviews" value={sectionQuery.data.counts.reviews} />
-                </section>
+                <div className="grid gap-5">
+                  <section aria-labelledby="content-overview-title">
+                    <div className="mb-4">
+                      <h2 id="content-overview-title" className="type-card-title">
+                        Content overview
+                      </h2>
+                      <p className="type-card-copy mt-1 text-ink/58">
+                        Active items currently managed through the dashboard.
+                      </p>
+                    </div>
+                    <div className="grid grid-cols-2 gap-3 md:grid-cols-3">
+                      <Metric title="Gallery" value={sectionQuery.data.counts.gallery} />
+                      <Metric title="Cases" value={sectionQuery.data.counts.cases} />
+                      <Metric title="Services" value={sectionQuery.data.counts.services} />
+                      <Metric title="Products" value={sectionQuery.data.counts.products} />
+                      <Metric title="FAQs" value={sectionQuery.data.counts.faqs} />
+                      <Metric title="Reviews" value={sectionQuery.data.counts.reviews} />
+                    </div>
+                  </section>
+
+                  <div className="grid gap-4 xl:grid-cols-2">
+                    <section className="rounded-[1.5rem] border border-line bg-white p-5 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] sm:p-6">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
+                            <HardDrive className="h-4 w-4" aria-hidden="true" />
+                          </span>
+                          <div className="min-w-0">
+                            <h2 className="type-card-title">Storage usage</h2>
+                            <p className="mt-1 text-sm font-medium text-ink/55">
+                              Database and media capacity
+                            </p>
+                          </div>
+                        </div>
+                        <span className="type-label shrink-0 rounded-full bg-sage px-3 py-1.5 text-vet-green">
+                          Planned
+                        </span>
+                      </div>
+
+                      <div
+                        role="progressbar"
+                        aria-label="Storage usage"
+                        aria-valuetext="Waiting for the final database connection"
+                        className="mt-6 h-2.5 overflow-hidden rounded-full bg-ink/10"
+                      />
+                      <div className="mt-3 grid grid-cols-2 gap-3 text-sm font-semibold">
+                        <div>
+                          <span className="block text-ink/45">Used</span>
+                          <span className="mt-1 block text-ink">Not connected</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="block text-ink/45">Available</span>
+                          <span className="mt-1 block text-ink">Not connected</span>
+                        </div>
+                      </div>
+                      <p className="mt-5 border-t border-line pt-4 text-sm font-medium leading-relaxed text-ink/58">
+                        Live storage totals will appear here after the final database provider is
+                        connected. No storage data is requested yet.
+                      </p>
+                    </section>
+
+                    <section className="rounded-[1.5rem] border border-line bg-white p-5 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.34)] sm:p-6">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex min-w-0 items-center gap-3">
+                          <span className="grid size-10 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
+                            <Lightbulb className="h-4 w-4" aria-hidden="true" />
+                          </span>
+                          <div>
+                            <h2 className="type-card-title">Helpful reminders</h2>
+                            <p className="mt-1 text-sm font-medium text-ink/55">
+                              Small checks that prevent publishing mistakes.
+                            </p>
+                          </div>
+                        </div>
+                        <span className="type-label shrink-0 rounded-full bg-sage px-3 py-1.5 text-vet-green">
+                          Updates daily
+                        </span>
+                      </div>
+                      <div className="mt-5">
+                        <HelpList items={OVERVIEW_TIP_SETS[overviewTipIndex]} />
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => setActiveSection("help")}
+                        className="focus-ring type-button mt-5 inline-flex min-h-11 items-center gap-2 rounded-full border border-ink/15 px-5 text-ink transition-colors hover:border-vet-green hover:bg-sage"
+                      >
+                        <LifeBuoy className="h-4 w-4" aria-hidden="true" />
+                        Open dashboard guide
+                      </button>
+                    </section>
+                  </div>
+                </div>
               ) : null}
 
               {activeSection === "gallery" && sectionQuery.data?.section === "gallery" ? (
