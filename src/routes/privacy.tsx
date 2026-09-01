@@ -40,8 +40,8 @@ const sections: LegalSection[] = [
       <>
         <p>
           This policy explains how personal data is handled when you browse the Healthy Pet
-          Veterinary Clinic website, view published content, load the map, or choose to contact the
-          clinic through a telephone, email, WhatsApp, or third-party link.
+          Veterinary Clinic website, view published content and the clinic map, or choose to contact
+          the clinic through a telephone, email, WhatsApp, or third-party link.
         </p>
         <p>
           The website does not accept appointment bookings, payments, purchases, or public form
@@ -75,8 +75,9 @@ const sections: LegalSection[] = [
           public visitors.
         </li>
         <li>
-          <strong>Third-party map data:</strong> Google may receive technical information only after
-          you choose to load Google Maps or open the external map link.
+          <strong>Third-party map data:</strong> OpenStreetMap may receive technical information
+          when the embedded clinic map loads. Google may receive information if you open the
+          external map link.
         </li>
       </ul>
     ),
@@ -100,10 +101,7 @@ const sections: LegalSection[] = [
             To meet legal, regulatory, accounting, professional, or dispute-handling obligations
             where processing is required by law or necessary to establish or defend legal claims.
           </li>
-          <li>
-            To load optional third-party features, such as Google Maps, only after you actively
-            request them.
-          </li>
+          <li>To display the clinic location using an embedded map.</li>
         </ul>
         <p>We do not use website data for automated decision-making or profiling.</p>
       </>
@@ -121,10 +119,11 @@ const sections: LegalSection[] = [
           own terms and, where applicable, data-processing arrangements.
         </p>
         <p>
-          Google Maps, WhatsApp/Meta, telephone and email providers, Wolt, Foody, and social-media
-          services receive information only when you load, open, or use their services. Their own
-          privacy notices apply. We may also disclose information to professional advisers,
-          regulators, courts, law-enforcement bodies, or other authorities when legally required.
+          OpenStreetMap may receive technical information when the embedded map loads. Google Maps,
+          WhatsApp/Meta, telephone and email providers, Wolt, Foody, and social-media services may
+          receive information when you open or use their services. Their own privacy notices apply.
+          We may also disclose information to professional advisers, regulators, courts,
+          law-enforcement bodies, or other authorities when legally required.
         </p>
         <p>We do not sell personal data.</p>
       </>
@@ -155,10 +154,11 @@ const sections: LegalSection[] = [
           storage to use the protected dashboard.
         </p>
         <p>
-          Google Maps is not loaded until you request it. Once loaded, Google may set or read its
-          own cookies or similar technologies. External services opened through links may do the
-          same under their own policies. You can clear local storage and cookies through your
-          browser settings; doing so may reset saved preferences or sign an administrator out.
+          The embedded OpenStreetMap map loads with the Contact section and may use its own
+          technologies under its privacy terms. Google Maps and other external services opened
+          through links may do the same under their own policies. You can clear local storage and
+          cookies through your browser settings; doing so may reset saved preferences or sign an
+          administrator out.
         </p>
       </>
     ),

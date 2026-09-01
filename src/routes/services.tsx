@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Home, Mail, MessageCircle, Phone } from "lucide-react";
-import servicesHeroBanner from "@/assets/services/services_hero_banner.png";
+import servicesHeroBanner from "@/assets/services/services_hero_banner.webp";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { Footer } from "@/components/site/Footer";
 import { Nav } from "@/components/site/Nav";

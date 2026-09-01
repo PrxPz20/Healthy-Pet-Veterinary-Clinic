@@ -1,15 +1,15 @@
-import dermatologyImage from "@/assets/services/dermatology.png";
-import digitalXrayImage from "@/assets/services/digital_x_ray.png";
-import endoscopyImage from "@/assets/services/endoscopy.png";
-import groomingImage from "@/assets/services/grooming.png";
-import laboratoryImage from "@/assets/services/full_laboratory_blood_tests .png";
-import orthopedicImage from "@/assets/services/orthopedic_surgery.png";
-import pathologyImage from "@/assets/services/pathology.png";
-import hydrotherapyImage from "@/assets/services/pet_hydrotherapy.png";
-import physiotherapyImage from "@/assets/services/pet_physiotherapy_&_acupuncture.png";
-import petShopImage from "@/assets/services/pet_shop.png";
-import softTissueImage from "@/assets/services/soft_tissue_surgery.png";
-import ultrasoundImage from "@/assets/services/ultrasound.png";
+import dermatologyImage from "@/assets/services/dermatology.webp";
+import digitalXrayImage from "@/assets/services/digital_x_ray.webp";
+import endoscopyImage from "@/assets/services/endoscopy.webp";
+import groomingImage from "@/assets/services/grooming.webp";
+import laboratoryImage from "@/assets/services/full_laboratory_blood_tests .webp";
+import orthopedicImage from "@/assets/services/orthopedic_surgery.webp";
+import pathologyImage from "@/assets/services/pathology.webp";
+import hydrotherapyImage from "@/assets/services/pet_hydrotherapy.webp";
+import physiotherapyImage from "@/assets/services/pet_physiotherapy_&_acupuncture.webp";
+import petShopImage from "@/assets/services/pet_shop.webp";
+import softTissueImage from "@/assets/services/soft_tissue_surgery.webp";
+import ultrasoundImage from "@/assets/services/ultrasound.webp";
 import { getSiteContent } from "./provider";
 
 export const serviceImages: Record<string, string> = {
