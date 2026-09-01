@@ -30,7 +30,7 @@ export function Services() {
   }, [services]);
 
   return (
-    <section id="services" className="relative bg-white py-20 text-ink md:py-28">
+    <section id="services" className="relative bg-white py-16 text-ink md:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -60,11 +60,11 @@ export function Services() {
                   className="focus-ring focus-ring-dark group block min-w-0 overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-38px_rgba(24,26,28,0.32)] transition-all duration-300 hover:-translate-y-1 hover:border-vet-green/35 hover:shadow-[0_22px_48px_-38px_rgba(24,26,28,0.42)]"
                 >
                   <div
-                    className={`grid min-w-0 gap-0 lg:grid-cols-2 ${
-                      reversed ? "" : "lg:[&>*:first-child]:order-2"
+                    className={`grid min-w-0 gap-0 md:grid-cols-[0.9fr_1.1fr] ${
+                      reversed ? "" : "md:[&>*:first-child]:order-2"
                     }`}
                   >
-                    <div className="border-b border-line bg-white lg:border-b-0">
+                    <div className="border-b border-line bg-white md:border-b-0">
                       <img
                         src={image}
                         alt={imageAlt}
@@ -72,7 +72,7 @@ export function Services() {
                         className="aspect-[4/3] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
                       />
                     </div>
-                    <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:p-8 lg:min-h-[22rem]">
+                    <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:min-h-[22rem] md:p-8">
                       <span className="type-label text-vet-green">
                         {String(index + 1).padStart(2, "0")}
                       </span>
@@ -91,16 +91,6 @@ export function Services() {
             );
           })}
         </StaggerGroup>
-        <a
-          href="/services"
-          className="focus-ring focus-ring-dark type-button group relative mx-auto mt-8 flex min-h-11 w-fit items-center justify-center gap-2 rounded-sm px-2 py-2 text-center font-semibold text-ink/64 transition-colors duration-200 after:absolute after:bottom-1.5 after:left-2 after:h-[2px] after:w-[calc(100%-1rem)] after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:text-ink hover:after:scale-x-100"
-        >
-          Explore all veterinary services
-          <ArrowUpRight
-            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            aria-hidden="true"
-          />
-        </a>
       </div>
     </section>
   );

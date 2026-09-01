@@ -25,7 +25,7 @@ const sections: LegalSection[] = [
         <dl className="grid gap-3 rounded-2xl border border-line bg-sage/45 p-5 sm:grid-cols-2">
           {controllerDetails.map(([label, value]) => (
             <div key={label}>
-              <dt className="type-label text-ink/52">{label}</dt>
+              <dt className="type-label text-ink/68">{label}</dt>
               <dd className="mt-1 break-words font-semibold text-ink">{value}</dd>
             </div>
           ))}

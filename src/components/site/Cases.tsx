@@ -30,7 +30,7 @@ export function Cases() {
   }, [cases]);
 
   return (
-    <section id="cases" className="relative bg-white py-20 text-ink md:py-28">
+    <section id="cases" className="relative bg-white py-16 text-ink md:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -53,16 +53,6 @@ export function Cases() {
             </StaggerItem>
           ))}
         </StaggerGroup>
-        <a
-          href="/cases"
-          className="focus-ring focus-ring-dark type-button group relative mx-auto mt-8 flex min-h-11 w-fit items-center justify-center gap-2 rounded-sm px-2 py-2 text-center font-semibold text-ink/64 transition-colors duration-200 after:absolute after:bottom-1.5 after:left-2 after:h-[2px] after:w-[calc(100%-1rem)] after:origin-left after:scale-x-0 after:bg-current after:transition-transform after:duration-300 hover:text-ink hover:after:scale-x-100"
-        >
-          Explore all documented cases
-          <ArrowUpRight
-            className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5"
-            aria-hidden="true"
-          />
-        </a>
       </div>
     </section>
   );

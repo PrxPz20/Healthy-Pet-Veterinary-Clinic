@@ -71,7 +71,7 @@ export function Contact() {
                         <Phone className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
-                        <div className="type-label text-white/55">Phone</div>
+                        <div className="type-label text-white/70">Phone</div>
                         <div className="mt-1 grid gap-2">
                           <div className="flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center">
                             {contact.phones.slice(0, 2).map((phone, index) => (
@@ -84,7 +84,7 @@ export function Contact() {
                                 ) : null}
                                 <a
                                   href={phoneHref(phone.number)}
-                                  className="focus-ring focus-ring-dark rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
+                                  className="focus-ring focus-ring-dark inline-flex min-h-11 items-center rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
                                 >
                                   {phone.label} {formatPhone(phone.number)}
                                 </a>
@@ -94,7 +94,7 @@ export function Contact() {
                           {contact.phones[2] ? (
                             <a
                               href={phoneHref(contact.phones[2].number)}
-                              className="focus-ring focus-ring-dark w-fit rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
+                              className="focus-ring focus-ring-dark inline-flex min-h-11 w-fit items-center rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
                             >
                               {contact.phones[2].label} {formatPhone(contact.phones[2].number)}
                             </a>
@@ -109,12 +109,12 @@ export function Contact() {
                         <row.icon className="h-4 w-4" />
                       </div>
                       <div className="min-w-0">
-                        <div className="type-label text-white/55">{row.label}</div>
+                        <div className="type-label text-white/70">{row.label}</div>
                         <a
                           href={row.href}
                           target={row.label === "Address" || row.external ? "_blank" : undefined}
                           rel={row.label === "Address" || row.external ? "noreferrer" : undefined}
-                          className="focus-ring focus-ring-dark mt-1 inline-block rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
+                          className="focus-ring focus-ring-dark mt-1 inline-flex min-h-11 items-center rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
                         >
                           {row.value}
                         </a>
@@ -129,7 +129,7 @@ export function Contact() {
                   <Clock className="h-4 w-4" aria-hidden="true" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <div className="type-label text-white/55">Opening hours</div>
+                  <div className="type-label text-white/70">Opening hours</div>
                   <dl className="type-card-copy mt-3 overflow-hidden rounded-2xl border border-white/10 bg-white/[0.04]">
                     {contact.openingHours.map((row) => (
                       <div

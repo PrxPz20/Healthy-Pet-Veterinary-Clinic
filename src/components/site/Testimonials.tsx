@@ -31,7 +31,7 @@ export function Testimonials() {
   }, [hasTestimonials, paused, reduceMotion, testimonials.length]);
 
   return (
-    <section className="bg-white py-20 text-ink md:py-28">
+    <section id="reviews" className="bg-white py-16 text-ink md:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="rounded-[1.5rem] border border-line bg-clinic p-6 sm:p-8 md:p-10">
           <div className="grid gap-8 md:grid-cols-[0.8fr_1.2fr] md:items-start">

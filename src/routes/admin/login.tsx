@@ -130,7 +130,7 @@ function AdminLoginPage() {
                   <button
                     type="button"
                     onClick={() => setShowPassword((current) => !current)}
-                    className="focus-ring absolute right-1 top-1/2 grid h-10 w-10 -translate-y-1/2 cursor-pointer place-items-center rounded-lg text-ink/48 transition-colors hover:bg-sage hover:text-vet-green"
+                    className="focus-ring absolute right-0.5 top-1/2 grid h-11 w-11 -translate-y-1/2 cursor-pointer place-items-center rounded-lg text-ink/48 transition-colors hover:bg-sage hover:text-vet-green"
                     aria-label={showPassword ? "Hide password" : "Show password"}
                   >
                     {showPassword ? (

@@ -22,18 +22,18 @@ export function Footer() {
 
   return (
     <footer className="border-t border-white/10 bg-ink text-white">
-      <div className="mx-auto max-w-7xl px-5 py-14 sm:px-8 sm:py-16">
-        <div className="grid gap-x-10 gap-y-12 sm:grid-cols-2 lg:grid-cols-[1.25fr_0.8fr_1fr_1.35fr] lg:gap-x-12">
-          <div className="sm:col-span-2 lg:col-span-1">
+      <div className="mx-auto max-w-7xl px-5 py-12 sm:px-8 sm:py-16">
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:gap-x-10 lg:grid-cols-[1.25fr_0.8fr_1fr_1.35fr] lg:gap-x-12">
+          <div className="col-span-2 lg:col-span-1">
             <img
               src={logoUrl}
               alt="Healthy Pet Veterinary Clinic"
-              className="h-16 w-auto max-w-[260px] object-contain"
+              className="h-14 w-auto max-w-[260px] object-contain sm:h-16"
             />
-            <p className="type-card-copy mt-4 max-w-xs text-white/55">
+            <p className="type-card-copy mt-4 max-w-xs text-white/65">
               {clinic.tagline} Located in {contact.address.city}, {contact.address.country}.
             </p>
-            <div className="mt-6 flex items-center gap-3" aria-label="Social media">
+            <div className="mt-5 flex items-center gap-3 sm:mt-6" aria-label="Social media">
               {contact.socialLinks.map((link) => {
                 return (
                   <a
@@ -56,10 +56,9 @@ export function Footer() {
             links={navigation}
             activeId={activeId}
             reduceMotion={reduceMotion}
-            twoColumnsOnMobile
           />
           <FooterColumn title="Services" links={serviceLinks} />
-          <div className="sm:col-span-2 lg:col-span-1">
+          <div className="col-span-2 lg:col-span-1">
             <FooterColumn
               title="Contact"
               links={[
@@ -81,7 +80,7 @@ export function Footer() {
           </div>
         </div>
 
-        <div className="type-label mt-12 flex flex-col gap-4 border-t border-white/10 pt-6 text-white/55 sm:flex-row sm:items-center sm:justify-between">
+        <div className="type-label mt-10 flex flex-col gap-4 border-t border-white/10 pt-6 text-white/65 sm:mt-12 sm:flex-row sm:items-center sm:justify-between">
           <div>
             © {new Date().getFullYear()} {clinic.legalName}. All rights reserved.
           </div>
@@ -110,20 +109,16 @@ function FooterColumn({
   links,
   activeId,
   reduceMotion,
-  twoColumnsOnMobile = false,
 }: {
   title: string;
   links: { label: string; href: string }[];
   activeId?: string;
   reduceMotion?: boolean | null;
-  twoColumnsOnMobile?: boolean;
 }) {
   return (
     <div>
-      <h2 className="type-label text-white/55">{title}</h2>
-      <ul
-        className={`mt-4 grid gap-x-4 ${twoColumnsOnMobile ? "grid-cols-2 sm:grid-cols-1" : "grid-cols-1"}`}
-      >
+      <h2 className="type-label text-white/70">{title}</h2>
+      <ul className="mt-3 grid grid-cols-1 gap-x-4 sm:mt-4">
         {links.map((link) => (
           <li key={`${title}-${link.label}`}>
             <a

@@ -5,7 +5,9 @@ export function MobileCta() {
   const [contactVisible, setContactVisible] = useState(false);
 
   useEffect(() => {
-    const bottomSections = document.querySelectorAll("#contact, #final-cta, footer");
+    const bottomSections = document.querySelectorAll(
+      "#services, #doctor, #gallery, #cases, #reviews, #products, #faq, #contact, #final-cta, footer",
+    );
     if (!bottomSections.length) return;
 
     const visibleSections = new Set<Element>();

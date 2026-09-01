@@ -28,7 +28,7 @@ export function Products() {
   }, [products]);
 
   return (
-    <section id="products" className="bg-white py-20 text-ink md:py-28">
+    <section id="products" className="bg-white py-16 text-ink md:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="max-w-3xl">
           <h2 className="type-section-title">{homepage.products.heading}</h2>
@@ -50,7 +50,7 @@ export function Products() {
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
                     />
                   ) : (
-                    <div className="grid h-full place-items-center px-5 text-center text-sm font-bold text-ink/52">
+                    <div className="grid h-full place-items-center px-5 text-center text-sm font-bold text-ink/68">
                       No image added
                     </div>
                   )}

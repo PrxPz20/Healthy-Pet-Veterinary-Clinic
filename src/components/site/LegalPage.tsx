@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { Home } from "lucide-react";
+import { ChevronDown, Home } from "lucide-react";
 import { Footer } from "./Footer";
 import { Nav } from "./Nav";
 
@@ -36,7 +36,7 @@ export function LegalPage({
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/88 to-ink/35" />
         <div className="absolute inset-0 bg-ink/20" />
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-white/58">
+          <nav aria-label="Breadcrumb" className="text-sm text-white/70">
             <a
               href="/"
               className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-1.5 rounded transition-colors hover:text-white"
@@ -60,24 +60,32 @@ export function LegalPage({
 
       <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 sm:px-8 md:py-20 lg:grid-cols-[14rem_minmax(0,1fr)] lg:gap-16">
         <aside className="lg:sticky lg:top-32 lg:self-start">
-          <nav aria-label={`${title} sections`}>
-            <h2 className="type-label text-ink/52">On this page</h2>
-            <ul className="mt-3 grid grid-cols-2 gap-x-4 border-t border-line sm:grid-cols-3 lg:grid-cols-1">
-              {sections.map((section) => (
-                <li key={section.id} className="border-b border-line">
-                  <a
-                    href={`#${section.id}`}
-                    className="focus-ring focus-ring-dark flex min-h-11 items-center rounded py-2 text-sm font-semibold text-ink/68 transition-colors hover:text-vet-green-dark"
-                  >
-                    {section.title}
-                  </a>
-                </li>
-              ))}
-            </ul>
+          <nav aria-label={`${title} sections`} className="lg:hidden">
+            <details className="group rounded-2xl border border-line bg-white">
+              <summary className="focus-ring flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 rounded-2xl px-4 py-3 text-sm font-bold text-ink marker:content-none [&::-webkit-details-marker]:hidden">
+                On this page
+                <ChevronDown
+                  className="size-4 shrink-0 text-vet-green transition-transform duration-200 group-open:rotate-180"
+                  aria-hidden="true"
+                />
+              </summary>
+              <LegalSectionLinks
+                sections={sections}
+                className="grid grid-cols-2 gap-x-4 border-t border-line px-4 sm:grid-cols-3"
+              />
+            </details>
+          </nav>
+
+          <nav aria-label={`${title} sections`} className="hidden lg:block">
+            <h2 className="type-label text-ink/68">On this page</h2>
+            <LegalSectionLinks
+              sections={sections}
+              className="mt-3 grid grid-cols-1 border-t border-line"
+            />
           </nav>
         </aside>
 
-        <article className="min-w-0 max-w-4xl">
+        <article className="min-w-0 max-w-[75ch]">
           <div className="mb-10 border-l-4 border-amber-500 bg-amber-50 px-5 py-4 text-sm leading-6 text-amber-950">
             <strong>Required before publication:</strong> replace every bracketed placeholder and
             confirm that the clinic has permission or another valid legal basis to publish all
@@ -101,5 +109,29 @@ export function LegalPage({
 
       <Footer />
     </main>
+  );
+}
+
+function LegalSectionLinks({
+  sections,
+  className,
+}: {
+  sections: LegalSection[];
+  className: string;
+}) {
+  return (
+    <ul className={className}>
+      {sections.map((section) => (
+        <li key={section.id} className="border-b border-line">
+          <a
+            href={`#${section.id}`}
+            onClick={(event) => event.currentTarget.closest("details")?.removeAttribute("open")}
+            className="focus-ring focus-ring-dark flex min-h-11 items-center rounded py-2 text-sm font-semibold text-ink/72 transition-colors hover:text-vet-green-dark"
+          >
+            {section.title}
+          </a>
+        </li>
+      ))}
+    </ul>
   );
 }

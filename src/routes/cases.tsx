@@ -76,10 +76,10 @@ function CasesPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/78 to-ink/42" />
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-white/55">
+          <nav aria-label="Breadcrumb" className="text-sm text-white/70">
             <a
               href="/"
-              className="focus-ring focus-ring-dark inline-flex items-center gap-1.5 rounded transition-colors hover:text-white"
+              className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-1.5 rounded transition-colors hover:text-white"
             >
               <Home className="h-3.5 w-3.5" aria-hidden="true" />
               Home

@@ -51,13 +51,13 @@ export function SensitiveImage({
                   event.stopPropagation();
                   setRevealed(true);
                 }}
-                className="focus-ring focus-ring-dark type-button mt-4 inline-flex min-h-10 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-white transition-colors duration-200 hover:bg-vet-green"
+                className="focus-ring focus-ring-dark type-button mt-4 inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-ink px-4 py-2 text-white transition-colors duration-200 hover:bg-vet-green"
               >
                 <Eye className="h-4 w-4" />
                 View image
               </button>
             ) : (
-              <span className="type-button mt-4 inline-flex min-h-10 items-center justify-center rounded-full bg-ink px-4 py-2 text-white">
+              <span className="type-button mt-4 inline-flex min-h-11 items-center justify-center rounded-full bg-ink px-4 py-2 text-white">
                 Protected preview
               </span>
             )}

@@ -155,7 +155,7 @@ export function Nav() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -6 }}
                 transition={reduceMotion ? { duration: 0 } : softTransition}
-                className="focus-ring focus-ring-dark type-label inline-flex max-w-24 items-center rounded-full bg-white/10 px-3 py-2 text-white backdrop-blur-md xl:hidden"
+                className="focus-ring focus-ring-dark type-label hidden max-w-24 items-center rounded-full bg-white/10 px-3 py-2 text-white backdrop-blur-md sm:inline-flex xl:hidden"
               >
                 <span className="truncate">{activeItem.label}</span>
               </motion.a>

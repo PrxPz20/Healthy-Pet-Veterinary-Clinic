@@ -51,7 +51,7 @@ export function CaseCard({
         />
       ) : (
         <div
-          className={`grid place-items-center bg-sage px-5 text-center text-sm font-bold text-ink/52 ${aspectClass}`}
+          className={`grid place-items-center bg-sage px-5 text-center text-sm font-bold text-ink/68 ${aspectClass}`}
         >
           No image added
         </div>

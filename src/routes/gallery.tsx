@@ -43,6 +43,12 @@ function GalleryPage() {
   const [visibleCount, setVisibleCount] = useState(GALLERY_PAGE_SIZE);
   const visibleGallery = items.slice(0, visibleCount);
   const hasMore = visibleCount < items.length;
+  const galleryGridClass =
+    visibleGallery.length === 1
+      ? "mx-auto max-w-md grid-cols-1"
+      : visibleGallery.length === 2
+        ? "mx-auto max-w-3xl grid-cols-1 sm:grid-cols-2"
+        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
   useEffect(() => {
     let mounted = true;
@@ -66,10 +72,10 @@ function GalleryPage() {
 
       <section className="bg-ink pb-18 pt-32 text-white md:pb-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-white/55">
+          <nav aria-label="Breadcrumb" className="text-sm text-white/70">
             <a
               href="/"
-              className="focus-ring focus-ring-dark inline-flex items-center gap-1.5 rounded transition-colors hover:text-white"
+              className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-1.5 rounded transition-colors hover:text-white"
             >
               <Home className="h-3.5 w-3.5" aria-hidden="true" />
               Home
@@ -91,14 +97,18 @@ function GalleryPage() {
 
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className={`grid gap-5 ${galleryGridClass}`}>
             {visibleGallery.map((item, index) => (
               <GalleryCard
                 key={item.slug}
                 item={item}
                 priority={index < 4}
                 onClick={() => setActiveItem(item)}
-                className={item.orientation === "landscape" ? "lg:col-span-2" : ""}
+                className={
+                  visibleGallery.length > 2 && item.orientation === "landscape"
+                    ? "lg:col-span-2"
+                    : ""
+                }
               />
             ))}
           </div>

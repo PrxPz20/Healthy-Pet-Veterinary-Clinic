@@ -22,11 +22,11 @@ export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCa
       transition={quickTransition}
     >
       <div
-        className={`grid min-w-0 gap-0 lg:grid-cols-2 ${
-          reversed ? "" : "lg:[&>*:first-child]:order-2"
+        className={`grid min-w-0 gap-0 md:grid-cols-[0.9fr_1.1fr] ${
+          reversed ? "" : "md:[&>*:first-child]:order-2"
         }`}
       >
-        <div className="min-h-full border-b border-line bg-white lg:border-b-0">
+        <div className="min-h-full border-b border-line bg-white md:border-b-0">
           <img
             src={image}
             alt={imageAlt}
@@ -35,7 +35,7 @@ export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCa
           />
         </div>
 
-        <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:p-8 lg:min-h-[26rem]">
+        <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:min-h-[24rem] md:p-8 lg:min-h-[26rem]">
           <h3 className="type-feature-title break-words text-ink">{service.title}</h3>
           <p className="type-body mt-4 max-w-[68ch] text-ink/68">{service.detail}</p>
 

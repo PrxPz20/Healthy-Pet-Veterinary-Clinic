@@ -83,10 +83,10 @@ function ServicesPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-ink via-ink/78 to-ink/42" />
         <div className="relative mx-auto max-w-7xl px-5 sm:px-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-white/55">
+          <nav aria-label="Breadcrumb" className="text-sm text-white/70">
             <a
               href="/"
-              className="focus-ring focus-ring-dark inline-flex items-center gap-1.5 rounded transition-colors hover:text-white"
+              className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-1.5 rounded transition-colors hover:text-white"
             >
               <Home className="h-3.5 w-3.5" aria-hidden="true" />
               Home
@@ -138,7 +138,7 @@ function ServicesPage() {
             {visibleCategories.map((category) => (
               <section key={category.id} id={category.target} className="scroll-mt-28">
                 <Reveal className="mb-8 flex items-center gap-4 md:mb-10">
-                  <h2 className="type-section-title min-w-0 break-words text-ink">
+                  <h2 className="type-subsection-title min-w-0 break-words text-ink">
                     {category.label}
                   </h2>
                   <span className="h-px flex-1 bg-line" aria-hidden="true" />

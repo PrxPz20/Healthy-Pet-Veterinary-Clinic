@@ -13,7 +13,7 @@ export function Faq() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section id="faq" className="relative bg-white py-20 text-ink md:py-28">
+    <section id="faq" className="relative bg-white py-16 text-ink md:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-16">
         <Reveal className="lg:order-2 lg:sticky lg:top-32">
           <h2 className="type-section-title max-w-xl">{homepage.faq.heading}</h2>
