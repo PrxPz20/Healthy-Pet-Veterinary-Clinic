@@ -5,6 +5,7 @@ import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 import { useEditorialContent } from "./editorial-content-context";
 import { softTransition } from "@/lib/motion";
+import { ContentEmptyState } from "./ContentEmptyState";
 
 export function Testimonials() {
   const { homepage } = getSiteContent();
@@ -143,12 +144,10 @@ export function Testimonials() {
                 </div>
               </div>
             ) : (
-              <div className="flex min-h-44 items-center gap-4 rounded-3xl bg-white p-5">
-                <span className="grid h-12 w-12 shrink-0 place-items-center rounded-full bg-sage text-vet-green">
-                  <MessageSquareQuote className="h-5 w-5" />
-                </span>
-                <p className="type-card-copy text-ink/68">{homepage.testimonials.emptyState}</p>
-              </div>
+              <ContentEmptyState
+                title="Reviews are being prepared"
+                body={homepage.testimonials.emptyState}
+              />
             )}
           </div>
         </Reveal>

@@ -31,7 +31,9 @@ export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCa
             src={image}
             alt={imageAlt}
             loading="lazy"
-            className="aspect-[4/3] h-full w-full object-cover"
+            width={1440}
+            height={1080}
+            className="aspect-[4/3] h-full w-full bg-sage object-cover object-center [filter:saturate(.94)_contrast(1.025)]"
           />
         </div>
 

@@ -9,10 +9,12 @@ import {
   mergeGalleryItems,
 } from "@/lib/supabase/public-gallery";
 import { GalleryCard } from "./GalleryCard";
+import { ContentEmptyState } from "./ContentEmptyState";
 
 export function Gallery() {
   const { gallery, homepage } = getSiteContent();
   const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
+  const [hasLoaded, setHasLoaded] = useState(false);
   const previewItems = items.slice(0, 6);
   const previewGridClass =
     previewItems.length === 1
@@ -27,6 +29,7 @@ export function Gallery() {
     loadPublishedGallery().then((cmsItems) => {
       if (mounted) {
         setItems(mergeGalleryItems(gallery, cmsItems));
+        setHasLoaded(true);
       }
     });
 
@@ -53,12 +56,20 @@ export function Gallery() {
         </Reveal>
 
         <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${previewGridClass}`}>
-          {previewItems.map((item) => (
-            <StaggerItem key={item.slug} className="h-full">
+          {previewItems.map((item, index) => (
+            <StaggerItem key={item.slug} className={`h-full ${index > 2 ? "hidden sm:block" : ""}`}>
               <GalleryCard item={item} href="/gallery" className="h-full" />
             </StaggerItem>
           ))}
         </StaggerGroup>
+        {hasLoaded && !previewItems.length ? (
+          <div className="mt-10 md:mt-12">
+            <ContentEmptyState
+              title="Gallery updates are coming soon"
+              body="New clinic moments will appear here once they are ready to share."
+            />
+          </div>
+        ) : null}
       </div>
     </section>
   );

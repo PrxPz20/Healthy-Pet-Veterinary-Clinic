@@ -5,6 +5,7 @@ import { Reveal } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
 import { useEditorialContent } from "./editorial-content-context";
 import { quickTransition } from "@/lib/motion";
+import { ContentEmptyState } from "./ContentEmptyState";
 
 export function Faq() {
   const { homepage } = getSiteContent();
@@ -72,6 +73,14 @@ export function Faq() {
               </Reveal>
             );
           })}
+          {!faqs.length ? (
+            <div className="py-4">
+              <ContentEmptyState
+                title="Questions are being updated"
+                body="Please contact the clinic directly if you need help in the meantime."
+              />
+            </div>
+          ) : null}
         </div>
       </div>
     </section>

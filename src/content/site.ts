@@ -10,7 +10,7 @@ import galleryTsitsis from "@/assets/gallery/image_5_TSITSIS.jpg";
 import galleryTedy from "@/assets/gallery/image_6_tedy.jpg";
 import galleryGreta from "@/assets/gallery/image_7_greta.jpg";
 import galleryDj from "@/assets/gallery/image_8_dj.jpg";
-import casesHeroBanner from "@/assets/cases/cases_hero_banner.png";
+import casesHeroBanner from "@/assets/cases/cases_hero_banner.webp";
 import profineSmallDog from "@/assets/profine-Dog_adult-small-chicken-&-potatoes_2kg.jpg";
 import royalCaninStarter from "@/assets/royal-canin-vet-care-starter-small-dog-1-5kg.jpg";
 import type { SiteContent } from "./types";

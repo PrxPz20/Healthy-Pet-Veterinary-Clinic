@@ -16,6 +16,7 @@ import {
   loadPublishedGallery,
   mergeGalleryItems,
 } from "@/lib/supabase/public-gallery";
+import { ContentEmptyState } from "@/components/site/ContentEmptyState";
 
 const content = getSiteContent();
 const GALLERY_PAGE_SIZE = 6;
@@ -39,6 +40,7 @@ function GalleryPage() {
   const contact = useContactSettings();
   const { clinic, gallery } = content;
   const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(GALLERY_PAGE_SIZE);
   const visibleGallery = items.slice(0, visibleCount);
@@ -56,6 +58,7 @@ function GalleryPage() {
     loadPublishedGallery().then((cmsItems) => {
       if (mounted) {
         setItems(mergeGalleryItems(gallery, cmsItems));
+        setHasLoaded(true);
       }
     });
 
@@ -112,6 +115,12 @@ function GalleryPage() {
               />
             ))}
           </div>
+          {hasLoaded && !visibleGallery.length ? (
+            <ContentEmptyState
+              title="Gallery updates are coming soon"
+              body="New clinic moments will appear here once they are ready to share."
+            />
+          ) : null}
           {hasMore ? (
             <div className="mt-10 flex justify-center">
               <button

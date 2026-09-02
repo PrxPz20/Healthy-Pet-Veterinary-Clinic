@@ -8,10 +8,18 @@ import {
   loadPublishedProducts,
   mergeProductItems,
 } from "@/lib/supabase/public-gallery";
+import { ContentEmptyState } from "./ContentEmptyState";
 
 export function Products() {
   const { homepage, products } = getSiteContent();
   const [items, setItems] = useState<Product[]>(() => initialPublicItems(products));
+  const [hasLoaded, setHasLoaded] = useState(false);
+  const productGridClass =
+    items.length === 1
+      ? "mx-auto max-w-sm grid-cols-1"
+      : items.length === 2
+        ? "mx-auto max-w-2xl grid-cols-1 sm:grid-cols-2"
+        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
   useEffect(() => {
     let mounted = true;
@@ -19,6 +27,7 @@ export function Products() {
     loadPublishedProducts().then((cmsItems) => {
       if (mounted) {
         setItems(mergeProductItems(products, cmsItems));
+        setHasLoaded(true);
       }
     });
 
@@ -35,7 +44,7 @@ export function Products() {
           <p className="type-section-copy mt-5 max-w-2xl text-ink/66">{homepage.products.body}</p>
         </Reveal>
 
-        <StaggerGroup className="mt-10 grid grid-cols-1 gap-5 md:mt-12 sm:grid-cols-2 lg:grid-cols-4">
+        <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${productGridClass}`}>
           {items.map((product) => (
             <StaggerItem key={product.name}>
               <article className="group h-full overflow-hidden rounded-3xl border border-line bg-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_-22px_rgba(24,26,28,0.3)]">
@@ -92,6 +101,14 @@ export function Products() {
             </StaggerItem>
           ))}
         </StaggerGroup>
+        {hasLoaded && !items.length ? (
+          <div className="mt-10 md:mt-12">
+            <ContentEmptyState
+              title="Products are being updated"
+              body="Contact the clinic to ask about current food and everyday care availability."
+            />
+          </div>
+        ) : null}
 
         <Reveal className="mt-6 rounded-[1.5rem] border border-line bg-white p-5 sm:mt-8 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-6">
           <div className="flex max-w-2xl items-start gap-3">

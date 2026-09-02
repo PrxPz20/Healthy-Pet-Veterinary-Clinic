@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AlertTriangle, Home } from "lucide-react";
-import casesHeroBanner from "@/assets/cases/cases_hero_banner.png";
+import casesHeroBanner from "@/assets/cases/cases_hero_banner.webp";
 import { Reveal } from "@/components/anim";
 import { CaseCard } from "@/components/site/CaseCard";
 import { Footer } from "@/components/site/Footer";
@@ -18,6 +18,7 @@ import {
   loadPublishedCases,
   mergeCaseItems,
 } from "@/lib/supabase/public-gallery";
+import { ContentEmptyState } from "@/components/site/ContentEmptyState";
 
 const content = getSiteContent();
 const CASES_PAGE_SIZE = 6;
@@ -41,10 +42,17 @@ function CasesPage() {
   const contact = useContactSettings();
   const { clinic, cases } = content;
   const [items, setItems] = useState<CaseItem[]>(() => initialPublicItems(cases));
+  const [hasLoaded, setHasLoaded] = useState(false);
   const [visibleCount, setVisibleCount] = useState(CASES_PAGE_SIZE);
   const [activeCase, setActiveCase] = useState<CaseItem | null>(null);
   const visibleCases = items.slice(0, visibleCount);
   const hasMore = visibleCount < items.length;
+  const casesGridClass =
+    visibleCases.length === 1
+      ? "mx-auto max-w-sm grid-cols-1"
+      : visibleCases.length === 2
+        ? "mx-auto max-w-2xl grid-cols-1 sm:grid-cols-2"
+        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
   useEffect(() => {
     let mounted = true;
@@ -52,6 +60,7 @@ function CasesPage() {
     loadPublishedCases().then((cmsItems) => {
       if (mounted) {
         setItems(mergeCaseItems(cases, cmsItems));
+        setHasLoaded(true);
       }
     });
 
@@ -65,7 +74,7 @@ function CasesPage() {
       <JsonLd data={buildClinicSchema(content, contact)} />
       <JsonLd data={buildBreadcrumbSchema(clinic.siteUrl, "Cases", "/cases")} />
       <Nav />
-      <SensitiveContentWarning />
+      {hasLoaded && items.some((item) => item.isSensitive) ? <SensitiveContentWarning /> : null}
 
       <section className="relative overflow-hidden bg-ink pb-18 pt-32 text-white md:pb-24">
         <img
@@ -102,28 +111,38 @@ function CasesPage() {
 
       <section className="pb-20 pt-8 md:pb-28 md:pt-10">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="mx-auto mb-10 flex max-w-full items-center justify-center gap-3 rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.45)] sm:w-fit sm:px-5 sm:py-4">
-            <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-red-100 text-red-600">
-              <span className="absolute inset-0 rounded-full bg-red-500/20 motion-safe:animate-ping" />
-              <span className="absolute inset-0 rounded-full ring-2 ring-red-400/45 motion-safe:animate-ping [animation-delay:450ms]" />
-              <AlertTriangle className="relative h-5 w-5" aria-hidden="true" />
-            </span>
-            <p className="type-body min-w-0 text-center font-medium text-ink/72 lg:whitespace-nowrap">
-              These images are included for educational review and professional context. They are
-              not a substitute for an examination or medical advice for a specific pet.
-            </p>
-          </div>
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {visibleCases.length ? (
+            <div className="mx-auto mb-10 flex max-w-full items-center justify-center gap-3 rounded-[1.5rem] border border-red-200 bg-red-50 px-4 py-3 shadow-[0_18px_45px_-36px_rgba(24,26,28,0.45)] sm:w-fit sm:px-5 sm:py-4">
+              <span className="relative grid h-9 w-9 shrink-0 place-items-center rounded-full bg-red-100 text-red-600">
+                <span className="absolute inset-0 rounded-full bg-red-500/20 motion-safe:animate-ping" />
+                <span className="absolute inset-0 rounded-full ring-2 ring-red-400/45 motion-safe:animate-ping [animation-delay:450ms]" />
+                <AlertTriangle className="relative h-5 w-5" aria-hidden="true" />
+              </span>
+              <p className="type-body min-w-0 text-center font-medium text-ink/72 lg:whitespace-nowrap">
+                These images are included for educational review and professional context. They are
+                not a substitute for an examination or medical advice for a specific pet.
+              </p>
+            </div>
+          ) : null}
+          <div className={`grid gap-5 ${casesGridClass}`}>
             {visibleCases.map((item, index) => (
               <CaseCard
                 key={item.id}
                 item={item}
                 priority={index < 3}
                 onClick={() => setActiveCase(item)}
-                className={item.orientation === "landscape" ? "lg:col-span-2" : ""}
+                className={
+                  visibleCases.length > 2 && item.orientation === "landscape" ? "lg:col-span-2" : ""
+                }
               />
             ))}
           </div>
+          {hasLoaded && !visibleCases.length ? (
+            <ContentEmptyState
+              title="No published cases yet"
+              body="Documented cases will appear here after clinic review and approval."
+            />
+          ) : null}
           {hasMore ? (
             <div className="mt-10 flex justify-center">
               <button

@@ -16,6 +16,7 @@ import {
   loadPublishedServices,
   mergeServiceItems,
 } from "@/lib/supabase/public-gallery";
+import { ContentEmptyState } from "@/components/site/ContentEmptyState";
 
 const content = getSiteContent();
 
@@ -41,6 +42,7 @@ function ServicesPage() {
   const secondary = contact.phones.length ? whatsappCta(contact) : null;
   const PrimaryIcon = contact.phones.length ? Phone : contact.whatsapp ? MessageCircle : Mail;
   const [services, setServices] = useState<Service[]>(() => initialPublicItems(staticServices));
+  const [hasLoaded, setHasLoaded] = useState(false);
   const categoryDetails = new Map(serviceCategories.map((category) => [category.id, category]));
   const visibleCategories = Array.from(new Set(services.map((service) => service.category))).map(
     (id) => ({
@@ -60,6 +62,7 @@ function ServicesPage() {
     loadPublishedServices().then((cmsItems) => {
       if (mounted) {
         setServices(mergeServiceItems(staticServices, cmsItems));
+        setHasLoaded(true);
       }
     });
 
@@ -156,6 +159,12 @@ function ServicesPage() {
               </section>
             ))}
           </div>
+          {hasLoaded && !visibleCategories.length ? (
+            <ContentEmptyState
+              title="Services are being updated"
+              body="Please contact the clinic for current care options and availability."
+            />
+          ) : null}
         </div>
       </section>
 

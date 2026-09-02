@@ -9,11 +9,19 @@ import {
   mergeCaseItems,
 } from "@/lib/supabase/public-gallery";
 import { CaseCard } from "./CaseCard";
+import { ContentEmptyState } from "./ContentEmptyState";
 
 export function Cases() {
   const { cases, homepage } = getSiteContent();
   const [items, setItems] = useState<CaseItem[]>(() => initialPublicItems(cases));
+  const [hasLoaded, setHasLoaded] = useState(false);
   const previewItems = items.filter((item) => item.homepagePreview).slice(0, 4);
+  const previewGridClass =
+    previewItems.length === 1
+      ? "mx-auto max-w-sm grid-cols-1"
+      : previewItems.length === 2
+        ? "mx-auto max-w-2xl grid-cols-1 sm:grid-cols-2"
+        : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
   useEffect(() => {
     let mounted = true;
@@ -21,6 +29,7 @@ export function Cases() {
     loadPublishedCases().then((cmsItems) => {
       if (mounted) {
         setItems(mergeCaseItems(cases, cmsItems));
+        setHasLoaded(true);
       }
     });
 
@@ -46,13 +55,21 @@ export function Cases() {
           </a>
         </Reveal>
 
-        <StaggerGroup className="mt-10 grid grid-cols-1 gap-5 sm:grid-cols-2 md:mt-12 lg:grid-cols-4">
-          {previewItems.map((item) => (
-            <StaggerItem key={item.id} className="h-full">
+        <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${previewGridClass}`}>
+          {previewItems.map((item, index) => (
+            <StaggerItem key={item.id} className={`h-full ${index > 1 ? "hidden sm:block" : ""}`}>
               <CaseCard item={item} href="/cases" allowReveal={false} className="h-full" />
             </StaggerItem>
           ))}
         </StaggerGroup>
+        {hasLoaded && !previewItems.length ? (
+          <div className="mt-10 md:mt-12">
+            <ContentEmptyState
+              title="No published cases yet"
+              body="Documented cases will appear here after clinic review and approval."
+            />
+          </div>
+        ) : null}
       </div>
     </section>
   );

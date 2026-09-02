@@ -9,10 +9,12 @@ import {
   mergeServiceItems,
 } from "@/lib/supabase/public-gallery";
 import { serviceImages } from "@/content/cms-media";
+import { ContentEmptyState } from "./ContentEmptyState";
 
 export function Services() {
   const { homepage, services } = getSiteContent();
   const [items, setItems] = useState<Service[]>(() => initialPublicItems(services));
+  const [hasLoaded, setHasLoaded] = useState(false);
   const featuredServices = items.slice(0, 3);
 
   useEffect(() => {
@@ -21,6 +23,7 @@ export function Services() {
     loadPublishedServices().then((cmsItems) => {
       if (mounted) {
         setItems(mergeServiceItems(services, cmsItems));
+        setHasLoaded(true);
       }
     });
 
@@ -54,7 +57,7 @@ export function Services() {
             const reversed = index % 2 === 1;
 
             return (
-              <StaggerItem key={service.slug}>
+              <StaggerItem key={service.slug} className={index > 1 ? "hidden sm:block" : ""}>
                 <a
                   href={`/services#${service.slug}`}
                   className="focus-ring focus-ring-dark group block min-w-0 overflow-hidden rounded-[1.5rem] border border-line bg-white shadow-[0_18px_45px_-38px_rgba(24,26,28,0.32)] transition-all duration-300 hover:-translate-y-1 hover:border-vet-green/35 hover:shadow-[0_22px_48px_-38px_rgba(24,26,28,0.42)]"
@@ -69,7 +72,9 @@ export function Services() {
                         src={image}
                         alt={imageAlt}
                         loading="lazy"
-                        className="aspect-[4/3] h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                        width={1440}
+                        height={1080}
+                        className="aspect-[4/3] h-full w-full bg-sage object-cover object-center [filter:saturate(.94)_contrast(1.025)] transition-transform duration-500 group-hover:scale-[1.025]"
                       />
                     </div>
                     <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:min-h-[22rem] md:p-8">
@@ -91,6 +96,14 @@ export function Services() {
             );
           })}
         </StaggerGroup>
+        {hasLoaded && !featuredServices.length ? (
+          <div className="mt-10 md:mt-12">
+            <ContentEmptyState
+              title="Services are being updated"
+              body="Please contact the clinic for current care options and availability."
+            />
+          </div>
+        ) : null}
       </div>
     </section>
   );
