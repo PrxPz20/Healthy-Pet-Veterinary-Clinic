@@ -30,6 +30,9 @@ export function SensitiveImage({
         alt={image.alt}
         loading={priority ? "eager" : "lazy"}
         decoding="async"
+        width={900}
+        height={675}
+        sizes="(min-width: 1280px) 300px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
         className={`h-full w-full object-cover transition-[filter,transform,opacity] duration-300 ${
           protectedImage ? "scale-[1.03] blur-2xl opacity-75" : "blur-0 opacity-100"
         }`}

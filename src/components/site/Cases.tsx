@@ -7,14 +7,16 @@ import {
   initialPublicItems,
   loadPublishedCases,
   mergeCaseItems,
+  publicContentStartsLoaded,
 } from "@/lib/supabase/public-gallery";
 import { CaseCard } from "./CaseCard";
 import { ContentEmptyState } from "./ContentEmptyState";
+import { ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
 
 export function Cases() {
   const { cases, homepage } = getSiteContent();
   const [items, setItems] = useState<CaseItem[]>(() => initialPublicItems(cases));
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
   const previewItems = items.filter((item) => item.homepagePreview).slice(0, 4);
   const previewGridClass =
     previewItems.length === 1
@@ -55,21 +57,32 @@ export function Cases() {
           </a>
         </Reveal>
 
-        <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${previewGridClass}`}>
-          {previewItems.map((item, index) => (
-            <StaggerItem key={item.id} className={`h-full ${index > 1 ? "hidden sm:block" : ""}`}>
-              <CaseCard item={item} href="/cases" allowReveal={false} className="h-full" />
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-        {hasLoaded && !previewItems.length ? (
+        <ContentResultsStatus
+          label="cases"
+          loading={!hasLoaded}
+          visible={previewItems.length}
+          total={items.length}
+        />
+        {!hasLoaded ? (
+          <div className="mt-10 md:mt-12">
+            <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
+          </div>
+        ) : previewItems.length ? (
+          <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${previewGridClass}`}>
+            {previewItems.map((item, index) => (
+              <StaggerItem key={item.id} className={`h-full ${index > 1 ? "hidden sm:block" : ""}`}>
+                <CaseCard item={item} href="/cases" allowReveal={false} className="h-full" />
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        ) : (
           <div className="mt-10 md:mt-12">
             <ContentEmptyState
               title="No published cases yet"
               body="Documented cases will appear here after clinic review and approval."
             />
           </div>
-        ) : null}
+        )}
       </div>
     </section>
   );

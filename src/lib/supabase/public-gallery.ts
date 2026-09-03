@@ -275,3 +275,7 @@ export function mergeProductItems(staticItems: Product[], cmsItems: Product[] | 
 export function initialPublicItems<T>(staticItems: T[]) {
   return isSupabaseConfigured() ? [] : staticItems;
 }
+
+export function publicContentStartsLoaded() {
+  return !isSupabaseConfigured();
+}

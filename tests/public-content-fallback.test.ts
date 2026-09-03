@@ -15,3 +15,10 @@ test("public CMS failures restore static content for every supported section", (
     );
   }
 });
+
+test("static content starts ready when Supabase is not configured", () => {
+  assert.match(
+    source,
+    /function publicContentStartsLoaded\(\)[\s\S]*?return !isSupabaseConfigured\(\);/,
+  );
+});

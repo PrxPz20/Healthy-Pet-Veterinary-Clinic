@@ -1357,8 +1357,9 @@ function validationProps(label: string, placeholder: string) {
 
 function UploadHint() {
   return (
-    <p className="mt-2 text-xs font-medium leading-relaxed text-ink/45">
-      JPG or WebP recommended; PNG supported. Maximum 10 MB per image.
+    <p className="mt-2 text-xs font-medium leading-relaxed text-ink/55">
+      WebP is recommended. Resize to about 1600 px wide and aim for under 1 MB; maximum 10 MB per
+      image.
     </p>
   );
 }

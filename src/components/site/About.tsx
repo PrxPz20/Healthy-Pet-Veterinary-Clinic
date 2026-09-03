@@ -67,6 +67,7 @@ export function About() {
                 loading="lazy"
                 width={1280}
                 height={1280}
+                sizes="(min-width: 1024px) 50vw, 100vw"
                 className="h-full w-full object-cover transition-transform duration-500 hover:scale-[1.025]"
               />
             </div>

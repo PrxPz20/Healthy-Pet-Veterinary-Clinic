@@ -15,8 +15,10 @@ import {
   initialPublicItems,
   loadPublishedGallery,
   mergeGalleryItems,
+  publicContentStartsLoaded,
 } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "@/components/site/ContentEmptyState";
+import { ContentLoadingState, ContentResultsStatus } from "@/components/site/PublicContentState";
 
 const content = getSiteContent();
 const GALLERY_PAGE_SIZE = 6;
@@ -40,7 +42,7 @@ function GalleryPage() {
   const contact = useContactSettings();
   const { clinic, gallery } = content;
   const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(GALLERY_PAGE_SIZE);
   const visibleGallery = items.slice(0, visibleCount);
@@ -100,32 +102,42 @@ function GalleryPage() {
 
       <section className="py-20 md:py-28">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className={`grid gap-5 ${galleryGridClass}`}>
-            {visibleGallery.map((item, index) => (
-              <GalleryCard
-                key={item.slug}
-                item={item}
-                priority={index < 4}
-                onClick={() => setActiveItem(item)}
-                className={
-                  visibleGallery.length > 2 && item.orientation === "landscape"
-                    ? "lg:col-span-2"
-                    : ""
-                }
-              />
-            ))}
-          </div>
-          {hasLoaded && !visibleGallery.length ? (
+          <ContentResultsStatus
+            label="gallery items"
+            loading={!hasLoaded}
+            visible={visibleGallery.length}
+            total={items.length}
+          />
+          {!hasLoaded ? (
+            <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
+          ) : visibleGallery.length ? (
+            <div className={`grid gap-5 ${galleryGridClass}`}>
+              {visibleGallery.map((item, index) => (
+                <GalleryCard
+                  key={item.slug}
+                  item={item}
+                  priority={index < 4}
+                  onClick={() => setActiveItem(item)}
+                  className={
+                    visibleGallery.length > 2 && item.orientation === "landscape"
+                      ? "lg:col-span-2"
+                      : ""
+                  }
+                />
+              ))}
+            </div>
+          ) : (
             <ContentEmptyState
               title="Gallery updates are coming soon"
               body="New clinic moments will appear here once they are ready to share."
             />
-          ) : null}
+          )}
           {hasMore ? (
             <div className="mt-10 flex justify-center">
               <button
                 type="button"
                 onClick={() => setVisibleCount((count) => count + GALLERY_PAGE_SIZE)}
+                aria-label={`Load more gallery items. Showing ${visibleGallery.length} of ${items.length}`}
                 className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-white transition-colors duration-200 hover:bg-vet-green"
               >
                 Load more

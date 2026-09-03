@@ -7,14 +7,16 @@ import {
   initialPublicItems,
   loadPublishedGallery,
   mergeGalleryItems,
+  publicContentStartsLoaded,
 } from "@/lib/supabase/public-gallery";
 import { GalleryCard } from "./GalleryCard";
 import { ContentEmptyState } from "./ContentEmptyState";
+import { ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
 
 export function Gallery() {
   const { gallery, homepage } = getSiteContent();
   const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
   const previewItems = items.slice(0, 6);
   const previewGridClass =
     previewItems.length === 1
@@ -55,21 +57,35 @@ export function Gallery() {
           </a>
         </Reveal>
 
-        <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${previewGridClass}`}>
-          {previewItems.map((item, index) => (
-            <StaggerItem key={item.slug} className={`h-full ${index > 2 ? "hidden sm:block" : ""}`}>
-              <GalleryCard item={item} href="/gallery" className="h-full" />
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-        {hasLoaded && !previewItems.length ? (
+        <ContentResultsStatus
+          label="gallery items"
+          loading={!hasLoaded}
+          visible={previewItems.length}
+          total={items.length}
+        />
+        {!hasLoaded ? (
+          <div className="mt-10 md:mt-12">
+            <ContentLoadingState />
+          </div>
+        ) : previewItems.length ? (
+          <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${previewGridClass}`}>
+            {previewItems.map((item, index) => (
+              <StaggerItem
+                key={item.slug}
+                className={`h-full ${index > 2 ? "hidden sm:block" : ""}`}
+              >
+                <GalleryCard item={item} href="/gallery" className="h-full" />
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        ) : (
           <div className="mt-10 md:mt-12">
             <ContentEmptyState
               title="Gallery updates are coming soon"
               body="New clinic moments will appear here once they are ready to share."
             />
           </div>
-        ) : null}
+        )}
       </div>
     </section>
   );

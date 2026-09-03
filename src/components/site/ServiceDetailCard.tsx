@@ -31,15 +31,19 @@ export function ServiceDetailCard({ service, reversed = false }: ServiceDetailCa
             src={image}
             alt={imageAlt}
             loading="lazy"
+            decoding="async"
             width={1440}
             height={1080}
+            sizes="(min-width: 1280px) 560px, (min-width: 768px) 45vw, 100vw"
             className="aspect-[4/3] h-full w-full bg-sage object-cover object-center [filter:saturate(.94)_contrast(1.025)]"
           />
         </div>
 
         <div className="flex min-w-0 flex-col justify-center p-5 sm:p-6 md:min-h-[24rem] md:p-8 lg:min-h-[26rem]">
-          <h3 className="type-feature-title break-words text-ink">{service.title}</h3>
-          <p className="type-body mt-4 max-w-[68ch] text-ink/68">{service.detail}</p>
+          <h3 className="type-feature-title [overflow-wrap:anywhere] text-ink">{service.title}</h3>
+          <p className="type-body mt-4 max-w-[68ch] [overflow-wrap:anywhere] text-ink/68">
+            {service.detail}
+          </p>
 
           <a
             href="/#contact"

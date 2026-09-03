@@ -56,8 +56,8 @@ export function CaseCard({
           No image added
         </div>
       )}
-      <figcaption className="p-5 sm:p-6">
-        <div className="flex items-start justify-between gap-4">
+      <figcaption className="flex min-h-[12rem] flex-1 p-5 sm:p-6">
+        <div className="flex w-full items-start justify-between gap-4">
           <div className="min-w-0">
             <div className="flex flex-wrap items-center gap-2">
               {item.isSensitive ? (
@@ -66,11 +66,22 @@ export function CaseCard({
                 </span>
               ) : null}
               {item.category ? (
-                <span className="type-label text-vet-green">{item.category}</span>
+                <span
+                  className="type-label max-w-full truncate text-vet-green"
+                  title={item.category}
+                >
+                  {item.category}
+                </span>
               ) : null}
             </div>
-            <h3 className="type-card-title mt-3 text-ink">{item.title}</h3>
-            <p className="type-card-copy mt-2 line-clamp-3 text-ink/62">{item.description}</p>
+            <h3 className="type-card-title mt-3 line-clamp-2 [overflow-wrap:anywhere] text-ink">
+              {item.title}
+            </h3>
+            {item.description ? (
+              <p className="type-card-copy mt-2 line-clamp-3 [overflow-wrap:anywhere] text-ink/62">
+                {item.description}
+              </p>
+            ) : null}
           </div>
           {href ? (
             <span className="mt-1 grid h-10 w-10 shrink-0 place-items-center rounded-full bg-sage text-vet-green transition-colors duration-300 group-hover:bg-vet-green group-hover:text-white">

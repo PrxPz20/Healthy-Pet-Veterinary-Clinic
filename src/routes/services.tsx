@@ -15,8 +15,10 @@ import {
   initialPublicItems,
   loadPublishedServices,
   mergeServiceItems,
+  publicContentStartsLoaded,
 } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "@/components/site/ContentEmptyState";
+import { ContentLoadingState, ContentResultsStatus } from "@/components/site/PublicContentState";
 
 const content = getSiteContent();
 
@@ -42,7 +44,7 @@ function ServicesPage() {
   const secondary = contact.phones.length ? whatsappCta(contact) : null;
   const PrimaryIcon = contact.phones.length ? Phone : contact.whatsapp ? MessageCircle : Mail;
   const [services, setServices] = useState<Service[]>(() => initialPublicItems(staticServices));
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
   const categoryDetails = new Map(serviceCategories.map((category) => [category.id, category]));
   const visibleCategories = Array.from(new Set(services.map((service) => service.category))).map(
     (id) => ({
@@ -137,34 +139,43 @@ function ServicesPage() {
 
       <section className="py-20 md:py-24">
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
-          <div className="space-y-16 md:space-y-20">
-            {visibleCategories.map((category) => (
-              <section key={category.id} id={category.target} className="scroll-mt-28">
-                <Reveal className="mb-8 flex items-center gap-4 md:mb-10">
-                  <h2 className="type-subsection-title min-w-0 break-words text-ink">
-                    {category.label}
-                  </h2>
-                  <span className="h-px flex-1 bg-line" aria-hidden="true" />
-                </Reveal>
-                <StaggerGroup className="grid grid-cols-1 gap-5 md:gap-6">
-                  {category.services.map((service) => (
-                    <StaggerItem key={service.slug}>
-                      <ServiceDetailCard
-                        service={service}
-                        reversed={(serviceOrder.get(service.slug) ?? 0) % 2 === 1}
-                      />
-                    </StaggerItem>
-                  ))}
-                </StaggerGroup>
-              </section>
-            ))}
-          </div>
-          {hasLoaded && !visibleCategories.length ? (
+          <ContentResultsStatus
+            label="services"
+            loading={!hasLoaded}
+            visible={services.length}
+            total={services.length}
+          />
+          {!hasLoaded ? (
+            <ContentLoadingState count={2} className="grid-cols-1" />
+          ) : visibleCategories.length ? (
+            <div className="space-y-16 md:space-y-20">
+              {visibleCategories.map((category) => (
+                <section key={category.id} id={category.target} className="scroll-mt-28">
+                  <Reveal className="mb-8 flex items-center gap-4 md:mb-10">
+                    <h2 className="type-subsection-title min-w-0 [overflow-wrap:anywhere] text-ink">
+                      {category.label}
+                    </h2>
+                    <span className="h-px flex-1 bg-line" aria-hidden="true" />
+                  </Reveal>
+                  <StaggerGroup className="grid grid-cols-1 gap-5 md:gap-6">
+                    {category.services.map((service) => (
+                      <StaggerItem key={service.slug}>
+                        <ServiceDetailCard
+                          service={service}
+                          reversed={(serviceOrder.get(service.slug) ?? 0) % 2 === 1}
+                        />
+                      </StaggerItem>
+                    ))}
+                  </StaggerGroup>
+                </section>
+              ))}
+            </div>
+          ) : (
             <ContentEmptyState
               title="Services are being updated"
               body="Please contact the clinic for current care options and availability."
             />
-          ) : null}
+          )}
         </div>
       </section>
 

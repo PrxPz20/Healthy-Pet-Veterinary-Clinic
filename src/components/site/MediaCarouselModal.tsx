@@ -97,6 +97,9 @@ export function MediaCarouselModal({
                             alt={item.alt}
                             loading={index === 0 ? "eager" : "lazy"}
                             decoding="async"
+                            width={1440}
+                            height={1080}
+                            sizes="(min-width: 1024px) 896px, 100vw"
                             className="max-h-[72vh] w-full object-contain"
                           />
                         )}
@@ -117,6 +120,10 @@ export function MediaCarouselModal({
                 <img
                   src={safeMedia[0].src}
                   alt={safeMedia[0].alt}
+                  decoding="async"
+                  width={1440}
+                  height={1080}
+                  sizes="(min-width: 1024px) 896px, 100vw"
                   className="max-h-[72vh] w-full object-contain"
                 />
               ) : null}

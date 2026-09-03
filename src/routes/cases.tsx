@@ -17,8 +17,10 @@ import {
   initialPublicItems,
   loadPublishedCases,
   mergeCaseItems,
+  publicContentStartsLoaded,
 } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "@/components/site/ContentEmptyState";
+import { ContentLoadingState, ContentResultsStatus } from "@/components/site/PublicContentState";
 
 const content = getSiteContent();
 const CASES_PAGE_SIZE = 6;
@@ -42,7 +44,7 @@ function CasesPage() {
   const contact = useContactSettings();
   const { clinic, cases } = content;
   const [items, setItems] = useState<CaseItem[]>(() => initialPublicItems(cases));
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
   const [visibleCount, setVisibleCount] = useState(CASES_PAGE_SIZE);
   const [activeCase, setActiveCase] = useState<CaseItem | null>(null);
   const visibleCases = items.slice(0, visibleCount);
@@ -124,30 +126,42 @@ function CasesPage() {
               </p>
             </div>
           ) : null}
-          <div className={`grid gap-5 ${casesGridClass}`}>
-            {visibleCases.map((item, index) => (
-              <CaseCard
-                key={item.id}
-                item={item}
-                priority={index < 3}
-                onClick={() => setActiveCase(item)}
-                className={
-                  visibleCases.length > 2 && item.orientation === "landscape" ? "lg:col-span-2" : ""
-                }
-              />
-            ))}
-          </div>
-          {hasLoaded && !visibleCases.length ? (
+          <ContentResultsStatus
+            label="cases"
+            loading={!hasLoaded}
+            visible={visibleCases.length}
+            total={items.length}
+          />
+          {!hasLoaded ? (
+            <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
+          ) : visibleCases.length ? (
+            <div className={`grid gap-5 ${casesGridClass}`}>
+              {visibleCases.map((item, index) => (
+                <CaseCard
+                  key={item.id}
+                  item={item}
+                  priority={index < 3}
+                  onClick={() => setActiveCase(item)}
+                  className={
+                    visibleCases.length > 2 && item.orientation === "landscape"
+                      ? "lg:col-span-2"
+                      : ""
+                  }
+                />
+              ))}
+            </div>
+          ) : (
             <ContentEmptyState
               title="No published cases yet"
               body="Documented cases will appear here after clinic review and approval."
             />
-          ) : null}
+          )}
           {hasMore ? (
             <div className="mt-10 flex justify-center">
               <button
                 type="button"
                 onClick={() => setVisibleCount((count) => count + CASES_PAGE_SIZE)}
+                aria-label={`Load more cases. Showing ${visibleCases.length} of ${items.length}`}
                 className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center rounded-full bg-ink px-6 py-3 text-white transition-colors duration-200 hover:bg-vet-green"
               >
                 Load more

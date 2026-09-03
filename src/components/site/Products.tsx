@@ -7,13 +7,15 @@ import {
   initialPublicItems,
   loadPublishedProducts,
   mergeProductItems,
+  publicContentStartsLoaded,
 } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "./ContentEmptyState";
+import { ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
 
 export function Products() {
   const { homepage, products } = getSiteContent();
   const [items, setItems] = useState<Product[]>(() => initialPublicItems(products));
-  const [hasLoaded, setHasLoaded] = useState(false);
+  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
   const productGridClass =
     items.length === 1
       ? "mx-auto max-w-sm grid-cols-1"
@@ -44,71 +46,90 @@ export function Products() {
           <p className="type-section-copy mt-5 max-w-2xl text-ink/66">{homepage.products.body}</p>
         </Reveal>
 
-        <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${productGridClass}`}>
-          {items.map((product) => (
-            <StaggerItem key={product.name}>
-              <article className="group h-full overflow-hidden rounded-3xl border border-line bg-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_-22px_rgba(24,26,28,0.3)]">
-                <div className="aspect-[4/3] overflow-hidden bg-sage">
-                  {product.image.src ? (
-                    <img
-                      src={product.image.src}
-                      alt={product.image.alt}
-                      loading="lazy"
-                      width={900}
-                      height={675}
-                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
-                    />
-                  ) : (
-                    <div className="grid h-full place-items-center px-5 text-center text-sm font-bold text-ink/68">
-                      No image added
+        <ContentResultsStatus
+          label="products"
+          loading={!hasLoaded}
+          visible={items.length}
+          total={items.length}
+        />
+        {!hasLoaded ? (
+          <div className="mt-10 md:mt-12">
+            <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
+          </div>
+        ) : items.length ? (
+          <StaggerGroup className={`mt-10 grid gap-5 md:mt-12 ${productGridClass}`}>
+            {items.map((product) => (
+              <StaggerItem key={product.name} className="h-full">
+                <article className="group flex h-full min-w-0 flex-col overflow-hidden rounded-3xl border border-line bg-white transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_14px_24px_-22px_rgba(24,26,28,0.3)]">
+                  <div className="aspect-[4/3] overflow-hidden bg-sage">
+                    {product.image.src ? (
+                      <img
+                        src={product.image.src}
+                        alt={product.image.alt}
+                        loading="lazy"
+                        decoding="async"
+                        width={900}
+                        height={675}
+                        sizes="(min-width: 1280px) 300px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                        className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.025]"
+                      />
+                    ) : (
+                      <div className="grid h-full place-items-center px-5 text-center text-sm font-bold text-ink/68">
+                        No image added
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex min-w-0 flex-1 flex-col p-5 md:p-6">
+                    <div className="type-label truncate text-vet-green" title={product.category}>
+                      {product.category}
                     </div>
-                  )}
-                </div>
-                <div className="flex flex-col p-5 md:p-6">
-                  <div className="type-label text-vet-green">{product.category}</div>
-                  <h3 className="type-card-title mt-2 text-ink">{product.name}</h3>
-                  {product.description ? (
-                    <p className="type-card-copy mt-3 flex-1 text-ink/62">{product.description}</p>
-                  ) : null}
-                  {(product.links.wolt || product.links.foody) && (
-                    <div className="mt-5 flex flex-wrap gap-2">
-                      {product.links.wolt && (
-                        <a
-                          href={product.links.wolt}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-white transition-colors duration-200 hover:bg-vet-green"
-                        >
-                          Wolt
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                      {product.links.foody && (
-                        <a
-                          href={product.links.foody}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="focus-ring type-button inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line bg-white px-4 py-2.5 text-ink transition-colors duration-200 hover:border-vet-green hover:text-vet-green"
-                        >
-                          Foody
-                          <ExternalLink className="h-3.5 w-3.5" />
-                        </a>
-                      )}
-                    </div>
-                  )}
-                </div>
-              </article>
-            </StaggerItem>
-          ))}
-        </StaggerGroup>
-        {hasLoaded && !items.length ? (
+                    <h3 className="type-card-title mt-2 line-clamp-2 [overflow-wrap:anywhere] text-ink">
+                      {product.name}
+                    </h3>
+                    {product.description ? (
+                      <p className="type-card-copy mt-3 line-clamp-3 flex-1 [overflow-wrap:anywhere] text-ink/62">
+                        {product.description}
+                      </p>
+                    ) : null}
+                    {(product.links.wolt || product.links.foody) && (
+                      <div className="mt-auto flex flex-wrap gap-2 pt-5">
+                        {product.links.wolt && (
+                          <a
+                            href={product.links.wolt}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="focus-ring focus-ring-dark type-button inline-flex min-h-11 items-center gap-1.5 rounded-full bg-ink px-4 py-2.5 text-white transition-colors duration-200 hover:bg-vet-green"
+                          >
+                            Wolt
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                        {product.links.foody && (
+                          <a
+                            href={product.links.foody}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="focus-ring type-button inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line bg-white px-4 py-2.5 text-ink transition-colors duration-200 hover:border-vet-green hover:text-vet-green"
+                          >
+                            Foody
+                            <ExternalLink className="h-3.5 w-3.5" />
+                          </a>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </article>
+              </StaggerItem>
+            ))}
+          </StaggerGroup>
+        ) : (
           <div className="mt-10 md:mt-12">
             <ContentEmptyState
               title="Products are being updated"
               body="Contact the clinic to ask about current food and everyday care availability."
             />
           </div>
-        ) : null}
+        )}
 
         <Reveal className="mt-6 rounded-[1.5rem] border border-line bg-white p-5 sm:mt-8 sm:flex sm:items-center sm:justify-between sm:gap-6 sm:p-6">
           <div className="flex max-w-2xl items-start gap-3">
