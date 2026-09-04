@@ -1,22 +1,19 @@
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-import type { GalleryItem } from "@/content/types";
-import {
-  initialPublicItems,
-  loadPublishedGallery,
-  mergeGalleryItems,
-  publicContentStartsLoaded,
-} from "@/lib/supabase/public-gallery";
+import { loadPublishedGallery, mergeGalleryItems } from "@/lib/supabase/public-gallery";
 import { GalleryCard } from "./GalleryCard";
 import { ContentEmptyState } from "./ContentEmptyState";
-import { ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { ContentErrorState, ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { usePublicItems } from "@/hooks/use-public-items";
 
 export function Gallery() {
   const { gallery, homepage } = getSiteContent();
-  const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
-  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
+  const { items, hasLoaded, loading, hasError, retry } = usePublicItems(
+    gallery,
+    loadPublishedGallery,
+    mergeGalleryItems,
+  );
   const previewItems = items.slice(0, 6);
   const previewGridClass =
     previewItems.length === 1
@@ -25,23 +22,8 @@ export function Gallery() {
         ? "mx-auto max-w-3xl grid-cols-1 sm:grid-cols-2"
         : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3";
 
-  useEffect(() => {
-    let mounted = true;
-
-    loadPublishedGallery().then((cmsItems) => {
-      if (mounted) {
-        setItems(mergeGalleryItems(gallery, cmsItems));
-        setHasLoaded(true);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, [gallery]);
-
   return (
-    <section id="gallery" className="relative bg-white py-16 text-ink md:py-24">
+    <section id="gallery" className="site-section relative bg-white py-16 text-ink lg:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -59,10 +41,11 @@ export function Gallery() {
 
         <ContentResultsStatus
           label="gallery items"
-          loading={!hasLoaded}
+          loading={loading}
           visible={previewItems.length}
           total={items.length}
         />
+        {hasError ? <ContentErrorState onRetry={retry} loading={loading} /> : null}
         {!hasLoaded ? (
           <div className="mt-10 md:mt-12">
             <ContentLoadingState />

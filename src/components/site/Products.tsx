@@ -1,21 +1,18 @@
 import { ExternalLink, Info, MessageCircle } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-import type { Product } from "@/content/types";
-import {
-  initialPublicItems,
-  loadPublishedProducts,
-  mergeProductItems,
-  publicContentStartsLoaded,
-} from "@/lib/supabase/public-gallery";
+import { loadPublishedProducts, mergeProductItems } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "./ContentEmptyState";
-import { ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { ContentErrorState, ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { usePublicItems } from "@/hooks/use-public-items";
 
 export function Products() {
   const { homepage, products } = getSiteContent();
-  const [items, setItems] = useState<Product[]>(() => initialPublicItems(products));
-  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
+  const { items, hasLoaded, loading, hasError, retry } = usePublicItems(
+    products,
+    loadPublishedProducts,
+    mergeProductItems,
+  );
   const productGridClass =
     items.length === 1
       ? "mx-auto max-w-sm grid-cols-1"
@@ -23,23 +20,8 @@ export function Products() {
         ? "mx-auto max-w-2xl grid-cols-1 sm:grid-cols-2"
         : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
-  useEffect(() => {
-    let mounted = true;
-
-    loadPublishedProducts().then((cmsItems) => {
-      if (mounted) {
-        setItems(mergeProductItems(products, cmsItems));
-        setHasLoaded(true);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, [products]);
-
   return (
-    <section id="products" className="bg-white py-16 text-ink md:py-24">
+    <section id="products" className="site-section bg-white py-16 text-ink lg:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="max-w-3xl">
           <h2 className="type-section-title">{homepage.products.heading}</h2>
@@ -48,10 +30,11 @@ export function Products() {
 
         <ContentResultsStatus
           label="products"
-          loading={!hasLoaded}
+          loading={loading}
           visible={items.length}
           total={items.length}
         />
+        {hasError ? <ContentErrorState onRetry={retry} loading={loading} /> : null}
         {!hasLoaded ? (
           <div className="mt-10 md:mt-12">
             <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />

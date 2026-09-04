@@ -26,7 +26,7 @@ export function About() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section id="doctor" className="relative bg-white py-16 text-ink md:py-24">
+    <section id="doctor" className="site-section relative bg-white py-16 text-ink lg:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <div className="grid items-start gap-10 lg:grid-cols-[0.95fr_1.05fr] lg:gap-16">
           <Reveal>

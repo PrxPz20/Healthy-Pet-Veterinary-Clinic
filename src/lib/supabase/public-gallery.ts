@@ -55,6 +55,14 @@ type ProductRow = {
 
 type PublicMediaBucket = "site-gallery" | "site-services" | "site-products" | "site-hero";
 
+function cleanText(value: string | null | undefined) {
+  return value?.trim() ?? "";
+}
+
+function mediaAlt(value: string | null | undefined, fallback: string) {
+  return cleanText(value) || fallback;
+}
+
 function publicImage(bucket: PublicMediaBucket, path: string) {
   const staticImage = resolveStaticCmsImage(path);
   if (staticImage) {
@@ -66,11 +74,12 @@ function publicImage(bucket: PublicMediaBucket, path: string) {
 }
 
 function mapGalleryItem(row: GalleryRow): GalleryItem | null {
+  const title = cleanText(row.title);
   const media = [...(row.gallery_media ?? [])]
     .sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order)
     .map<MediaAsset>((item) => ({
       src: publicImage("site-gallery", item.image_path),
-      alt: item.alt,
+      alt: mediaAlt(item.alt, `${title} at Healthy Pet Veterinary Clinic`),
       type: "image",
     }));
 
@@ -80,27 +89,28 @@ function mapGalleryItem(row: GalleryRow): GalleryItem | null {
 
   return {
     slug: row.slug,
-    title: row.title,
-    description: row.description ?? "",
+    title,
+    description: cleanText(row.description),
     image: media[0],
     media,
   };
 }
 
 function mapCaseItem(row: CaseRow, mediaUrls: ReadonlyMap<string, string>): CaseItem {
+  const title = cleanText(row.title);
   const media = [...(row.case_media ?? [])]
     .sort((a, b) => Number(b.is_cover) - Number(a.is_cover) || a.sort_order - b.sort_order)
     .flatMap<MediaAsset>((item) => {
       const src = mediaUrls.get(item.image_path);
-      return src ? [{ src, alt: item.alt, type: "image" }] : [];
+      return src ? [{ src, alt: mediaAlt(item.alt, title), type: "image" }] : [];
     });
 
   return {
     id: row.slug,
-    title: row.title,
-    description: row.description ?? "",
-    category: row.category ?? undefined,
-    image: media[0] ?? { src: "", alt: row.title },
+    title,
+    description: cleanText(row.description),
+    category: cleanText(row.category) || undefined,
+    image: media[0] ?? { src: "", alt: title },
     media,
     isSensitive: row.is_sensitive,
     homepagePreview: true,
@@ -108,35 +118,37 @@ function mapCaseItem(row: CaseRow, mediaUrls: ReadonlyMap<string, string>): Case
 }
 
 function mapService(row: ServiceRow): Service {
+  const title = cleanText(row.title);
   return {
     slug: row.slug,
-    title: row.title,
-    seoTitle: row.title,
-    short: row.short,
-    detail: row.detail,
-    category: row.category,
+    title,
+    seoTitle: title,
+    short: cleanText(row.short),
+    detail: cleanText(row.detail),
+    category: cleanText(row.category) || "General care",
     icon: row.icon || "Stethoscope",
     highlights: [],
     image: row.image_path
       ? {
           src: publicImage("site-services", row.image_path),
-          alt: `${row.title} at Healthy Pet Veterinary Clinic`,
+          alt: `${title} at Healthy Pet Veterinary Clinic`,
         }
       : undefined,
   };
 }
 
 function mapProduct(row: ProductRow): Product {
+  const name = cleanText(row.name);
   return {
-    name: row.name,
-    category: row.category,
-    description: row.description,
+    name,
+    category: cleanText(row.category) || "General",
+    description: cleanText(row.description),
     image: row.image_path
       ? {
           src: publicImage("site-products", row.image_path),
-          alt: row.name,
+          alt: name,
         }
-      : { src: "", alt: row.name },
+      : { src: "", alt: name },
     links: {
       wolt: row.wolt_url ?? undefined,
       foody: row.foody_url ?? undefined,

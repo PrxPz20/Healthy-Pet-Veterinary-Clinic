@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Home } from "lucide-react";
 import { Reveal } from "@/components/anim";
 import { Footer } from "@/components/site/Footer";
@@ -11,14 +11,14 @@ import { itemMedia } from "@/content/media";
 import { getSiteContent } from "@/content/provider";
 import type { GalleryItem } from "@/content/types";
 import { buildBreadcrumbSchema, buildClinicSchema, JsonLd } from "@/lib/schema";
-import {
-  initialPublicItems,
-  loadPublishedGallery,
-  mergeGalleryItems,
-  publicContentStartsLoaded,
-} from "@/lib/supabase/public-gallery";
+import { loadPublishedGallery, mergeGalleryItems } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "@/components/site/ContentEmptyState";
-import { ContentLoadingState, ContentResultsStatus } from "@/components/site/PublicContentState";
+import {
+  ContentErrorState,
+  ContentLoadingState,
+  ContentResultsStatus,
+} from "@/components/site/PublicContentState";
+import { usePublicItems } from "@/hooks/use-public-items";
 
 const content = getSiteContent();
 const GALLERY_PAGE_SIZE = 6;
@@ -41,8 +41,11 @@ export const Route = createFileRoute("/gallery")({
 function GalleryPage() {
   const contact = useContactSettings();
   const { clinic, gallery } = content;
-  const [items, setItems] = useState<GalleryItem[]>(() => initialPublicItems(gallery));
-  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
+  const { items, hasLoaded, loading, hasError, retry } = usePublicItems(
+    gallery,
+    loadPublishedGallery,
+    mergeGalleryItems,
+  );
   const [activeItem, setActiveItem] = useState<GalleryItem | null>(null);
   const [visibleCount, setVisibleCount] = useState(GALLERY_PAGE_SIZE);
   const visibleGallery = items.slice(0, visibleCount);
@@ -53,21 +56,6 @@ function GalleryPage() {
       : visibleGallery.length === 2
         ? "mx-auto max-w-3xl grid-cols-1 sm:grid-cols-2"
         : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
-
-  useEffect(() => {
-    let mounted = true;
-
-    loadPublishedGallery().then((cmsItems) => {
-      if (mounted) {
-        setItems(mergeGalleryItems(gallery, cmsItems));
-        setHasLoaded(true);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, [gallery]);
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-hidden bg-white text-ink">
@@ -104,10 +92,11 @@ function GalleryPage() {
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <ContentResultsStatus
             label="gallery items"
-            loading={!hasLoaded}
+            loading={loading}
             visible={visibleGallery.length}
             total={items.length}
           />
+          {hasError ? <ContentErrorState onRetry={retry} loading={loading} /> : null}
           {!hasLoaded ? (
             <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
           ) : visibleGallery.length ? (

@@ -93,6 +93,8 @@ function AdminLoginPage() {
               <label className="grid gap-2">
                 <span className="text-sm font-semibold text-ink/72">Email address</span>
                 <input
+                  id="admin-email"
+                  name="email"
                   type="email"
                   value={email}
                   onChange={(event) => {
@@ -100,9 +102,11 @@ function AdminLoginPage() {
                     setError("");
                   }}
                   autoComplete="email"
+                  autoFocus
                   placeholder="admin@healthypet.com"
                   required
                   aria-invalid={Boolean(error)}
+                  aria-describedby={error ? "admin-login-error" : undefined}
                   className={`focus-ring min-h-12 w-full rounded-xl border bg-white px-4 text-base text-ink outline-none transition-colors placeholder:text-ink/65 ${
                     error ? "border-red-400" : "border-line hover:border-ink/35"
                   }`}
@@ -113,6 +117,8 @@ function AdminLoginPage() {
                 <span className="text-sm font-semibold text-ink/72">Password</span>
                 <span className="relative">
                   <input
+                    id="admin-password"
+                    name="password"
                     type={showPassword ? "text" : "password"}
                     value={password}
                     onChange={(event) => {
@@ -123,6 +129,7 @@ function AdminLoginPage() {
                     placeholder="Enter your password"
                     required
                     aria-invalid={Boolean(error)}
+                    aria-describedby={error ? "admin-login-error" : undefined}
                     className={`focus-ring min-h-12 w-full rounded-xl border bg-white px-4 pr-12 text-base text-ink outline-none transition-colors placeholder:text-ink/65 ${
                       error ? "border-red-400" : "border-line hover:border-ink/35"
                     }`}
@@ -143,7 +150,11 @@ function AdminLoginPage() {
               </label>
 
               {error ? (
-                <p role="alert" className="text-sm font-semibold text-red-700">
+                <p
+                  id="admin-login-error"
+                  role="alert"
+                  className="text-sm font-semibold text-red-700"
+                >
                   {error}
                 </p>
               ) : null}

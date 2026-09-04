@@ -10,6 +10,7 @@ type SensitiveImageProps = {
   className?: string;
   priority?: boolean;
   allowReveal?: boolean;
+  fit?: "cover" | "contain";
 };
 
 export function SensitiveImage({
@@ -18,6 +19,7 @@ export function SensitiveImage({
   className = "aspect-[4/3]",
   priority = false,
   allowReveal = true,
+  fit = "cover",
 }: SensitiveImageProps) {
   const [revealed, setRevealed] = useState(!isSensitive);
   const reduceMotion = useReducedMotion();
@@ -33,7 +35,7 @@ export function SensitiveImage({
         width={900}
         height={675}
         sizes="(min-width: 1280px) 300px, (min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-        className={`h-full w-full object-cover transition-[filter,transform,opacity] duration-300 ${
+        className={`h-full w-full ${fit === "contain" ? "object-contain" : "object-cover"} transition-[filter,transform,opacity] duration-300 ${
           protectedImage ? "scale-[1.03] blur-2xl opacity-75" : "blur-0 opacity-100"
         }`}
         whileHover={reduceMotion || protectedImage ? undefined : { scale: 1.025 }}

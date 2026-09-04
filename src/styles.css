@@ -260,6 +260,12 @@
       line-height: 0.98;
     }
   }
+
+  @media (min-width: 768px) and (max-width: 1023px) {
+    .site-section {
+      padding-block: 5rem;
+    }
+  }
   .glass {
     background-color: color-mix(in oklab, white 70%, transparent);
     backdrop-filter: saturate(140%) blur(16px);
@@ -285,6 +291,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
   *,
   *::before,
   *::after {

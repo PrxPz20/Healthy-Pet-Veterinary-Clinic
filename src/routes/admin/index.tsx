@@ -1769,6 +1769,7 @@ function AdminSelect({
 }) {
   const detailsRef = useRef<HTMLDetailsElement>(null);
   const summaryRef = useRef<HTMLElement>(null);
+  const optionsRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
   const [openUpwards, setOpenUpwards] = useState(false);
   const selected = options.find((option) => option.value === value)?.label ?? label;
@@ -1803,12 +1804,45 @@ function AdminSelect({
         if (event.key === "Escape") {
           event.currentTarget.removeAttribute("open");
           setOpen(false);
+          summaryRef.current?.focus();
+          return;
+        }
+
+        const buttons = Array.from(
+          optionsRef.current?.querySelectorAll<HTMLButtonElement>("button:not(:disabled)") ?? [],
+        );
+        if (!buttons.length) return;
+
+        if (
+          event.target === summaryRef.current &&
+          (event.key === "ArrowDown" || event.key === "ArrowUp")
+        ) {
+          event.preventDefault();
+          detailsRef.current?.setAttribute("open", "");
+          requestAnimationFrame(() =>
+            (event.key === "ArrowDown" ? buttons[0] : buttons[buttons.length - 1])?.focus(),
+          );
+          return;
+        }
+
+        const activeIndex = buttons.indexOf(document.activeElement as HTMLButtonElement);
+        if (activeIndex >= 0 && ["ArrowDown", "ArrowUp", "Home", "End"].includes(event.key)) {
+          event.preventDefault();
+          const nextIndex =
+            event.key === "Home"
+              ? 0
+              : event.key === "End"
+                ? buttons.length - 1
+                : (activeIndex + (event.key === "ArrowDown" ? 1 : -1) + buttons.length) %
+                  buttons.length;
+          buttons[nextIndex]?.focus();
         }
       }}
       className="relative min-w-0"
     >
       <summary
         ref={summaryRef}
+        aria-label={label}
         className={`focus-ring flex cursor-pointer list-none items-center justify-between gap-3 border bg-white font-semibold text-ink transition-colors marker:hidden hover:border-vet-green ${
           compact ? "min-h-10 rounded-xl px-3 text-sm" : "min-h-11 rounded-2xl px-4 text-base"
         } ${open ? "border-vet-green bg-sage/45 text-vet-green" : "border-line"}`}
@@ -1819,6 +1853,7 @@ function AdminSelect({
         />
       </summary>
       <div
+        ref={optionsRef}
         className={`absolute left-0 z-40 max-h-64 w-full min-w-48 overflow-y-auto rounded-2xl border border-line bg-white p-2 shadow-xl motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200 ${
           openUpwards ? "motion-safe:slide-in-from-bottom-1" : "motion-safe:slide-in-from-top-1"
         } ${openUpwards ? "bottom-[calc(100%+0.5rem)]" : "top-[calc(100%+0.5rem)]"}`}
@@ -2253,6 +2288,8 @@ function ContactManager({
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Street address" required error={errors.street}>
                 <input
+                  name="street-address"
+                  autoComplete="street-address"
                   className={inputClass}
                   value={address.street}
                   onChange={(event) => {
@@ -2268,6 +2305,8 @@ function ContactManager({
               </Field>
               <Field label="City" required error={errors.city}>
                 <input
+                  name="address-level2"
+                  autoComplete="address-level2"
                   className={inputClass}
                   value={address.city}
                   onChange={(event) => {
@@ -2283,6 +2322,8 @@ function ContactManager({
               </Field>
               <Field label="Postal code" required error={errors.postalCode}>
                 <input
+                  name="postal-code"
+                  autoComplete="postal-code"
                   className={inputClass}
                   value={address.postalCode}
                   onChange={(event) => {
@@ -2298,6 +2339,8 @@ function ContactManager({
               </Field>
               <Field label="Country" required error={errors.country}>
                 <input
+                  name="country-name"
+                  autoComplete="country-name"
                   className={inputClass}
                   value={address.country}
                   onChange={(event) => {
@@ -2313,6 +2356,8 @@ function ContactManager({
               </Field>
               <Field label="Google Maps link" error={errors.mapUrl}>
                 <input
+                  name="map-url"
+                  autoComplete="off"
                   type="url"
                   className={inputClass}
                   value={address.mapUrl}
@@ -2403,6 +2448,8 @@ function ContactManager({
                   >
                     <Field label="Phone label" required error={labelError}>
                       <input
+                        name={`phone-label-${index}`}
+                        autoComplete="off"
                         className={inputClass}
                         value={phone.label}
                         onChange={(event) => {
@@ -2425,6 +2472,8 @@ function ContactManager({
                     </Field>
                     <Field label="Phone number" required error={numberError}>
                       <input
+                        name={`phone-${index}`}
+                        autoComplete={index === 0 ? "tel" : "off"}
                         type="tel"
                         inputMode="tel"
                         className={inputClass}
@@ -2518,6 +2567,8 @@ function ContactManager({
             <div className="grid gap-4 sm:grid-cols-2">
               <Field label="WhatsApp number" error={errors.whatsapp}>
                 <input
+                  name="whatsapp"
+                  autoComplete="tel"
                   type="tel"
                   inputMode="tel"
                   className={inputClass}
@@ -2534,6 +2585,8 @@ function ContactManager({
               </Field>
               <Field label="Email address" error={errors.email}>
                 <input
+                  name="email"
+                  autoComplete="email"
                   type="email"
                   className={inputClass}
                   value={email}
@@ -3062,8 +3115,9 @@ function TimePicker({
         <input
           type="text"
           inputMode="numeric"
-          role="combobox"
+          autoComplete="off"
           aria-expanded={open}
+          aria-haspopup="dialog"
           aria-controls={`${id}-time-options`}
           aria-label={label}
           value={draft}
@@ -3093,11 +3147,10 @@ function TimePicker({
           }}
           placeholder="HH:MM"
           maxLength={5}
-          className={`${inputClass} min-h-10 rounded-xl py-2 pl-3 pr-10 text-sm`}
+          className={`${inputClass} min-h-10 rounded-xl py-2 pl-3 pr-12 text-sm`}
         />
         <button
           type="button"
-          tabIndex={-1}
           onMouseDown={(event) => event.preventDefault()}
           onClick={() => {
             if (open) {
@@ -3107,7 +3160,7 @@ function TimePicker({
               showPicker();
             }
           }}
-          className="focus-ring absolute right-1 top-1/2 grid h-8 w-8 -translate-y-1/2 cursor-pointer place-items-center rounded-lg text-ink/45 transition-colors hover:bg-sage hover:text-vet-green"
+          className="focus-ring absolute right-0.5 top-1/2 grid h-10 w-10 -translate-y-1/2 cursor-pointer place-items-center rounded-lg text-ink/45 transition-colors hover:bg-sage hover:text-vet-green"
           aria-label={`${open ? "Close" : "Open"} ${label.toLowerCase()} time picker`}
         >
           <ChevronDown className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`} />
@@ -3117,6 +3170,8 @@ function TimePicker({
       {open ? (
         <div
           id={`${id}-time-options`}
+          role="dialog"
+          aria-label={`${label} time options`}
           className={`absolute left-0 z-50 w-[min(16rem,calc(100vw-2rem))] rounded-2xl border border-line bg-white p-2 shadow-xl motion-safe:animate-in motion-safe:fade-in-0 motion-safe:duration-200 ${
             openUpwards ? "motion-safe:slide-in-from-bottom-1" : "motion-safe:slide-in-from-top-1"
           } ${openUpwards ? "bottom-[calc(100%+0.5rem)]" : "top-[calc(100%+0.5rem)]"}`}
@@ -4824,6 +4879,8 @@ function RecordList({
           <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-ink/45" />
           <input
             type="search"
+            name="content-search"
+            autoComplete="off"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
             placeholder="Search"

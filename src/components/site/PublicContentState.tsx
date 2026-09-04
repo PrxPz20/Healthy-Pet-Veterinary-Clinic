@@ -1,3 +1,5 @@
+import { RefreshCw } from "lucide-react";
+
 export function ContentLoadingState({
   count = 3,
   className = "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3",
@@ -17,6 +19,34 @@ export function ContentLoadingState({
           </div>
         </div>
       ))}
+    </div>
+  );
+}
+
+export function ContentErrorState({
+  onRetry,
+  loading = false,
+}: {
+  onRetry: () => void;
+  loading?: boolean;
+}) {
+  return (
+    <div
+      role="alert"
+      className="mt-8 flex flex-col gap-3 rounded-2xl border border-line bg-clinic px-4 py-4 text-ink sm:flex-row sm:items-center sm:justify-between"
+    >
+      <p className="type-card-copy font-semibold text-ink/72">
+        Some current content could not be loaded. Please try again in a moment.
+      </p>
+      <button
+        type="button"
+        onClick={onRetry}
+        disabled={loading}
+        className="focus-ring focus-ring-dark type-button inline-flex min-h-11 w-fit shrink-0 items-center gap-2 rounded-full bg-ink px-5 text-white transition-colors hover:bg-vet-green disabled:cursor-wait disabled:opacity-60"
+      >
+        <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} aria-hidden="true" />
+        {loading ? "Trying again..." : "Try again"}
+      </button>
     </div>
   );
 }

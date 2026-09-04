@@ -44,14 +44,16 @@ export function Hero() {
           aria-hidden="true"
           className="absolute inset-0 h-full w-full object-cover object-[58%_center] md:object-center"
           loading="eager"
+          fetchPriority="high"
         />
         <video
           ref={videoRef}
           className="absolute inset-0 h-full w-full object-cover object-[58%_center] md:object-center"
+          autoPlay={!reduceMotion}
           muted
           loop
           playsInline
-          preload="metadata"
+          preload={reduceMotion ? "metadata" : "auto"}
           poster={media.heroPoster.src}
           aria-hidden="true"
         >

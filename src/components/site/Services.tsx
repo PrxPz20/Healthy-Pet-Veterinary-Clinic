@@ -1,41 +1,23 @@
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-import type { Service } from "@/content/types";
-import {
-  initialPublicItems,
-  loadPublishedServices,
-  mergeServiceItems,
-  publicContentStartsLoaded,
-} from "@/lib/supabase/public-gallery";
+import { loadPublishedServices, mergeServiceItems } from "@/lib/supabase/public-gallery";
 import { serviceImages } from "@/content/cms-media";
 import { ContentEmptyState } from "./ContentEmptyState";
-import { ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { ContentErrorState, ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { usePublicItems } from "@/hooks/use-public-items";
 
 export function Services() {
   const { homepage, services } = getSiteContent();
-  const [items, setItems] = useState<Service[]>(() => initialPublicItems(services));
-  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
+  const { items, hasLoaded, loading, hasError, retry } = usePublicItems(
+    services,
+    loadPublishedServices,
+    mergeServiceItems,
+  );
   const featuredServices = items.slice(0, 3);
 
-  useEffect(() => {
-    let mounted = true;
-
-    loadPublishedServices().then((cmsItems) => {
-      if (mounted) {
-        setItems(mergeServiceItems(services, cmsItems));
-        setHasLoaded(true);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, [services]);
-
   return (
-    <section id="services" className="relative bg-white py-16 text-ink md:py-24">
+    <section id="services" className="site-section relative bg-white py-16 text-ink lg:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -52,10 +34,11 @@ export function Services() {
 
         <ContentResultsStatus
           label="services"
-          loading={!hasLoaded}
+          loading={loading}
           visible={featuredServices.length}
           total={items.length}
         />
+        {hasError ? <ContentErrorState onRetry={retry} loading={loading} /> : null}
         {!hasLoaded ? (
           <div className="mt-10 md:mt-12">
             <ContentLoadingState count={2} className="grid-cols-1" />

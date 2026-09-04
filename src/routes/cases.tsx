@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { AlertTriangle, Home } from "lucide-react";
 import casesHeroBanner from "@/assets/cases/cases_hero_banner.webp";
 import { Reveal } from "@/components/anim";
@@ -13,14 +13,14 @@ import { itemMedia } from "@/content/media";
 import { getSiteContent } from "@/content/provider";
 import type { CaseItem } from "@/content/types";
 import { buildBreadcrumbSchema, buildClinicSchema, JsonLd } from "@/lib/schema";
-import {
-  initialPublicItems,
-  loadPublishedCases,
-  mergeCaseItems,
-  publicContentStartsLoaded,
-} from "@/lib/supabase/public-gallery";
+import { loadPublishedCases, mergeCaseItems } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "@/components/site/ContentEmptyState";
-import { ContentLoadingState, ContentResultsStatus } from "@/components/site/PublicContentState";
+import {
+  ContentErrorState,
+  ContentLoadingState,
+  ContentResultsStatus,
+} from "@/components/site/PublicContentState";
+import { usePublicItems } from "@/hooks/use-public-items";
 
 const content = getSiteContent();
 const CASES_PAGE_SIZE = 6;
@@ -43,8 +43,11 @@ export const Route = createFileRoute("/cases")({
 function CasesPage() {
   const contact = useContactSettings();
   const { clinic, cases } = content;
-  const [items, setItems] = useState<CaseItem[]>(() => initialPublicItems(cases));
-  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
+  const { items, hasLoaded, loading, hasError, retry } = usePublicItems(
+    cases,
+    loadPublishedCases,
+    mergeCaseItems,
+  );
   const [visibleCount, setVisibleCount] = useState(CASES_PAGE_SIZE);
   const [activeCase, setActiveCase] = useState<CaseItem | null>(null);
   const visibleCases = items.slice(0, visibleCount);
@@ -55,21 +58,6 @@ function CasesPage() {
       : visibleCases.length === 2
         ? "mx-auto max-w-2xl grid-cols-1 sm:grid-cols-2"
         : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
-
-  useEffect(() => {
-    let mounted = true;
-
-    loadPublishedCases().then((cmsItems) => {
-      if (mounted) {
-        setItems(mergeCaseItems(cases, cmsItems));
-        setHasLoaded(true);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, [cases]);
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-hidden bg-white text-ink">
@@ -128,10 +116,11 @@ function CasesPage() {
           ) : null}
           <ContentResultsStatus
             label="cases"
-            loading={!hasLoaded}
+            loading={loading}
             visible={visibleCases.length}
             total={items.length}
           />
+          {hasError ? <ContentErrorState onRetry={retry} loading={loading} /> : null}
           {!hasLoaded ? (
             <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />
           ) : visibleCases.length ? (

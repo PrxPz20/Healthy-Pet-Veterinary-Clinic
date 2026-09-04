@@ -47,7 +47,7 @@ export function Contact() {
   ];
 
   return (
-    <section id="contact" className="relative bg-ink py-20 text-white md:py-28">
+    <section id="contact" className="site-section relative bg-ink py-20 text-white lg:py-28">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal>
           <div className="max-w-3xl">

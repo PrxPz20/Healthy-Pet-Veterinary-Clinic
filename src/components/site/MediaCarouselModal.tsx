@@ -1,6 +1,6 @@
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { X } from "lucide-react";
-import { useRef } from "react";
+import { ImageOff, X } from "lucide-react";
+import { useRef, useState } from "react";
 import {
   Carousel,
   CarouselContent,
@@ -21,6 +21,41 @@ type MediaCarouselModalProps = {
   isSensitive?: boolean;
   onClose: () => void;
 };
+
+const mediaFrameClass =
+  "h-[min(64vh,42rem)] min-h-[16rem] w-full bg-white sm:h-[min(70vh,42rem)] sm:min-h-[24rem]";
+
+function ModalImage({ item, priority }: { item: MediaAsset; priority: boolean }) {
+  const [loaded, setLoaded] = useState(false);
+  const [failed, setFailed] = useState(false);
+
+  return (
+    <div className={`relative grid place-items-center overflow-hidden ${mediaFrameClass}`}>
+      {!loaded && !failed ? (
+        <div className="absolute inset-0 animate-pulse bg-sage/65" aria-hidden="true" />
+      ) : null}
+      {failed ? (
+        <div className="grid place-items-center gap-2 text-center text-ink/62" role="status">
+          <ImageOff className="h-6 w-6" aria-hidden="true" />
+          <span className="type-card-copy font-semibold">Image unavailable</span>
+        </div>
+      ) : (
+        <img
+          src={item.src}
+          alt={item.alt}
+          loading={priority ? "eager" : "lazy"}
+          decoding="async"
+          width={1440}
+          height={1080}
+          sizes="(min-width: 1024px) 896px, 100vw"
+          onLoad={() => setLoaded(true)}
+          onError={() => setFailed(true)}
+          className={`h-full w-full object-contain transition-opacity duration-200 ${loaded ? "opacity-100" : "opacity-0"}`}
+        />
+      )}
+    </div>
+  );
+}
 
 export function MediaCarouselModal({
   open,
@@ -61,7 +96,7 @@ export function MediaCarouselModal({
             aria-labelledby="media-modal-title"
             aria-describedby={description ? "media-modal-description" : undefined}
             tabIndex={-1}
-            className="relative w-full max-w-4xl overflow-hidden rounded-[1.5rem] bg-white text-ink shadow-[0_24px_70px_-38px_rgba(0,0,0,0.72)]"
+            className="relative max-h-[calc(100dvh-2rem)] w-full max-w-4xl overflow-y-auto rounded-[1.5rem] bg-white text-ink shadow-[0_24px_70px_-38px_rgba(0,0,0,0.72)]"
             initial={reduceMotion ? false : { opacity: 0, y: 16, scale: 0.98 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 10, scale: 0.98 }}
@@ -80,61 +115,56 @@ export function MediaCarouselModal({
 
             <div className="bg-white">
               {safeMedia.length > 1 ? (
-                <Carousel className="relative" opts={{ loop: false }}>
+                <Carousel
+                  className="relative touch-pan-y"
+                  opts={{ loop: false }}
+                  aria-label={`${title} media`}
+                >
                   <CarouselContent>
                     {safeMedia.map((item, index) => (
-                      <CarouselItem key={`${item.src}-${index}`}>
+                      <CarouselItem
+                        key={`${item.src}-${index}`}
+                        aria-label={`${index + 1} of ${safeMedia.length}`}
+                      >
                         {isSensitive ? (
                           <SensitiveImage
                             image={item}
                             isSensitive
                             priority={index === 0}
-                            className="max-h-[72vh] min-h-[20rem] bg-white"
+                            fit="contain"
+                            className={mediaFrameClass}
                           />
                         ) : (
-                          <img
-                            src={item.src}
-                            alt={item.alt}
-                            loading={index === 0 ? "eager" : "lazy"}
-                            decoding="async"
-                            width={1440}
-                            height={1080}
-                            sizes="(min-width: 1024px) 896px, 100vw"
-                            className="max-h-[72vh] w-full object-contain"
-                          />
+                          <ModalImage item={item} priority={index === 0} />
                         )}
                       </CarouselItem>
                     ))}
                   </CarouselContent>
-                  <CarouselPrevious className="left-4 border-white/70 bg-white/92 text-ink hover:bg-white" />
-                  <CarouselNext className="right-4 border-white/70 bg-white/92 text-ink hover:bg-white" />
+                  <CarouselPrevious className="left-3 h-11 w-11 border-white/70 bg-white/92 text-ink hover:bg-white sm:left-4" />
+                  <CarouselNext className="right-3 h-11 w-11 border-white/70 bg-white/92 text-ink hover:bg-white sm:right-4" />
                 </Carousel>
               ) : isSensitive && safeMedia[0] ? (
                 <SensitiveImage
                   image={safeMedia[0]}
                   isSensitive
                   priority
-                  className="max-h-[72vh] min-h-[20rem] bg-white"
+                  fit="contain"
+                  className={mediaFrameClass}
                 />
               ) : safeMedia[0] ? (
-                <img
-                  src={safeMedia[0].src}
-                  alt={safeMedia[0].alt}
-                  decoding="async"
-                  width={1440}
-                  height={1080}
-                  sizes="(min-width: 1024px) 896px, 100vw"
-                  className="max-h-[72vh] w-full object-contain"
-                />
+                <ModalImage item={safeMedia[0]} priority />
               ) : null}
             </div>
 
             <div className="p-5 sm:p-6">
-              <h2 id="media-modal-title" className="type-card-title">
+              <h2 id="media-modal-title" className="type-card-title [overflow-wrap:anywhere]">
                 {title}
               </h2>
               {description ? (
-                <p id="media-modal-description" className="type-body mt-2 text-ink/66">
+                <p
+                  id="media-modal-description"
+                  className="type-body mt-2 max-h-32 overflow-y-auto [overflow-wrap:anywhere] text-ink/66"
+                >
                   {description}
                 </p>
               ) : null}

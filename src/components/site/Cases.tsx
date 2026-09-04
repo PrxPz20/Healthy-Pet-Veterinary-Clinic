@@ -1,22 +1,19 @@
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
 import { getSiteContent } from "@/content/provider";
-import type { CaseItem } from "@/content/types";
-import {
-  initialPublicItems,
-  loadPublishedCases,
-  mergeCaseItems,
-  publicContentStartsLoaded,
-} from "@/lib/supabase/public-gallery";
+import { loadPublishedCases, mergeCaseItems } from "@/lib/supabase/public-gallery";
 import { CaseCard } from "./CaseCard";
 import { ContentEmptyState } from "./ContentEmptyState";
-import { ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { ContentErrorState, ContentLoadingState, ContentResultsStatus } from "./PublicContentState";
+import { usePublicItems } from "@/hooks/use-public-items";
 
 export function Cases() {
   const { cases, homepage } = getSiteContent();
-  const [items, setItems] = useState<CaseItem[]>(() => initialPublicItems(cases));
-  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
+  const { items, hasLoaded, loading, hasError, retry } = usePublicItems(
+    cases,
+    loadPublishedCases,
+    mergeCaseItems,
+  );
   const previewItems = items.filter((item) => item.homepagePreview).slice(0, 4);
   const previewGridClass =
     previewItems.length === 1
@@ -25,23 +22,8 @@ export function Cases() {
         ? "mx-auto max-w-2xl grid-cols-1 sm:grid-cols-2"
         : "grid-cols-1 sm:grid-cols-2 lg:grid-cols-4";
 
-  useEffect(() => {
-    let mounted = true;
-
-    loadPublishedCases().then((cmsItems) => {
-      if (mounted) {
-        setItems(mergeCaseItems(cases, cmsItems));
-        setHasLoaded(true);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, [cases]);
-
   return (
-    <section id="cases" className="relative bg-white py-16 text-ink md:py-24">
+    <section id="cases" className="site-section relative bg-white py-16 text-ink lg:py-24">
       <div className="mx-auto max-w-7xl px-5 sm:px-8">
         <Reveal className="flex flex-col gap-5 md:flex-row md:items-end md:justify-between">
           <div>
@@ -59,10 +41,11 @@ export function Cases() {
 
         <ContentResultsStatus
           label="cases"
-          loading={!hasLoaded}
+          loading={loading}
           visible={previewItems.length}
           total={items.length}
         />
+        {hasError ? <ContentErrorState onRetry={retry} loading={loading} /> : null}
         {!hasLoaded ? (
           <div className="mt-10 md:mt-12">
             <ContentLoadingState className="grid-cols-1 sm:grid-cols-2 lg:grid-cols-4" />

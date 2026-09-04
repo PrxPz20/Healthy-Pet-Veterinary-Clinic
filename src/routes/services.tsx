@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { Home, Mail, MessageCircle, Phone } from "lucide-react";
 import servicesHeroBanner from "@/assets/services/services_hero_banner.webp";
 import { Reveal, StaggerGroup, StaggerItem } from "@/components/anim";
@@ -9,16 +8,15 @@ import { useContactSettings } from "@/components/site/contact-settings-context";
 import { ServiceDetailCard } from "@/components/site/ServiceDetailCard";
 import { getSiteContent } from "@/content/provider";
 import { primaryContactCta, whatsappCta } from "@/content/contact";
-import type { Service } from "@/content/types";
 import { buildBreadcrumbSchema, buildClinicSchema, JsonLd } from "@/lib/schema";
-import {
-  initialPublicItems,
-  loadPublishedServices,
-  mergeServiceItems,
-  publicContentStartsLoaded,
-} from "@/lib/supabase/public-gallery";
+import { loadPublishedServices, mergeServiceItems } from "@/lib/supabase/public-gallery";
 import { ContentEmptyState } from "@/components/site/ContentEmptyState";
-import { ContentLoadingState, ContentResultsStatus } from "@/components/site/PublicContentState";
+import {
+  ContentErrorState,
+  ContentLoadingState,
+  ContentResultsStatus,
+} from "@/components/site/PublicContentState";
+import { usePublicItems } from "@/hooks/use-public-items";
 
 const content = getSiteContent();
 
@@ -43,8 +41,13 @@ function ServicesPage() {
   const primary = primaryContactCta(contact);
   const secondary = contact.phones.length ? whatsappCta(contact) : null;
   const PrimaryIcon = contact.phones.length ? Phone : contact.whatsapp ? MessageCircle : Mail;
-  const [services, setServices] = useState<Service[]>(() => initialPublicItems(staticServices));
-  const [hasLoaded, setHasLoaded] = useState(publicContentStartsLoaded);
+  const {
+    items: services,
+    hasLoaded,
+    loading,
+    hasError,
+    retry,
+  } = usePublicItems(staticServices, loadPublishedServices, mergeServiceItems);
   const categoryDetails = new Map(serviceCategories.map((category) => [category.id, category]));
   const visibleCategories = Array.from(new Set(services.map((service) => service.category))).map(
     (id) => ({
@@ -57,21 +60,6 @@ function ServicesPage() {
     }),
   );
   const serviceOrder = new Map(services.map((service, index) => [service.slug, index]));
-
-  useEffect(() => {
-    let mounted = true;
-
-    loadPublishedServices().then((cmsItems) => {
-      if (mounted) {
-        setServices(mergeServiceItems(staticServices, cmsItems));
-        setHasLoaded(true);
-      }
-    });
-
-    return () => {
-      mounted = false;
-    };
-  }, [staticServices]);
 
   return (
     <main id="main-content" className="min-h-screen overflow-x-hidden bg-white text-ink">
@@ -141,10 +129,11 @@ function ServicesPage() {
         <div className="mx-auto max-w-7xl px-5 sm:px-8">
           <ContentResultsStatus
             label="services"
-            loading={!hasLoaded}
+            loading={loading}
             visible={services.length}
             total={services.length}
           />
+          {hasError ? <ContentErrorState onRetry={retry} loading={loading} /> : null}
           {!hasLoaded ? (
             <ContentLoadingState count={2} className="grid-cols-1" />
           ) : visibleCategories.length ? (

@@ -14,7 +14,7 @@ export function Faq() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section id="faq" className="relative bg-white py-16 text-ink md:py-24">
+    <section id="faq" className="site-section relative bg-white py-16 text-ink lg:py-24">
       <div className="mx-auto grid max-w-7xl gap-10 px-5 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-start lg:gap-16">
         <Reveal className="lg:order-2 lg:sticky lg:top-32">
           <h2 className="type-section-title max-w-xl">{homepage.faq.heading}</h2>
@@ -43,7 +43,7 @@ export function Faq() {
                     className="focus-ring group flex w-full items-center justify-between gap-6 rounded-xl py-6 text-left"
                   >
                     <span
-                      className={`type-card-title transition-colors duration-200 ${isOpen ? "text-vet-green" : "text-ink group-hover:text-vet-green"}`}
+                      className={`type-card-title min-w-0 [overflow-wrap:anywhere] transition-colors duration-200 ${isOpen ? "text-vet-green" : "text-ink group-hover:text-vet-green"}`}
                     >
                       {it.question}
                     </span>
@@ -65,7 +65,9 @@ export function Faq() {
                         transition={reduceMotion ? { duration: 0 } : quickTransition}
                         className="overflow-hidden"
                       >
-                        <p className="type-body pb-6 pr-12 text-ink/66 md:pr-16">{it.answer}</p>
+                        <p className="type-body pb-6 pr-12 [overflow-wrap:anywhere] text-ink/66 md:pr-16">
+                          {it.answer}
+                        </p>
                       </motion.div>
                     )}
                   </AnimatePresence>
