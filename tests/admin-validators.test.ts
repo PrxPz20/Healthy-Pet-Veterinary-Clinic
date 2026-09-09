@@ -149,6 +149,7 @@ test("contact methods normalize and validate international phone numbers", () =>
     contactMethodsSchema.safeParse({
       phones: [{ label: "Clinic", number: "+35725101352" }],
       whatsapp: "",
+      viber: "",
       email: "",
     }).success,
     true,
@@ -157,9 +158,19 @@ test("contact methods normalize and validate international phone numbers", () =>
     contactMethodsSchema.safeParse({
       phones: [{ label: "Clinic", number: "+123" }],
       whatsapp: "",
+      viber: "",
       email: "",
     }).success,
     false,
+  );
+  assert.equal(
+    contactMethodsSchema.safeParse({
+      phones: [],
+      whatsapp: "",
+      viber: "+35795952663",
+      email: "",
+    }).success,
+    true,
   );
 });
 

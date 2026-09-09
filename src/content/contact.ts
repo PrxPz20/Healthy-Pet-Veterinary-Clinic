@@ -11,6 +11,7 @@ export function getStaticContactSettings(): ContactSettings {
       ...(clinic.vetPhone ? [{ label: "Vet Phone", number: clinic.vetPhone }] : []),
     ],
     whatsapp: clinic.vetPhone ?? "",
+    viber: "",
     email: clinic.email,
     socialLinks: clinic.socialLinks,
     openingHours,
@@ -23,6 +24,11 @@ export function phoneHref(number: string) {
 
 export function whatsappHref(number: string) {
   return number ? `https://wa.me/${number.replace(/\\D/g, "")}` : "";
+}
+
+export function viberHref(number: string) {
+  const normalized = number.replace(/[^\\d+]/g, "");
+  return normalized ? `viber://chat?number=${encodeURIComponent(normalized)}` : "";
 }
 
 export function formatPhone(number: string) {

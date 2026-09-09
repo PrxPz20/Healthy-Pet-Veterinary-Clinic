@@ -64,6 +64,7 @@ export type ContactSettings = {
   };
   phones: ContactPhone[];
   whatsapp: string;
+  viber: string;
   email: string;
   socialLinks: Cta[];
   openingHours: OpeningHour[];

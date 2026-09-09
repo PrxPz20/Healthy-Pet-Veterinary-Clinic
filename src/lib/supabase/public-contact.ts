@@ -12,6 +12,7 @@ type ContactRow = {
   map_url: string;
   email: string;
   whatsapp: string;
+  viber: string;
 };
 
 type PhoneRow = { id: string; label: string; phone: string; sort_order: number };
@@ -50,7 +51,7 @@ export async function loadPublicContactSettings(): Promise<ContactSettings> {
   const [settingsResult, phonesResult, hoursResult, socialResult] = await Promise.all([
     client
       .from("contact_settings")
-      .select("street,city,region,postal_code,country,map_url,email,whatsapp")
+      .select("street,city,region,postal_code,country,map_url,email,whatsapp,viber")
       .eq("id", true)
       .maybeSingle(),
     client.from("contact_phones").select("id,label,phone,sort_order").order("sort_order"),
@@ -80,6 +81,7 @@ export async function loadPublicContactSettings(): Promise<ContactSettings> {
           number: phone.phone,
         })),
     whatsapp: settings.whatsapp,
+    viber: settings.viber,
     email: settings.email,
     socialLinks: socialResult.error
       ? fallback.socialLinks

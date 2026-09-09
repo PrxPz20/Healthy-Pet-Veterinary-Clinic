@@ -55,9 +55,9 @@ const sections: LegalSection[] = [
           appointment bookings, payments, purchases, or public form submissions.
         </p>
         <p>
-          A telephone call, email, WhatsApp message, or visit is not confirmed merely because a
-          contact link appears on the site. Appointments, availability, prices, and service details
-          must be confirmed directly with the clinic.
+          A telephone call, email, WhatsApp or Viber message, or visit is not confirmed merely
+          because a contact link appears on the site. Appointments, availability, prices, and
+          service details must be confirmed directly with the clinic.
         </p>
       </>
     ),
@@ -127,8 +127,8 @@ const sections: LegalSection[] = [
     title: "Third-party services and links",
     content: (
       <p>
-        The site may link to Google Maps, WhatsApp, social media, Wolt, Foody, email, and other
-        third-party services. Links are provided for convenience and do not mean we control or
+        The site may link to Google Maps, WhatsApp, Viber, social media, Wolt, Foody, email, and
+        other third-party services. Links are provided for convenience and do not mean we control or
         endorse all third-party content. Those services have their own terms, privacy practices,
         security, availability, and charges. Use them at your own discretion.
       </p>

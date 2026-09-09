@@ -6,9 +6,11 @@ import {
   formatPhone,
   mapEmbedUrl,
   phoneHref,
+  viberHref,
   whatsappHref,
 } from "@/content/contact";
 import { useContactSettings } from "./contact-settings-context";
+import { SocialIcon } from "./SocialIcon";
 
 function formatHourRanges(ranges: { opens: string; closes: string }[]) {
   if (ranges.length === 0) return "Closed";
@@ -30,17 +32,6 @@ export function Contact() {
     external?: boolean;
   }[] = [
     { icon: MapPin, label: "Address", value: fullAddress, href: mapUrl },
-    ...(contact.whatsapp
-      ? [
-          {
-            icon: MessageCircle,
-            label: "WhatsApp",
-            value: "Open WhatsApp",
-            href: whatsappHref(contact.whatsapp),
-            external: true,
-          },
-        ]
-      : []),
     ...(contact.email
       ? [{ icon: Mail, label: "Email", value: contact.email, href: `mailto:${contact.email}` }]
       : []),
@@ -97,6 +88,50 @@ export function Contact() {
                               className="focus-ring focus-ring-dark inline-flex min-h-11 w-fit items-center rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
                             >
                               {contact.phones[2].label} {formatPhone(contact.phones[2].number)}
+                            </a>
+                          ) : null}
+                        </div>
+                      </div>
+                    </li>
+                  ) : null}
+                  {contact.whatsapp || contact.viber ? (
+                    <li className="flex items-start gap-4 md:col-span-2 lg:col-span-1">
+                      <div className="grid h-10 w-10 shrink-0 place-items-center rounded-full border border-white/12 bg-white/6 text-sage-light">
+                        <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                      </div>
+                      <div className="min-w-0">
+                        <div className="type-label text-white/70">Messaging</div>
+                        <div className="mt-1 flex flex-col gap-1 sm:flex-row sm:flex-wrap sm:items-center">
+                          {contact.whatsapp ? (
+                            <a
+                              href={whatsappHref(contact.whatsapp)}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
+                            >
+                              <SocialIcon
+                                platform="WhatsApp"
+                                className="h-4 w-4"
+                                aria-hidden="true"
+                              />
+                              WhatsApp
+                            </a>
+                          ) : null}
+                          {contact.whatsapp && contact.viber ? (
+                            <span
+                              className="mx-2 hidden text-white/32 sm:inline"
+                              aria-hidden="true"
+                            >
+                              |
+                            </span>
+                          ) : null}
+                          {contact.viber ? (
+                            <a
+                              href={viberHref(contact.viber)}
+                              className="focus-ring focus-ring-dark inline-flex min-h-11 items-center gap-2 rounded text-white/92 transition-colors duration-200 hover:text-sage-light"
+                            >
+                              <SocialIcon platform="Viber" className="h-4 w-4" aria-hidden="true" />
+                              Viber
                             </a>
                           ) : null}
                         </div>

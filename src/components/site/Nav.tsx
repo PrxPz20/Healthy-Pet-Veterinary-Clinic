@@ -90,7 +90,7 @@ export function Nav() {
           <img
             src={logoUrl}
             alt="Healthy Pet Veterinary Clinic"
-            className="h-14 w-auto max-w-[200px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-16 sm:max-w-[280px]"
+            className="h-[3.75rem] w-auto max-w-[220px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-[4.25rem] sm:max-w-[280px]"
           />
         </a>
 

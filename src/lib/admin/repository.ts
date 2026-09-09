@@ -620,7 +620,7 @@ export async function getContactSettings(): Promise<AdminContactSettings> {
   const [settingsResult, phonesResult, hoursResult, socialResult] = await Promise.all([
     client
       .from("contact_settings")
-      .select("street,city,region,postal_code,country,map_url,email,whatsapp")
+      .select("street,city,region,postal_code,country,map_url,email,whatsapp,viber")
       .eq("id", true)
       .maybeSingle(),
     client.from("contact_phones").select("id,label,phone,sort_order").order("sort_order"),
@@ -664,6 +664,7 @@ export async function getContactSettings(): Promise<AdminContactSettings> {
           number: phone.phone,
         })),
     whatsapp: settings.whatsapp,
+    viber: settings.viber,
     email: settings.email,
     socialLinks: socialResult.error
       ? fallback.socialLinks
@@ -700,12 +701,13 @@ export async function saveContactAddress(address: AdminContactSettings["address"
 }
 
 export async function saveContactMethods(
-  values: Pick<AdminContactSettings, "phones" | "whatsapp" | "email">,
+  values: Pick<AdminContactSettings, "phones" | "whatsapp" | "viber" | "email">,
 ) {
   const client = requireClient();
   const { error } = await client.rpc("save_contact_methods", {
     next_phones: values.phones,
     next_whatsapp: values.whatsapp,
+    next_viber: values.viber,
     next_email: values.email,
   });
   if (error) throw error;

@@ -11,7 +11,7 @@ This project now includes a secure admin dashboard foundation at `/admin`.
 - FAQs.
 - About Us copy and verified counters.
 - Approved Google reviews.
-- Contact address, map, phone numbers, WhatsApp, email, and weekly opening hours.
+- Contact address, map, phone numbers, WhatsApp, Viber, email, and weekly opening hours.
 
 The customer cannot edit layout, colors, fonts, raw HTML, arbitrary JSON, scripts, or design settings.
 

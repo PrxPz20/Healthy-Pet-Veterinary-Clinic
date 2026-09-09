@@ -175,10 +175,11 @@ export const contactMethodsSchema = z
       )
       .max(3),
     whatsapp: z.union([z.literal(""), internationalPhoneSchema]),
+    viber: z.union([z.literal(""), internationalPhoneSchema]),
     email: z.union([z.literal(""), z.string().trim().email("Enter a valid email address.")]),
   })
-  .refine((value) => value.phones.length > 0 || value.whatsapp || value.email, {
-    message: "Add at least one phone number, WhatsApp number, or email.",
+  .refine((value) => value.phones.length > 0 || value.whatsapp || value.viber || value.email, {
+    message: "Add at least one phone number, WhatsApp number, Viber number, or email.",
   });
 
 const timeSchema = z.union([z.literal(""), z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/)]);

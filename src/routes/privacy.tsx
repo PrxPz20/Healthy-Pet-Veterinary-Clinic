@@ -41,7 +41,7 @@ const sections: LegalSection[] = [
         <p>
           This policy explains how personal data is handled when you browse the Healthy Pet
           Veterinary Clinic website, view published content and the clinic map, or choose to contact
-          the clinic through a telephone, email, WhatsApp, or third-party link.
+          the clinic through a telephone, email, WhatsApp, Viber, or third-party link.
         </p>
         <p>
           The website does not accept appointment bookings, payments, purchases, or public form
@@ -120,10 +120,10 @@ const sections: LegalSection[] = [
         </p>
         <p>
           OpenStreetMap may receive technical information when the embedded map loads. Google Maps,
-          WhatsApp/Meta, telephone and email providers, Wolt, Foody, and social-media services may
-          receive information when you open or use their services. Their own privacy notices apply.
-          We may also disclose information to professional advisers, regulators, courts,
-          law-enforcement bodies, or other authorities when legally required.
+          WhatsApp/Meta, Viber/Rakuten, telephone and email providers, Wolt, Foody, and social-media
+          services may receive information when you open or use their services. Their own privacy
+          notices apply. We may also disclose information to professional advisers, regulators,
+          courts, law-enforcement bodies, or other authorities when legally required.
         </p>
         <p>We do not sell personal data.</p>
       </>

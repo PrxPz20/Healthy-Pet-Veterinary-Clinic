@@ -930,7 +930,7 @@ function HelpManager() {
             >
               <HelpList
                 items={[
-                  "Contact methods allow up to three labelled phone numbers. Keep at least one phone number, WhatsApp number, or email, and enter phone numbers in international format, such as +35725101352.",
+                  "Contact methods allow up to three labelled phone numbers. Keep at least one phone number, WhatsApp number, Viber number, or email, and use international format, such as +35725101352.",
                   "Social links allow up to 12 approved HTTPS profile links. A platform can appear more than once, but the same profile URL cannot be added twice.",
                   "Opening hours must cover all seven days with at least one open day. Open days need a complete first period; the second period is optional and must begin after the first period ends.",
                 ]}
@@ -2175,7 +2175,7 @@ function ContactManager({
   contact: AdminContactSettings;
   onSaveAddress: (values: AdminContactSettings["address"]) => Promise<void>;
   onSaveMethods: (
-    values: Pick<AdminContactSettings, "phones" | "whatsapp" | "email">,
+    values: Pick<AdminContactSettings, "phones" | "whatsapp" | "viber" | "email">,
   ) => Promise<void>;
   onSaveSocial: (values: AdminContactSettings["socialLinks"]) => Promise<void>;
   onSaveHours: (values: AdminOpeningHour[]) => Promise<void>;
@@ -2183,6 +2183,7 @@ function ContactManager({
   const [address, setAddress] = useState(contact.address);
   const [phones, setPhones] = useState(contact.phones);
   const [whatsapp, setWhatsapp] = useState(contact.whatsapp);
+  const [viber, setViber] = useState(contact.viber);
   const [email, setEmail] = useState(contact.email);
   const [socialLinks, setSocialLinks] = useState(contact.socialLinks);
   const [hours, setHours] = useState(contact.openingHours);
@@ -2195,6 +2196,7 @@ function ContactManager({
     setAddress(contact.address);
     setPhones(contact.phones);
     setWhatsapp(contact.whatsapp);
+    setViber(contact.viber);
     setEmail(contact.email);
     setSocialLinks(contact.socialLinks);
     setHours(contact.openingHours);
@@ -2391,10 +2393,10 @@ function ContactManager({
 
         <AdminBlock
           icon={<MessageCircle className="h-4 w-4" />}
-          title="Phone, WhatsApp & Email"
+          title="Phone, WhatsApp, Viber & Email"
           info={[
             "The first phone number is used by Call Now buttons.",
-            "Add at least one phone number, WhatsApp number, or email.",
+            "Add at least one phone number, WhatsApp number, Viber number, or email.",
             "Use international format, for example +35795952663.",
           ]}
         >
@@ -2410,6 +2412,7 @@ function ContactManager({
                   number: normalizeInternationalPhone(phone.number),
                 })),
                 whatsapp: normalizeInternationalPhone(whatsapp),
+                viber: normalizeInternationalPhone(viber),
                 email: email.trim(),
               });
               if (!result.success) {
@@ -2429,6 +2432,7 @@ function ContactManager({
               setErrors({});
               setPhones(result.data.phones);
               setWhatsapp(result.data.whatsapp);
+              setViber(result.data.viber);
               setEmail(result.data.email);
               void submit("methods", () => onSaveMethods(result.data));
             }}
@@ -2583,6 +2587,26 @@ function ContactManager({
                   {...validationProps("WhatsApp number", "+357 95 952663")}
                 />
               </Field>
+              <Field label="Viber number" error={errors.viber}>
+                <input
+                  name="viber"
+                  autoComplete="tel"
+                  type="tel"
+                  inputMode="tel"
+                  className={inputClass}
+                  value={viber}
+                  onChange={(event) => {
+                    setViber(normalizeInternationalPhone(event.target.value));
+                    clearError("viber", "methods");
+                  }}
+                  {...invalid("viber")}
+                  pattern="\+[1-9][0-9]{7,14}"
+                  maxLength={24}
+                  {...validationProps("Viber number", "+357 95 952663")}
+                />
+              </Field>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-2">
               <Field label="Email address" error={errors.email}>
                 <input
                   name="email"
