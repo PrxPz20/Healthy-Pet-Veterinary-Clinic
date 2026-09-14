@@ -42,6 +42,11 @@ export function Nav() {
   useEffect(() => {
     if (!open) return;
 
+    const previousBodyOverflow = document.body.style.overflow;
+    const previousRootOverflow = document.documentElement.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.documentElement.style.overflow = "hidden";
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key !== "Escape") return;
       setOpen(false);
@@ -49,7 +54,11 @@ export function Nav() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousBodyOverflow;
+      document.documentElement.style.overflow = previousRootOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
   }, [open]);
 
   useEffect(() => {
@@ -90,7 +99,7 @@ export function Nav() {
           <img
             src={logoUrl}
             alt="Healthy Pet Veterinary Clinic"
-            className="h-[3.75rem] w-auto max-w-[220px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-[4.25rem] sm:max-w-[280px]"
+            className="h-16 w-auto max-w-[235px] shrink-0 object-contain transition-transform duration-300 group-hover:scale-[1.02] sm:h-[4.5rem] sm:max-w-[300px]"
           />
         </a>
 
@@ -190,7 +199,7 @@ export function Nav() {
             initial={reduceMotion ? false : "hidden"}
             animate="show"
             exit={reduceMotion ? { opacity: 0 } : "exit"}
-            className="mx-3 mt-2 overflow-hidden rounded-3xl border border-white/10 bg-ink/96 shadow-[0_14px_40px_-22px_rgba(24,26,28,0.8)] backdrop-blur-xl xl:hidden"
+            className="mx-3 mt-2 max-h-[calc(100dvh-7rem)] overflow-y-auto overscroll-contain rounded-3xl border border-white/10 bg-ink/96 shadow-[0_14px_40px_-22px_rgba(24,26,28,0.8)] backdrop-blur-xl xl:hidden"
           >
             <motion.div
               variants={stagger}

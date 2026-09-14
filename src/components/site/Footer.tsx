@@ -28,7 +28,7 @@ export function Footer() {
             <img
               src={logoUrl}
               alt="Healthy Pet Veterinary Clinic"
-              className="h-14 w-auto max-w-[260px] object-contain sm:h-16"
+              className="-ml-2 h-[3.75rem] w-auto max-w-[280px] object-contain sm:h-[4.25rem] sm:max-w-[300px]"
             />
             <p className="type-card-copy mt-4 max-w-xs text-white/65">
               {clinic.tagline} Located in {contact.address.city}, {contact.address.country}.

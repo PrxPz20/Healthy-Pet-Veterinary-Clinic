@@ -108,7 +108,7 @@ function CasesPage() {
                 <span className="absolute inset-0 rounded-full ring-2 ring-red-400/45 motion-safe:animate-ping [animation-delay:450ms]" />
                 <AlertTriangle className="relative h-5 w-5" aria-hidden="true" />
               </span>
-              <p className="type-body min-w-0 text-center font-medium text-ink/72 lg:whitespace-nowrap">
+              <p className="type-body min-w-0 text-left font-medium text-ink/72 lg:whitespace-nowrap">
                 These images are included for educational review and professional context. They are
                 not a substitute for an examination or medical advice for a specific pet.
               </p>
