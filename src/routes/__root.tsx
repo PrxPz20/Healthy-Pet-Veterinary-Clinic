@@ -6,6 +6,7 @@ import {
   useRouter,
   HeadContent,
   Scripts,
+  type ErrorComponentProps,
 } from "@tanstack/react-router";
 import { ArrowLeft } from "lucide-react";
 
@@ -87,7 +88,7 @@ function NotFoundComponent() {
   );
 }
 
-function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
+function ErrorComponent({ error, reset }: ErrorComponentProps) {
   reportClientError("Route render failed", error);
   const router = useRouter();
 
@@ -120,27 +121,29 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
-  loader: async ({ location }) => {
-    if (location.pathname.startsWith("/admin")) {
-      const content = getSiteContent();
-      return {
-        contact: getStaticContactSettings(),
-        editorial: {
-          about: content.about,
-          aboutImage: content.media.about,
-          faqs: content.faqs,
-          testimonials: content.testimonials,
-        },
-      };
-    }
+async function loadRootData({ location }: { location: { pathname: string } }) {
+  if (location.pathname.startsWith("/admin")) {
+    const content = getSiteContent();
+    return {
+      contact: getStaticContactSettings(),
+      editorial: {
+        about: content.about,
+        aboutImage: content.media.about,
+        faqs: content.faqs,
+        testimonials: content.testimonials,
+      },
+    };
+  }
 
-    const [contact, editorial] = await Promise.all([
-      loadPublicContactSettings(),
-      loadPublicEditorialContent(),
-    ]);
-    return { contact, editorial };
-  },
+  const [contact, editorial] = await Promise.all([
+    loadPublicContactSettings(),
+    loadPublicEditorialContent(),
+  ]);
+  return { contact, editorial };
+}
+
+export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
+  loader: loadRootData,
   head: () => ({
     meta: [
       { charSet: "utf-8" },
@@ -190,7 +193,7 @@ function RootShell({ children }: { children: React.ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
-  const { contact, editorial } = Route.useLoaderData();
+  const { contact, editorial } = Route.useLoaderData() as Awaited<ReturnType<typeof loadRootData>>;
 
   return (
     <QueryClientProvider client={queryClient}>
