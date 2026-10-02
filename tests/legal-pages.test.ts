@@ -6,20 +6,24 @@ const privacy = readFileSync(new URL("../src/routes/privacy.tsx", import.meta.ur
 const terms = readFileSync(new URL("../src/routes/terms.tsx", import.meta.url), "utf8");
 const footer = readFileSync(new URL("../src/components/site/Footer.tsx", import.meta.url), "utf8");
 
-test("legal pages retain required placeholders and verified website limitations", () => {
-  for (const placeholder of [
-    "[REGISTERED LEGAL BUSINESS NAME]",
-    "[TRADING NAME]",
-    "[COMPANY REGISTRATION NUMBER]",
-    "[REGISTERED ADDRESS]",
-    "[PRIVACY CONTACT EMAIL]",
-    "[PRIVACY CONTACT PHONE]",
-    "[EFFECTIVE DATE]",
+test("legal pages include supplied operator details and verified website limitations", () => {
+  for (const detail of [
+    "FILIDONO LTD",
+    "Healthy Pet",
+    "HE488697",
+    "Katinas Paxinou 66, Agios Athanasios-Panthea, 4105",
+    "vetdr2000cy@gmail.com",
+    "95952663",
   ]) {
-    const escaped = placeholder.replaceAll("[", "\\[").replaceAll("]", "\\]");
+    const escaped = detail.replaceAll("[", "\\[").replaceAll("]", "\\]");
     assert.match(privacy, new RegExp(escaped));
     assert.match(terms, new RegExp(escaped));
   }
+
+  assert.match(privacy, /mailto:vetdr2000cy@gmail\.com/);
+  assert.match(terms, /mailto:vetdr2000cy@gmail\.com/);
+  assert.match(privacy, /\[EFFECTIVE DATE\]/);
+  assert.match(terms, /\[EFFECTIVE DATE\]/);
 
   const noTransactions =
     /does not accept\s+appointment bookings, payments, purchases, or public form/;

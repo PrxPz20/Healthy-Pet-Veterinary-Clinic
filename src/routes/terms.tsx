@@ -3,12 +3,12 @@ import { LegalPage, type LegalSection } from "@/components/site/LegalPage";
 import termsHero from "@/assets/legal/terms-hero.webp";
 
 const operatorDetails = [
-  ["Registered legal business name", "[REGISTERED LEGAL BUSINESS NAME]"],
-  ["Trading name", "[TRADING NAME]"],
-  ["Company registration number", "[COMPANY REGISTRATION NUMBER]"],
-  ["Registered address", "[REGISTERED ADDRESS]"],
-  ["Contact email", "[PRIVACY CONTACT EMAIL]"],
-  ["Contact phone", "[PRIVACY CONTACT PHONE]"],
+  ["Registered legal business name", "FILIDONO LTD"],
+  ["Trading name", "Healthy Pet"],
+  ["Company registration number", "HE488697"],
+  ["Registered address", "Katinas Paxinou 66, Agios Athanasios-Panthea, 4105"],
+  ["Contact email", "vetdr2000cy@gmail.com", "mailto:vetdr2000cy@gmail.com"],
+  ["Contact phone", "95952663"],
   ["Effective date", "[EFFECTIVE DATE]"],
 ] as const;
 
@@ -18,10 +18,21 @@ const sections: LegalSection[] = [
     title: "Website operator",
     content: (
       <dl className="grid gap-3 rounded-2xl border border-line bg-sage/45 p-5 sm:grid-cols-2">
-        {operatorDetails.map(([label, value]) => (
+        {operatorDetails.map(([label, value, href]) => (
           <div key={label}>
             <dt className="type-label text-ink/68">{label}</dt>
-            <dd className="mt-1 break-words font-semibold text-ink">{value}</dd>
+            <dd className="mt-1 break-words font-semibold text-ink">
+              {href ? (
+                <a
+                  href={href}
+                  className="focus-ring inline-flex min-h-11 items-center rounded hover:underline"
+                >
+                  {value}
+                </a>
+              ) : (
+                value
+              )}
+            </dd>
           </div>
         ))}
       </dl>

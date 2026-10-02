@@ -3,12 +3,12 @@ import { LegalPage, type LegalSection } from "@/components/site/LegalPage";
 import privacyHero from "@/assets/legal/privacy-hero.webp";
 
 const controllerDetails = [
-  ["Registered legal business name", "[REGISTERED LEGAL BUSINESS NAME]"],
-  ["Trading name", "[TRADING NAME]"],
-  ["Company registration number", "[COMPANY REGISTRATION NUMBER]"],
-  ["Registered address", "[REGISTERED ADDRESS]"],
-  ["Privacy contact email", "[PRIVACY CONTACT EMAIL]"],
-  ["Privacy contact phone", "[PRIVACY CONTACT PHONE]"],
+  ["Registered legal business name", "FILIDONO LTD"],
+  ["Trading name", "Healthy Pet"],
+  ["Company registration number", "HE488697"],
+  ["Registered address", "Katinas Paxinou 66, Agios Athanasios-Panthea, 4105"],
+  ["Privacy contact email", "vetdr2000cy@gmail.com", "mailto:vetdr2000cy@gmail.com"],
+  ["Privacy contact phone", "95952663"],
   ["Effective date", "[EFFECTIVE DATE]"],
 ] as const;
 
@@ -23,10 +23,21 @@ const sections: LegalSection[] = [
           through this website. It decides why and how that information is used.
         </p>
         <dl className="grid gap-3 rounded-2xl border border-line bg-sage/45 p-5 sm:grid-cols-2">
-          {controllerDetails.map(([label, value]) => (
+          {controllerDetails.map(([label, value, href]) => (
             <div key={label}>
               <dt className="type-label text-ink/68">{label}</dt>
-              <dd className="mt-1 break-words font-semibold text-ink">{value}</dd>
+              <dd className="mt-1 break-words font-semibold text-ink">
+                {href ? (
+                  <a
+                    href={href}
+                    className="focus-ring inline-flex min-h-11 items-center rounded hover:underline"
+                  >
+                    {value}
+                  </a>
+                ) : (
+                  value
+                )}
+              </dd>
             </div>
           ))}
         </dl>
